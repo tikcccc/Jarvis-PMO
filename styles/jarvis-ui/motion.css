@@ -1,0 +1,110 @@
+:root {
+  --jarvis-motion-duration-fast: 160ms;
+  --jarvis-motion-duration-base: 220ms;
+  --jarvis-motion-duration-slow: 320ms;
+  --jarvis-motion-duration-ambient: 6s;
+  --jarvis-motion-ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --jarvis-motion-ease-emphasis: cubic-bezier(0.16, 1, 0.3, 1);
+  --jarvis-motion-ease-exit: cubic-bezier(0.4, 0, 1, 1);
+  --jarvis-motion-distance-sm: 0.375rem;
+  --jarvis-motion-distance-md: 0.75rem;
+  --jarvis-motion-distance-lg: 1rem;
+}
+
+.animate-in {
+  animation-duration: var(--jarvis-motion-duration-base);
+  animation-timing-function: var(--jarvis-motion-ease-emphasis);
+  animation-fill-mode: both;
+  will-change: opacity, transform;
+}
+
+.fade-in {
+  animation-name: jarvis-fade-in;
+}
+
+.rise-in {
+  animation-name: jarvis-rise-in;
+}
+
+.slide-in-from-right-4 {
+  animation-name: jarvis-slide-in-right;
+}
+
+.jarvis-ai-ambient {
+  position: relative;
+  isolation: isolate;
+}
+
+.jarvis-ai-ambient::before {
+  content: "";
+  position: absolute;
+  inset: -35%;
+  z-index: -1;
+  border-radius: inherit;
+  background:
+    radial-gradient(circle at 28% 30%, rgba(59, 130, 246, 0.18), transparent 48%),
+    radial-gradient(circle at 72% 66%, rgba(16, 185, 129, 0.12), transparent 42%);
+  filter: blur(36px);
+  opacity: 0.82;
+  animation: jarvis-ai-aurora var(--jarvis-motion-duration-ambient) linear infinite;
+}
+
+@keyframes jarvis-fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes jarvis-rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(var(--jarvis-motion-distance-sm));
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes jarvis-slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(var(--jarvis-motion-distance-lg));
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes jarvis-ai-aurora {
+  0% {
+    transform: translate3d(-6%, -2%, 0) scale(0.98);
+  }
+
+  50% {
+    transform: translate3d(6%, 4%, 0) scale(1.04);
+  }
+
+  100% {
+    transform: translate3d(-6%, -2%, 0) scale(0.98);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-in,
+  .fade-in,
+  .rise-in,
+  .slide-in-from-right-4,
+  .jarvis-ai-ambient::before {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+  }
+}

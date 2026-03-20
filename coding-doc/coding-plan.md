@@ -21,6 +21,7 @@ Turn the current Jarvis PMO prototype reference into a maintainable Next.js fron
 ## Phase 3. Extract Shared UI
 
 - Build reusable `Card`, `Badge`, `ProgressBar`, `IconButton`, and page header primitives.
+- Build reusable motion tokens and keyframes in `styles/jarvis-ui/motion.css`.
 - Build the persistent app shell:
   - collapsible sidebar
   - sticky top header
@@ -55,7 +56,9 @@ During this phase, reuse existing shared sections whenever possible instead of c
 ## Phase 6. QA and Consistency Pass
 
 - Verify every route uses the same shell and token system.
+- Verify motion stays inside the approved shell and module hierarchy guardrails.
 - Confirm icon family, spacing, and card language remain consistent.
+- Verify reduced-motion fallbacks for non-essential animation.
 - Run responsive checks for desktop and mobile.
 - Compare the migrated pages against the original reference prototype.
 
@@ -64,6 +67,7 @@ During this phase, reuse existing shared sections whenever possible instead of c
 - maintainable Next.js app structure
 - project architecture docs in `coding-doc/`
 - reusable `front-end-ui` skill for future UI work
+- reusable `front-end-motion` skill and animation architecture guidance for future motion work
 - documented acceptance and testing rules to prevent visual drift
 
 ## Implementation Constraints

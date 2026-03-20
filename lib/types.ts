@@ -22,11 +22,18 @@ export interface NavItem {
   href: string;
   label: string;
   icon: IconName;
+  children?: NavChildItem[];
 }
 
 export interface NavSection {
   label?: string;
   items: NavItem[];
+}
+
+export interface NavChildItem {
+  id: string;
+  href: string;
+  label: string;
 }
 
 export interface MetricCard {
@@ -97,4 +104,83 @@ export interface ApprovalCondition {
   deadline?: string;
   progressPercent?: number;
   evidenceLabel?: string;
+}
+
+export interface ProcurementMetric {
+  id: string;
+  label: string;
+  value: string;
+  detail: string;
+  tone: Tone;
+  icon: IconName;
+}
+
+export interface ProcurementPackage {
+  id: string;
+  code: string;
+  name: string;
+  stage: string;
+  scope: string;
+  closingDate: string;
+  status: string;
+  tone: Tone;
+  bidderCount: number;
+  clarificationCount: number;
+  bqCoverage: string;
+  lead: string;
+  engineerEstimate: string;
+}
+
+export interface ProcurementRiskSignal {
+  id: string;
+  label: string;
+  value: string;
+  tone: Tone;
+}
+
+export interface ProcurementBidder {
+  id: string;
+  packageId: string;
+  supplierId: string;
+  name: string;
+  commercialOffer: string;
+  commercialSpread: string;
+  complianceScore: number;
+  bqDeviation: string;
+  riskScore: number;
+  riskLevel: string;
+  riskTone: Tone;
+  pricingPattern: string;
+  recommendedAction: string;
+  recommendedActionTone: Tone;
+  summary: string;
+  flags: string[];
+  riskSignals: ProcurementRiskSignal[];
+}
+
+export interface ProcurementSupplierProfile {
+  id: string;
+  name: string;
+  qualificationStatus: string;
+  qualificationTone: Tone;
+  historicProjects: string;
+  claimRatio: string;
+  responseTime: string;
+  integrityScore: number;
+  lastAward: string;
+  highlight: string;
+  redFlags: string[];
+}
+
+export interface ProcurementIssueLog {
+  id: string;
+  packageId: string;
+  bidderId?: string;
+  category: string;
+  title: string;
+  message: string;
+  owner: string;
+  status: string;
+  tone: Tone;
+  timeLabel: string;
 }

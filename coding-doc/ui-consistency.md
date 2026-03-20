@@ -2,9 +2,9 @@
 
 ## 1. Visual Intent
 
-The product is a white-theme executive command center for PMO leaders in real estate development. The UI should feel precise, operational, and premium, with dense but readable information.
+The product is a white-theme executive command center for PMO leaders in real estate development. The UI should feel precise, operational, premium, and readable under dense information loads.
 
-This is not a greenfield design system. The existing prototype is the baseline and future edits should preserve its visual language.
+Consistency is required, but sameness is not. The app should feel like one system while still letting each module express its own working style, focal area, and reading path.
 
 ## 2. Reference Baseline
 
@@ -16,7 +16,41 @@ Scope and naming reference:
 
 - `reference-doc/IN/2026-3-20 prototype developement/gemeni_chat.md`
 
-## 3. Shell Formula
+## 3. Governance Model
+
+The UI is governed in two layers:
+
+### 3.1 Layer One: Shell and System Invariants
+
+These stay stable across the whole product:
+
+- sidebar
+- top header
+- content container width and padding
+- white-theme direction
+- color semantics
+- icon family
+- card, badge, button, progress bar, and table baseline language
+
+This layer exists to keep the platform coherent.
+
+### 3.2 Layer Two: Module-Level Composition
+
+These may change per module when the module intent calls for it:
+
+- reading path
+- layout rhythm
+- typography hierarchy
+- emphasis placement
+- dark-panel usage
+- density distribution between panels
+- relative priority of KPI, workspace, detail, and log zones
+
+This layer exists to keep modules legible and distinctive.
+
+## 4. Layer One: Shell and System Invariants
+
+### 4.1 Shell Formula
 
 The shell should keep these proportions and behaviors:
 
@@ -35,9 +69,9 @@ The shell should keep these proportions and behaviors:
   - generous page padding
   - centered max-width container
 
-## 4. Token Direction
+### 4.2 Token Direction
 
-### Colors
+#### Colors
 
 - base background: near-white
 - surface: white
@@ -46,75 +80,219 @@ The shell should keep these proportions and behaviors:
 - success: emerald
 - warning: amber
 - danger: rose
-- emphasis surface: near-black only for special analytical panels
+- emphasis surface: near-black only for analytical, risk, simulation, or live-intelligence panels
 
-### Radius and Elevation
+#### Radius and Elevation
 
 - standard cards use `rounded-xl`
 - controls use soft rounded corners, never sharp rectangles
 - shadows are subtle and should not become glossy or heavy
 
-### Typography
+#### Typography Baseline
 
 - app chrome uses a neutral sans
 - small metadata labels are uppercase and compact
 - metric values are bold and high-contrast
-- avoid oversized hero typography
+- avoid oversized hero typography for the application shell
 
-## 5. Shared Component Semantics
+### 4.3 Shared Component Semantics
 
-### Cards
+#### Cards
 
 - white background
 - light border
 - soft shadow
 - hover state can slightly increase shadow or border emphasis
+- the shared `Card` primitive must not hard-lock white surfaces when a module uses an approved dark emphasis panel
 
-### Badges
+#### Badges
 
 - compact uppercase style
 - semantic variants only
-- do not introduce decorative badge styles that do not map to status
+- decorative badge styles are not allowed unless they still map to status or risk meaning
 
-### Progress Indicators
+#### Progress Indicators
 
 - thin, rounded tracks
 - solid fills
 - compact labels above the bar when detail is needed
 
-### Tables and Lists
+#### Tables and Lists
 
 - headers use tiny uppercase gray labels
 - rows use hover fill, not heavy separators
 - action icons align to the far right and remain compact
 
-### Dark Panels
+#### Dark Panels
 
 Used sparingly for:
 
 - scenario simulation
 - contract logic
 - live site perception
+- analytical pressure zones
 
-These panels should feel intentional and data-heavy, not like a dark mode toggle.
+These panels should feel intentional and data-heavy, not like a global dark mode toggle.
+- approved dark panels should be implemented through a supported shared-card surface, not through conflicting one-off overrides
 
-## 6. Icon Rules
+### 4.4 Icon Rules
 
 - Use `lucide-react`.
 - Keep the same icon meanings when porting the existing prototype.
 - Do not mix icon families on the same page.
 - Keep icons small and aligned with compact UI density.
 
-## 7. Page Anatomy
+### 4.5 Motion and Transition Rules
 
-Most routes follow this pattern:
+- Motion exists to clarify focus, latency, and spatial hierarchy, not to add spectacle.
+- Keep shell motion subtle and fast; the sidebar and topbar should feel steady rather than theatrical.
+- Prefer opacity plus short-distance translation over large travel or bounce.
+- Shared motion tokens and keyframes should come from the supported motion layer, not from one-off page-local values by default.
+- Dark analytical panels may use subtle ambient motion, but the effect should stay low amplitude and never read like a global dark-mode animation.
+- Respect `prefers-reduced-motion` and remove non-essential ambient loops when it is enabled.
 
-1. compact title row or KPI header
-2. summary metric grid
-3. primary working panel
-4. secondary insight, analytics, or log panel
+## 5. Layer Two: Module-Level Composition
 
-Avoid replacing these operational layouts with generic marketing blocks.
+### 5.1 Consistency Is Not Sameness
+
+All modules should feel related, but they should not all read the same way.
+
+Allowed variation includes:
+
+- different dominant panel sizes
+- different typography emphasis
+- different placement of KPI ribbons
+- different ratios between workspace and detail
+- different use of dark analytical panels
+- different information density between sections
+
+Not allowed:
+
+- changing the shell structure per module
+- inventing a new design language unrelated to the approved prototype
+- turning operational modules into marketing-style pages
+
+### 5.2 Attention Hierarchy and Heatmap Rules
+
+Each module should define:
+
+1. one primary focal zone
+2. one secondary support zone
+3. tertiary supporting context
+
+Apply these rules:
+
+- The first 2 seconds of scanning should make the main task obvious.
+- If everything has the same weight, the page has no focus.
+- If every module uses the same focus pattern, the product loses module identity.
+- Prefer one clearly dominant block over many equally weighted cards.
+- Use contrast, scale, density, and spacing intentionally instead of making every section equally prominent.
+
+### 5.3 Typography Hierarchy
+
+Typography should vary by role, not only by size.
+
+Use distinct treatments for:
+
+- lead metric or decision number
+- module workbench title
+- section lead
+- evidence or metadata copy
+- alert copy
+- dense table labels
+
+Guidance:
+
+- lead numbers should carry stronger contrast than surrounding copy
+- evidence text should be tighter and calmer than decision text
+- supporting descriptions should not compete with active work surfaces
+- a module may shift weight, spacing, or line length to fit its task, without changing the global app chrome font family
+
+### 5.4 Layout Rhythm
+
+Do not default every route to the same formula.
+
+Module pages may emphasize different rhythms such as:
+
+- compact KPI ribbon plus dominant analytical surface
+- workflow queue plus selected detail canvas
+- map plus selected asset context
+- timeline plus downstream impact panel
+- comparison matrix plus risk interpretation sidecar
+- live alert wall plus remediation log
+
+### 5.5 Emphasis Budget
+
+Every page has a limited emphasis budget.
+
+Use no more than 2 to 4 strong emphasis levers on one page:
+
+- large scale
+- dark surface
+- concentrated accent color
+- unusually dense data surface
+- oversized number
+- urgent status color
+
+If too many panels use strong emphasis, nothing stands out.
+
+### 5.6 Responsive Reprioritization
+
+Responsive behavior should re-order importance, not only stack blocks mechanically.
+
+On smaller widths:
+
+- keep the primary focal zone near the top
+- move tertiary logs or low-priority support panels downward
+- allow table regions to scroll horizontally when needed
+- preserve clarity of the active selection state
+
+### 5.7 Motion Hierarchy
+
+- The primary focal zone may receive the strongest entry or change-state motion.
+- Secondary support zones may animate more softly or only on explicit user interaction.
+- Tertiary context should usually stay still.
+- If more than one major surface is looping at the same time, the page is overspending its emphasis budget.
+
+## 6. Module Archetype Guidance
+
+These are directional defaults, not rigid templates.
+
+### Finance
+
+- lead with numbers, trend contrast, and scenario testing
+- compact KPI ribbon is acceptable because the metrics are themselves the story
+
+### Approvals
+
+- lead with workflow queue and selected case detail
+- timeline, conditions, and evidence should read as casework, not as dashboard cards
+
+### Procurement
+
+- lead with comparison, spread interpretation, and contract risk
+- supplier profile and risk scoring should support the main bid-evaluation surface
+
+### Milestones
+
+- lead with sequence, dependency, and impact propagation
+- the timeline should feel like the backbone of the page
+
+### Portfolio
+
+- lead with geography and selected project context
+- supporting metrics should frame the selected asset, not compete with the map
+
+### Progress, Quality, Safety
+
+- lead with live signals, anomalies, and operator response
+- emphasis can be sharper and more alert-driven than in planning modules
+
+## 7. Skill Usage Guidance
+
+- Use `skills/front-end-ui/SKILL.md` when the task is to protect shell fidelity, shared primitives, and baseline visual consistency.
+- Use `skills/module-visual-composition/SKILL.md` when the task is to improve focus, hierarchy, typography, or module distinction.
+- Use both when a module must become more visually legible without drifting from the shared Jarvis shell.
 
 ## 8. Allowed Changes
 
@@ -123,7 +301,9 @@ Allowed:
 - extracting shared components
 - moving inline data to typed files
 - minor spacing fixes needed for responsive stability
-- limited content edits required by new product scope
+- typography hierarchy adjustments inside module content
+- module-specific layout changes that preserve shell invariants
+- differentiated panel emphasis that remains inside the approved visual language
 
 Not allowed without explicit approval:
 
@@ -131,4 +311,5 @@ Not allowed without explicit approval:
 - changing the icon family
 - changing the white-theme direction
 - replacing dense operational cards with large minimalist sections
+- introducing arbitrary visual variation with no module rationale
 - using `reference-doc/PENDING` as live design input

@@ -1,5 +1,10 @@
 "use client";
 
+import type { Dispatch, SetStateAction } from "react";
+import { Suspense, useState } from "react";
+
+import { ChevronRight } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 
 import { getIcon } from "@/lib/icons";
@@ -11,7 +16,43 @@ interface SidebarProps {
   isOpen: boolean;
 }
 
-export function Sidebar({ pathname, isOpen }: SidebarProps) {
+interface SidebarContentProps extends SidebarProps {
+  currentHref: string;
+  expandedGroups: Record<string, boolean>;
+  setExpandedGroups: Dispatch<SetStateAction<Record<string, boolean>>>;
+}
+
+export function Sidebar(props: SidebarProps) {
+  const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({});
+
+  return (
+    <Suspense fallback={<SidebarContent {...props} currentHref={props.pathname} expandedGroups={expandedGroups} setExpandedGroups={setExpandedGroups} />}>
+      <SidebarSearchAware {...props} expandedGroups={expandedGroups} setExpandedGroups={setExpandedGroups} />
+    </Suspense>
+  );
+}
+
+function SidebarSearchAware({
+  pathname,
+  isOpen,
+  expandedGroups,
+  setExpandedGroups
+}: SidebarProps & Pick<SidebarContentProps, "expandedGroups" | "setExpandedGroups">) {
+  const searchParams = useSearchParams();
+  const currentHref = pathname === "/procurement" && searchParams.get("view") === "logs" ? "/procurement?view=logs" : pathname;
+
+  return (
+    <SidebarContent
+      pathname={pathname}
+      isOpen={isOpen}
+      currentHref={currentHref}
+      expandedGroups={expandedGroups}
+      setExpandedGroups={setExpandedGroups}
+    />
+  );
+}
+
+function SidebarContent({ pathname, isOpen, currentHref, expandedGroups, setExpandedGroups }: SidebarContentProps) {
   return (
     <aside
       className={cn(
@@ -45,25 +86,67 @@ export function Sidebar({ pathname, isOpen }: SidebarProps) {
             {section.items.map((item) => {
               const Icon = getIcon(item.icon);
               const isActive = pathname === item.href;
+              const hasChildren = Boolean(item.children?.length);
+              const isExpanded = expandedGroups[item.id] ?? isActive;
 
               return (
-                <Link
-                  key={item.id}
-                  href={item.href}
-                  className={cn(
-                    "w-full flex items-center space-x-3 px-3 py-2 rounded-xl transition-all group",
-                    isActive ? "bg-blue-50 text-blue-600 font-bold" : "text-gray-500 hover:bg-gray-50"
-                  )}
-                >
-                  <Icon
+                <div key={item.id} className="space-y-1">
+                  <div
                     className={cn(
-                      "w-4 h-4 shrink-0 transition-colors",
-                      isActive ? "text-blue-600" : "text-gray-400 group-hover:text-gray-900"
+                      "group flex items-center rounded-xl transition-all",
+                      isActive ? "bg-blue-50 text-blue-600 font-bold" : "text-gray-500 hover:bg-gray-50"
                     )}
-                  />
-                  {isOpen ? <span className="text-xs truncate">{item.label}</span> : null}
-                  {isActive && isOpen ? <div className="ml-auto w-1 h-1 bg-blue-600 rounded-full" /> : null}
-                </Link>
+                  >
+                    <Link href={item.href} className="flex min-w-0 flex-1 items-center space-x-3 px-3 py-2">
+                      <Icon
+                        className={cn(
+                          "h-4 w-4 shrink-0 transition-colors",
+                          isActive ? "text-blue-600" : "text-gray-400 group-hover:text-gray-900"
+                        )}
+                      />
+                      {isOpen ? <span className="truncate text-xs">{item.label}</span> : null}
+                      {isActive && isOpen && !hasChildren ? <div className="ml-auto h-1 w-1 rounded-full bg-blue-600" /> : null}
+                    </Link>
+
+                    {hasChildren && isOpen ? (
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setExpandedGroups((current) => ({
+                            ...current,
+                            [item.id]: !current[item.id]
+                          }))
+                        }
+                        className="mr-2 rounded-lg p-1 text-gray-400 transition-colors hover:bg-white/70 hover:text-gray-700"
+                        aria-label={isExpanded ? `Collapse ${item.label}` : `Expand ${item.label}`}
+                      >
+                        <ChevronRight className={cn("h-3.5 w-3.5 transition-transform", isExpanded ? "rotate-90" : "")} />
+                      </button>
+                    ) : null}
+                  </div>
+
+                  {hasChildren && isOpen && isExpanded ? (
+                    <div className="ml-7 space-y-1 border-l border-gray-100 pl-3">
+                      {item.children?.map((child) => {
+                        const isChildActive = currentHref === child.href;
+
+                        return (
+                          <Link
+                            key={child.id}
+                            href={child.href}
+                            className={cn(
+                              "flex items-center rounded-lg px-3 py-1.5 text-[11px] font-semibold transition-colors",
+                              isChildActive ? "bg-blue-50/80 text-blue-600" : "text-gray-500 hover:bg-gray-50 hover:text-gray-700"
+                            )}
+                          >
+                            <span className="truncate">{child.label}</span>
+                            {isChildActive ? <span className="ml-auto h-1 w-1 rounded-full bg-blue-600" /> : null}
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  ) : null}
+                </div>
               );
             })}
           </div>

@@ -1,5 +1,13 @@
-import { GenericModulePage } from "@/components/modules/generic/generic-module-page";
+import { ProcurementPage } from "@/components/modules/procurement/procurement-page";
 
-export default function ProcurementRoute() {
-  return <GenericModulePage moduleId="procurement" />;
+interface ProcurementRouteProps {
+  searchParams: Promise<{
+    view?: string;
+  }>;
+}
+
+export default async function ProcurementRoute({ searchParams }: ProcurementRouteProps) {
+  const { view } = await searchParams;
+
+  return <ProcurementPage initialView={view === "logs" ? "logs" : "workbench"} />;
 }

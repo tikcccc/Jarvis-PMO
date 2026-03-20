@@ -7,6 +7,8 @@ Define the typed mock-data contract for the frontend prototype so page structure
 ## 2. Core Types
 
 ```ts
+import type { IconName } from "@/lib/icons";
+
 export type ModuleId =
   | "dashboard"
   | "portfolio"
@@ -26,15 +28,20 @@ export type Tone = "default" | "info" | "success" | "warning" | "danger";
 
 export interface NavItem {
   id: ModuleId;
+  href: string;
   label: string;
-  icon: string;
-  group: "overview" | "portfolio" | "execution" | "site";
+  icon: IconName;
+}
+
+export interface NavSection {
+  label?: string;
+  items: NavItem[];
 }
 
 export interface ModuleMeta {
-  id: ModuleId;
+  id: Exclude<ModuleId, "dashboard">;
   title: string;
-  description: string;
+  desc: string;
   sections: string[];
 }
 
@@ -43,7 +50,7 @@ export interface MetricCard {
   label: string;
   value: string;
   tone: Tone;
-  icon: string;
+  icon: IconName;
 }
 
 export interface FeedItem {
@@ -96,13 +103,92 @@ export interface ApprovalRecord {
 
 export interface ApprovalCondition {
   id: number;
-  type: "precedent" | "subsequent";
+  type: "Precedent" | "Subsequent";
   content: string;
   status: string;
   tone: Tone;
   deadline?: string;
   progressPercent?: number;
   evidenceLabel?: string;
+}
+
+export interface ProcurementMetric {
+  id: string;
+  label: string;
+  value: string;
+  detail: string;
+  tone: Tone;
+  icon: IconName;
+}
+
+export interface ProcurementPackage {
+  id: string;
+  code: string;
+  name: string;
+  stage: string;
+  scope: string;
+  closingDate: string;
+  status: string;
+  tone: Tone;
+  bidderCount: number;
+  clarificationCount: number;
+  bqCoverage: string;
+  lead: string;
+  engineerEstimate: string;
+}
+
+export interface ProcurementRiskSignal {
+  id: string;
+  label: string;
+  value: string;
+  tone: Tone;
+}
+
+export interface ProcurementBidder {
+  id: string;
+  packageId: string;
+  supplierId: string;
+  name: string;
+  commercialOffer: string;
+  commercialSpread: string;
+  complianceScore: number;
+  bqDeviation: string;
+  riskScore: number;
+  riskLevel: string;
+  riskTone: Tone;
+  pricingPattern: string;
+  recommendedAction: string;
+  recommendedActionTone: Tone;
+  summary: string;
+  flags: string[];
+  riskSignals: ProcurementRiskSignal[];
+}
+
+export interface ProcurementSupplierProfile {
+  id: string;
+  name: string;
+  qualificationStatus: string;
+  qualificationTone: Tone;
+  historicProjects: string;
+  claimRatio: string;
+  responseTime: string;
+  integrityScore: number;
+  lastAward: string;
+  highlight: string;
+  redFlags: string[];
+}
+
+export interface ProcurementIssueLog {
+  id: string;
+  packageId: string;
+  bidderId?: string;
+  category: string;
+  title: string;
+  message: string;
+  owner: string;
+  status: string;
+  tone: Tone;
+  timeLabel: string;
 }
 ```
 
@@ -124,6 +210,14 @@ Suggested file mapping:
 - `lib/mock-data/approvals.ts`
   - `ApprovalRecord[]`
   - `ApprovalCondition[]`
+- `lib/mock-data/finance.ts`
+  - finance dashboard metrics, audit rows, and stress-test scaffolding
+- `lib/mock-data/procurement.ts`
+  - `ProcurementMetric[]`
+  - `ProcurementPackage[]`
+  - `Record<string, ProcurementBidder[]>`
+  - `Record<string, ProcurementSupplierProfile>`
+  - `ProcurementIssueLog[]`
 
 ## 5. Contract Rules
 

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Front End Motion"
+  short_description: "Keep Jarvis PMO motion enterprise-grade without shell drift"
+  default_prompt: "Use $front-end-motion to design or implement Jarvis PMO motion with a CSS-first baseline, Motion for React for spatial transitions, and GSAP or Lottie only for approved advanced cases."

@@ -136,7 +136,7 @@ export function FinancePage() {
             </div>
           </Card>
 
-          <Card className="p-6 bg-gray-900 text-white shadow-2xl shadow-blue-200/20">
+          <Card variant="emphasis" className="p-6 shadow-[0_28px_64px_rgba(59,130,246,0.14)]">
             <div className="flex items-center space-x-2 mb-4">
               <ArrowRightLeft className="w-4 h-4 text-blue-400" />
               <h3 className="jarvis-title-md uppercase tracking-widest text-white">Scenario Stress Test</h3>

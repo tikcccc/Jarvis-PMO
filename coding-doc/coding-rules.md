@@ -16,6 +16,10 @@ Keep the Next.js prototype implementation consistent with the approved reference
 - Framework: Next.js App Router
 - Language: TypeScript
 - Styling: Tailwind CSS plus shared CSS variables
+- Motion baseline: shared CSS motion layer in `styles/jarvis-ui/motion.css`
+- Spatial transitions: Motion for React (`motion/react`) only when layout or presence animation is required
+- Timeline-heavy sequences: GSAP only when CSS or Motion for React is not sufficient
+- Branded loop assets: Lottie only for contained approved surfaces
 - Icons: `lucide-react`
 - Quality gates:
   - `npm run lint`
@@ -26,9 +30,13 @@ Keep the Next.js prototype implementation consistent with the approved reference
 
 - Preserve the white-theme executive command-center visual language from the reference prototype.
 - Reuse shared primitives before creating page-local duplicates.
+- Reuse the shared motion layer before adding a runtime animation dependency.
 - Keep route files thin; place rich interactivity in module components.
+- Keep runtime animation logic isolated in client components instead of spreading transition objects across route files.
 - Do not replace dense operational layouts with marketing-style sections.
+- Do not animate the global shell theatrically; motion should clarify state and hierarchy inside module-local surfaces.
 - Keep icon size, badge tone, border radius, and card shadow behavior consistent across modules.
+- Honor `prefers-reduced-motion` when adding CSS or runtime motion.
 
 ## 5. Data and Typing Rules
 
@@ -47,5 +55,6 @@ Keep the Next.js prototype implementation consistent with the approved reference
 ## 7. Review Baseline
 
 - New routes and modules must preserve documented PMO naming.
+- Module-specific behavior and implementation status should be tracked in `coding-doc/modules/<module>.md`.
 - Architecture, data contract, acceptance criteria, and test strategy docs must stay aligned with implementation.
 - Changes that alter behavior or schema must update both code and `coding-doc/` in the same pass.

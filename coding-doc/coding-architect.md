@@ -47,6 +47,10 @@ Module naming must stay aligned with the reference documents. Do not rename modu
 - Framework: Next.js App Router
 - Language: TypeScript
 - Styling: Tailwind CSS plus shared CSS variables for durable UI tokens
+- Motion baseline: shared CSS motion layer in `styles/jarvis-ui/motion.css`
+- Spatial transitions: Motion for React (`motion/react`) only when layout or presence animation is needed
+- Timeline or SVG-heavy sequences: GSAP only in isolated client components
+- Designer-authored branded loops: Lottie JSON assets only for contained surfaces
 - Icons: `lucide-react`
 - Fonts: `Inter` or equivalent neutral sans for app chrome
 - Data source: local typed mock data for prototype phase
@@ -144,8 +148,15 @@ styles/
     base.css
     shell.css
     components.css
+    motion.css
     utilities.css
     index.css
+components/
+  motion/
+    ...
+lib/
+  motion/
+    ...
 ```
 
 ## 7. Rendering Model
@@ -199,6 +210,15 @@ The current prototype already defines a stable visual language. Preserve these p
 - Main values are bold and compact
 - Use grid-based dashboards, not large empty hero sections
 - Keep interaction language crisp and operational
+
+### 8.5 Motion System
+
+- Shared motion tokens, keyframes, and reduced-motion fallbacks live in `styles/jarvis-ui/motion.css`.
+- Default motion uses opacity plus short-distance translation, not large-scale travel.
+- The persistent shell should stay steady while module-local surfaces may animate.
+- Use Motion for React only for component-local layout or presence transitions.
+- Use GSAP and Lottie as approved exceptions for advanced analytical or branded surfaces.
+- Motion should help explain state change, focus, and hierarchy, not introduce a new visual language.
 
 ## 9. Module Composition Rules
 

@@ -1,0 +1,6 @@
+---
+interface:
+  display_name: "Jarvis Module Guardrails"
+  short_description: "Keep Jarvis module implementation and docs aligned with approved sources"
+  default_prompt: "Use $jarvis-module-guardrails to implement or document a Jarvis PMO module without drifting from reference-doc/IN, the current shared UI, or coding-doc."
+---

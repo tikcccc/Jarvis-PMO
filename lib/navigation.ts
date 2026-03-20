@@ -16,7 +16,16 @@ export const navigationSections: NavSection[] = [
   {
     label: "Execution",
     items: [
-      { id: "procurement", href: "/procurement", label: "Procurement", icon: "shoppingCart" },
+      {
+        id: "procurement",
+        href: "/procurement",
+        label: "Procurement",
+        icon: "shoppingCart",
+        children: [
+          { id: "procurement-workbench", href: "/procurement", label: "Workbench" },
+          { id: "procurement-logs", href: "/procurement?view=logs", label: "Logs" }
+        ]
+      },
       { id: "design", href: "/design", label: "Design (BIM-Cost)", icon: "penTool" },
       { id: "finance", href: "/finance", label: "Finance", icon: "wallet" },
       { id: "payment", href: "/payment", label: "Jarvis PAY", icon: "creditCard" }
