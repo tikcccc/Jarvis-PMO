@@ -93,7 +93,7 @@ export const moduleMetaById: Record<ModuleMeta["id"], ModuleMeta> = {
   safety: {
     id: "safety",
     title: "Project Safety Management",
-    desc: "Smart Site CMP & 9 指定 Site Modules",
+    desc: "Smart Site CMP & Site Modules",
     sections: [
       "Smart Video Analytics",
       "Personnel Location",
