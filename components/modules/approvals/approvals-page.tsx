@@ -4,7 +4,9 @@ import { useMemo, useState } from "react";
 import { ArrowRightLeft, Clock, ExternalLink, FileText, Filter, MoreVertical, Search, ShieldAlert, UploadCloud } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { IconButton } from "@/components/ui/icon-button";
 import { ProgressBar } from "@/components/ui/progress-bar";
 import { approvalConditionsByApprovalId, approvals, approvalStats } from "@/lib/mock-data/approvals";
 import { getIcon } from "@/lib/icons";
@@ -87,10 +89,10 @@ export function ApprovalsPage() {
           ))}
           <button
             type="button"
-            className="w-full py-4 border-2 border-dashed border-gray-100 rounded-xl flex flex-col items-center justify-center text-gray-400 hover:border-blue-200 hover:text-blue-500 transition-all"
+            className="flex w-full cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-gray-100 py-3.5 text-gray-400 transition-[border-color,color,transform] duration-200 hover:border-blue-200 hover:text-blue-500 motion-safe:hover:-translate-y-px"
           >
             <UploadCloud className="w-5 h-5 mb-1" />
-            <span className="jarvis-text-10 font-black uppercase tracking-widest">Upload New Approval Letter</span>
+            <span className="jarvis-control-label text-current">Upload New Approval Letter</span>
           </button>
         </div>
 
@@ -103,12 +105,12 @@ export function ApprovalsPage() {
               </p>
             </div>
             <div className="flex space-x-2">
-              <button type="button" className="p-2 hover:bg-white rounded-lg border border-transparent hover:border-gray-200">
+              <IconButton variant="surface">
                 <Filter className="w-4 h-4 text-gray-400" />
-              </button>
-              <button type="button" className="p-2 hover:bg-white rounded-lg border border-transparent hover:border-gray-200">
+              </IconButton>
+              <IconButton variant="surface">
                 <Search className="w-4 h-4 text-gray-400" />
-              </button>
+              </IconButton>
             </div>
           </div>
 
@@ -159,12 +161,12 @@ export function ApprovalsPage() {
                     )}
                   </div>
                   <div className="flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <button type="button" className="p-1.5 hover:bg-blue-50 text-gray-400 hover:text-blue-600 rounded">
+                    <IconButton size="sm" variant="blue">
                       <ExternalLink className="w-3.5 h-3.5" />
-                    </button>
-                    <button type="button" className="p-1.5 hover:bg-gray-100 text-gray-400 rounded">
+                    </IconButton>
+                    <IconButton size="sm">
                       <MoreVertical className="w-3.5 h-3.5" />
-                    </button>
+                    </IconButton>
                   </div>
                 </div>
               </div>
@@ -180,13 +182,13 @@ export function ApprovalsPage() {
                   Condition 103 (Heritage Wall) is currently 3 days from deadline with no evidence linked. Delaying this
                   will block &quot;Site Clearance Zone C&quot;, impacting master completion by <span className="font-bold">+5 Days</span>.
                 </p>
-                <div className="flex space-x-4 mt-3">
-                  <button type="button" className="jarvis-text-10 flex items-center font-bold uppercase tracking-widest text-rose-600 hover:underline">
-                    <ArrowRightLeft className="w-3 h-3 mr-1" /> Simulation Report
-                  </button>
-                  <button type="button" className="jarvis-text-10 flex items-center font-bold uppercase tracking-widest text-rose-600 hover:underline">
-                    <Clock className="w-3 h-3 mr-1" /> Request Extension
-                  </button>
+                <div className="mt-3 flex space-x-4">
+                  <Button variant="dangerText" size="inline">
+                    <ArrowRightLeft className="w-3 h-3" /> Simulation Report
+                  </Button>
+                  <Button variant="dangerText" size="inline">
+                    <Clock className="w-3 h-3" /> Request Extension
+                  </Button>
                 </div>
               </div>
             </div>

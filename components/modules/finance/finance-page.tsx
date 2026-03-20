@@ -1,7 +1,9 @@
 import { ArrowRightLeft, ArrowUpRight, CheckCircle2, ExternalLink, Maximize2, ShieldCheck } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { IconButton } from "@/components/ui/icon-button";
 import { ProgressBar } from "@/components/ui/progress-bar";
 import { getIcon } from "@/lib/icons";
 import { cashFlowBars, financeAuditRows, financeSummaryCards, highRiskVariationOrders } from "@/lib/mock-data/finance";
@@ -101,9 +103,9 @@ export function FinancePage() {
           <Card className="p-6">
             <div className="flex justify-between items-start mb-6">
               <h3 className="jarvis-title-md uppercase">VO Tracking (Black Box)</h3>
-              <button type="button" className="text-blue-600 hover:bg-blue-50 p-1 rounded transition-colors">
+              <IconButton variant="blue" size="sm">
                 <Maximize2 className="w-4 h-4" />
-              </button>
+              </IconButton>
             </div>
 
             <div className="space-y-4">
@@ -166,12 +168,9 @@ export function FinancePage() {
                     <p className="text-xs text-rose-400 font-bold italic">Cash Deficit Risk</p>
                     <p className="text-2xl font-black">HIGH</p>
                   </div>
-                  <button
-                    type="button"
-                    className="jarvis-text-10 rounded-lg bg-blue-600 px-4 py-2 font-black uppercase tracking-widest transition-all hover:bg-blue-500"
-                  >
+                  <Button variant="accent" size="sm">
                     Apply Strategy
-                  </button>
+                  </Button>
                 </div>
               </div>
             </div>
@@ -226,9 +225,9 @@ export function FinancePage() {
                     </div>
                   </td>
                   <td className="px-6 py-4 text-right">
-                    <button type="button" className="p-1.5 text-gray-300 group-hover:text-blue-500 transition-colors">
+                    <IconButton size="sm" className="border-transparent text-gray-300 hover:bg-transparent group-hover:text-blue-500">
                       <ExternalLink className="w-4 h-4" />
-                    </button>
+                    </IconButton>
                   </td>
                 </tr>
               ))}

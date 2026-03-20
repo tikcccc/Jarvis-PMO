@@ -40,6 +40,22 @@
   line-height: 1.125rem;
 }
 
+.jarvis-control-label {
+  font-size: 0.6875rem;
+  line-height: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.jarvis-control-label-compact {
+  font-size: 0.625rem;
+  line-height: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
 .jarvis-title-md {
   color: var(--jarvis-text);
   font-size: 0.9375rem;

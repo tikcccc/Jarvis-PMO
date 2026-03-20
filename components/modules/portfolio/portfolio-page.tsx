@@ -5,7 +5,9 @@ import { ChevronRight, ExternalLink, Filter, Layers, Search } from "lucide-react
 
 import { PortfolioMap } from "@/components/modules/portfolio/portfolio-map";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { IconButton } from "@/components/ui/icon-button";
 import { ProgressBar } from "@/components/ui/progress-bar";
 import { getIcon } from "@/lib/icons";
 import { portfolioProjectLogs, portfolioStats, projects } from "@/lib/mock-data/portfolio";
@@ -55,9 +57,9 @@ export function PortfolioPage() {
                 <Badge tone={selectedProject.tone}>{selectedProject.status}</Badge>
                 <h3 className="mt-2 text-lg font-bold tracking-tight text-gray-900">{selectedProject.name}</h3>
               </div>
-              <button type="button" className="text-gray-400 hover:text-blue-500 transition-colors">
+              <IconButton size="sm" variant="ghost">
                 <ExternalLink className="w-4 h-4" />
-              </button>
+              </IconButton>
             </div>
 
             <div className="flex-1 space-y-6 overflow-y-auto no-scrollbar">
@@ -99,12 +101,9 @@ export function PortfolioPage() {
               </div>
             </div>
 
-            <button
-              type="button"
-              className="mt-6 w-full rounded-xl bg-gray-900 py-3 text-xs font-bold text-white shadow-lg shadow-gray-200 transition-all hover:bg-black"
-            >
-              VIEW FULL PROJECT RECORD (SSOT)
-            </button>
+            <Button variant="primary" size="md" className="mt-6 w-full rounded-xl">
+              View Full Project Record (SSOT)
+            </Button>
           </Card>
         </div>
       </div>
@@ -116,12 +115,12 @@ export function PortfolioPage() {
             Project Portfolio Health Matrix
           </h3>
           <div className="flex space-x-2">
-            <button type="button" className="p-1.5 hover:bg-white rounded-lg border border-transparent hover:border-gray-200">
+            <IconButton variant="surface">
               <Filter className="w-4 h-4 text-gray-400" />
-            </button>
-            <button type="button" className="p-1.5 hover:bg-white rounded-lg border border-transparent hover:border-gray-200">
+            </IconButton>
+            <IconButton variant="surface">
               <Search className="w-4 h-4 text-gray-400" />
-            </button>
+            </IconButton>
           </div>
         </div>
         <table className="w-full text-left">
@@ -162,9 +161,9 @@ export function PortfolioPage() {
                 </td>
                 <td className="px-6 py-4 text-xs font-bold text-gray-900">{project.budgetLabel}</td>
                 <td className="px-6 py-4 text-right">
-                  <button type="button" className="p-1.5 text-gray-300 group-hover:text-blue-500 transition-colors">
+                  <IconButton size="sm" className="border-transparent text-gray-300 hover:bg-transparent group-hover:text-blue-500">
                     <ChevronRight className="w-4 h-4" />
-                  </button>
+                  </IconButton>
                 </td>
               </tr>
             ))}

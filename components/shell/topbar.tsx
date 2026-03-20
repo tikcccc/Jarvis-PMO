@@ -17,7 +17,7 @@ export function Topbar({ activeLabel, isSidebarOpen, onToggleSidebar }: TopbarPr
         <button
           type="button"
           onClick={onToggleSidebar}
-          className="p-1.5 hover:bg-gray-100 rounded-lg text-gray-400 transition-colors"
+          className="cursor-pointer rounded-lg p-1.5 text-gray-400 transition-[background-color,color,transform] duration-200 hover:bg-gray-100 motion-safe:hover:-translate-y-px"
           aria-label={isSidebarOpen ? "Collapse sidebar" : "Expand sidebar"}
         >
           <ChevronRight className={`w-5 h-5 transition-transform ${isSidebarOpen ? "rotate-180" : ""}`} />

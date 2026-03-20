@@ -1,6 +1,7 @@
 import { CheckCircle2, Clock, Database, ExternalLink, FileText, Milestone, Split, UploadCloud } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ProgressBar } from "@/components/ui/progress-bar";
 import { getIcon } from "@/lib/icons";
@@ -42,12 +43,9 @@ export function MilestonesPage() {
               <Milestone className="w-4 h-4 mr-2 text-blue-500" />
               Horizon Estate Development: Big Picture Timeline
             </h3>
-            <button
-              type="button"
-              className="flex items-center text-xs font-bold text-blue-600 bg-white px-3 py-1.5 rounded-lg border border-gray-100 shadow-sm"
-            >
-              <UploadCloud className="w-3 h-3 mr-2" /> INGEST P6 PLAN
-            </button>
+            <Button variant="secondary" size="sm">
+              <UploadCloud className="w-3 h-3" /> Ingest P6 Plan
+            </Button>
           </div>
 
           <div className="p-0">
@@ -141,12 +139,9 @@ export function MilestonesPage() {
                 ))}
               </div>
 
-              <button
-                type="button"
-                className="jarvis-text-10 w-full rounded-xl bg-blue-50/50 py-2.5 font-black uppercase tracking-widest text-blue-600 transition-colors hover:bg-blue-50"
-              >
-                OPTIMIZE CRITICAL PATH
-              </button>
+              <Button variant="subtle" size="md" className="w-full rounded-xl">
+                Optimize Critical Path
+              </Button>
             </div>
           </Card>
 

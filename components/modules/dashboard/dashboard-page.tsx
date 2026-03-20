@@ -1,5 +1,6 @@
 import { DashboardStrategicMapCard } from "@/components/modules/dashboard/dashboard-strategic-map-card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { getIcon } from "@/lib/icons";
 import { dashboardFeed, dashboardMetrics } from "@/lib/mock-data/dashboard";
@@ -84,12 +85,9 @@ export function DashboardPage() {
               </div>
             ))}
           </div>
-          <button
-            type="button"
-            className="w-full mt-6 py-2.5 text-xs font-bold text-blue-600 bg-blue-50/50 hover:bg-blue-50 rounded-xl transition-colors"
-          >
-            OPEN COMMAND LOGS
-          </button>
+          <Button variant="subtle" size="md" className="mt-6 w-full">
+            Open Command Logs
+          </Button>
         </Card>
       </div>
     </div>

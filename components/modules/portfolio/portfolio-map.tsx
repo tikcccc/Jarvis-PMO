@@ -47,12 +47,6 @@ const FALLBACK_PADDING = 14;
 
 type MapMode = keyof typeof MAP_STYLES;
 export type MarkerToneMode = "status" | "land" | "planning";
-export interface PortfolioMapOverlayContext {
-  containerSize: { width: number; height: number };
-  isFullscreen: boolean;
-  selectedProject: ProjectRecord;
-  selectedProjectScreenPosition: { x: number; y: number } | null;
-}
 
 interface PortfolioMapProps {
   projects: ProjectRecord[];
@@ -60,7 +54,7 @@ interface PortfolioMapProps {
   onSelectProject: (project: ProjectRecord) => void;
   markerToneMode?: MarkerToneMode;
   showFallbackBanner?: boolean;
-  overlay?: ReactNode | ((context: PortfolioMapOverlayContext) => ReactNode);
+  overlay?: ReactNode;
 }
 
 interface NormalizedProjectRecord extends ProjectRecord {
@@ -79,16 +73,9 @@ export function PortfolioMap({
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<MapRef | null>(null);
   const configuredMapModeRef = useRef<MapMode | null>(null);
-  const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
-  const [isFullscreen, setIsFullscreen] = useState(false);
   const [mapMode, setMapMode] = useState<MapMode>("map");
-  const [selectedProjectScreenPosition, setSelectedProjectScreenPosition] = useState<{ x: number; y: number } | null>(null);
   const token = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
   const normalizedProjects = useMemo(() => normalizeProjects(projects), [projects]);
-  const normalizedSelectedProject = useMemo(
-    () => normalizedProjects.find((project) => project.id === selectedProject.id) ?? null,
-    [normalizedProjects, selectedProject.id]
-  );
 
   const syncMapRuntime = useCallback(() => {
     const map = mapRef.current;
@@ -110,39 +97,6 @@ export function PortfolioMap({
     configuredMapModeRef.current = mapMode;
   }, [mapMode]);
 
-  const updateSelectedProjectScreenPosition = useCallback(() => {
-    const container = containerRef.current;
-
-    if (!container) {
-      return;
-    }
-
-    const nextContainerSize = {
-      width: container.clientWidth,
-      height: container.clientHeight
-    };
-
-    setContainerSize((currentSize) =>
-      currentSize.width === nextContainerSize.width && currentSize.height === nextContainerSize.height ? currentSize : nextContainerSize
-    );
-
-    if (token && mapRef.current) {
-      const point = mapRef.current.project([selectedProject.longitude, selectedProject.latitude]);
-      setSelectedProjectScreenPosition({ x: point.x, y: point.y });
-      return;
-    }
-
-    if (normalizedSelectedProject) {
-      setSelectedProjectScreenPosition({
-        x: (normalizedSelectedProject.left / 100) * nextContainerSize.width,
-        y: (normalizedSelectedProject.top / 100) * nextContainerSize.height
-      });
-      return;
-    }
-
-    setSelectedProjectScreenPosition(null);
-  }, [normalizedSelectedProject, selectedProject.latitude, selectedProject.longitude, token]);
-
   useEffect(() => {
     if (!token || !mapRef.current) {
       return;
@@ -155,10 +109,6 @@ export function PortfolioMap({
       zoom: Math.max(mapRef.current.getZoom(), 11)
     });
   }, [selectedProject, token]);
-
-  useEffect(() => {
-    updateSelectedProjectScreenPosition();
-  }, [selectedProject, updateSelectedProjectScreenPosition]);
 
   useEffect(() => {
     if (!token || !mapRef.current) {
@@ -175,14 +125,11 @@ export function PortfolioMap({
 
   useEffect(() => {
     if (!token || !containerRef.current) {
-      updateSelectedProjectScreenPosition();
-
       return;
     }
 
     const resizeMap = () => {
       mapRef.current?.resize();
-      updateSelectedProjectScreenPosition();
     };
 
     resizeMap();
@@ -200,27 +147,7 @@ export function PortfolioMap({
     return () => {
       observer.disconnect();
     };
-  }, [token, updateSelectedProjectScreenPosition]);
-
-  useEffect(() => {
-    if (typeof document === "undefined") {
-      return;
-    }
-
-    const syncFullscreenState = () => {
-      setIsFullscreen(document.fullscreenElement === containerRef.current);
-      requestAnimationFrame(() => {
-        mapRef.current?.resize();
-        updateSelectedProjectScreenPosition();
-      });
-    };
-
-    document.addEventListener("fullscreenchange", syncFullscreenState);
-
-    return () => {
-      document.removeEventListener("fullscreenchange", syncFullscreenState);
-    };
-  }, [updateSelectedProjectScreenPosition]);
+  }, [token]);
 
   async function handleToggleFullscreen() {
     if (!containerRef.current || typeof document === "undefined") {
@@ -231,7 +158,6 @@ export function PortfolioMap({
       await document.exitFullscreen();
       requestAnimationFrame(() => {
         mapRef.current?.resize();
-        updateSelectedProjectScreenPosition();
       });
       return;
     }
@@ -239,19 +165,8 @@ export function PortfolioMap({
     await containerRef.current.requestFullscreen?.();
     requestAnimationFrame(() => {
       mapRef.current?.resize();
-      updateSelectedProjectScreenPosition();
     });
   }
-
-  const resolvedOverlay =
-    typeof overlay === "function"
-      ? overlay({
-          containerSize,
-          isFullscreen,
-          selectedProject,
-          selectedProjectScreenPosition
-        })
-      : overlay;
 
   return (
     <div ref={containerRef} className="relative h-full w-full overflow-hidden rounded-xl">
@@ -263,7 +178,7 @@ export function PortfolioMap({
         <button
           type="button"
           onClick={handleToggleFullscreen}
-          className="p-1.5 bg-white/90 backdrop-blur shadow-sm border border-gray-100 rounded-lg text-gray-500 hover:text-gray-900 transition-colors"
+          className="cursor-pointer rounded-lg border border-gray-100 bg-white/90 p-1.5 text-gray-500 shadow-sm backdrop-blur transition-[background-color,color,transform] duration-200 hover:text-gray-900 motion-safe:hover:-translate-y-px"
           aria-label="Toggle fullscreen map"
         >
           <Maximize2 className="w-3.5 h-3.5" />
@@ -287,15 +202,10 @@ export function PortfolioMap({
           reuseMaps
           onStyleData={() => {
             syncMapRuntime();
-            updateSelectedProjectScreenPosition();
           }}
           onLoad={() => {
             mapRef.current?.resize();
             syncMapRuntime();
-            updateSelectedProjectScreenPosition();
-          }}
-          onMove={() => {
-            updateSelectedProjectScreenPosition();
           }}
         >
           <AttributionControl position="bottom-right" />
@@ -332,7 +242,7 @@ export function PortfolioMap({
         </div>
       ) : null}
 
-      {resolvedOverlay}
+      {overlay}
     </div>
   );
 }
@@ -347,7 +257,7 @@ function MapModeToggle({ mapMode, onChange }: { mapMode: MapMode; onChange: (mod
           onClick={() => onChange(mode)}
           aria-pressed={mapMode === mode}
           className={cn(
-            "jarvis-text-10 px-3 py-1 font-bold rounded-md transition-colors",
+            "jarvis-control-label-compact cursor-pointer rounded-md px-3 py-1 transition-[background-color,color,transform,box-shadow] duration-200 motion-safe:hover:-translate-y-px",
             mapMode === mode ? "bg-gray-900 text-white shadow" : "text-gray-400 hover:bg-gray-50"
           )}
         >
@@ -440,7 +350,7 @@ function ProjectMarkerButton({
         event.stopPropagation();
         onSelectProject(project);
       }}
-      className="flex flex-col items-center transition-transform hover:scale-110"
+      className="flex cursor-pointer flex-col items-center transition-transform duration-200 hover:scale-105 motion-safe:hover:-translate-y-0.5"
     >
       <div
         className={cn(

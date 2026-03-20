@@ -1,7 +1,9 @@
 import { Activity, ChevronRight, Database, Eye, Scan } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { IconButton } from "@/components/ui/icon-button";
 import { moduleMetaById } from "@/lib/mock-data/modules";
 import type { ModuleMeta } from "@/lib/types";
 
@@ -20,15 +22,12 @@ export function GenericModulePage({ moduleId }: GenericModulePageProps) {
           <p className="jarvis-page-copy mt-1">{moduleConfig.desc}</p>
         </div>
         <div className="flex space-x-2">
-          <button type="button" className="px-4 py-2 bg-white border border-gray-200 rounded-lg text-xs font-bold hover:bg-gray-50">
-            AUDIT LOGS
-          </button>
-          <button
-            type="button"
-            className="px-4 py-2 bg-gray-900 text-white rounded-lg text-xs font-bold hover:bg-gray-800 shadow-lg shadow-gray-200"
-          >
-            INITIATE AGENT
-          </button>
+          <Button variant="secondary" size="md">
+            Audit Logs
+          </Button>
+          <Button variant="primary" size="md">
+            Initiate Agent
+          </Button>
         </div>
       </div>
 
@@ -61,12 +60,12 @@ export function GenericModulePage({ moduleId }: GenericModulePageProps) {
               <span className="jarvis-text-10 font-bold uppercase text-gray-900">Live Site Perception: Jarvis Eagle Eye</span>
             </div>
             <div className="flex space-x-2">
-              <button type="button" className="p-1 hover:bg-gray-200 rounded">
+              <IconButton size="sm" className="h-7 w-7 hover:bg-gray-200">
                 <Scan className="w-4 h-4 text-gray-500" />
-              </button>
-              <button type="button" className="p-1 hover:bg-gray-200 rounded">
+              </IconButton>
+              <IconButton size="sm" className="h-7 w-7 hover:bg-gray-200">
                 <Eye className="w-4 h-4 text-gray-500" />
-              </button>
+              </IconButton>
             </div>
           </div>
           <div className="h-[400px] bg-black relative flex items-center justify-center">
