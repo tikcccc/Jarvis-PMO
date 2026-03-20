@@ -1,0 +1,98 @@
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.animate-in {
+  animation-duration: 0.35s;
+  animation-fill-mode: both;
+}
+
+.fade-in {
+  animation-name: jarvis-fade-in;
+}
+
+.slide-in-from-right-4 {
+  animation-name: jarvis-slide-in-right;
+}
+
+.jarvis-text-10 {
+  font-size: 0.625rem;
+  line-height: 1rem;
+}
+
+.jarvis-text-10-tight {
+  font-size: 0.625rem;
+  line-height: 0.875rem;
+}
+
+.jarvis-text-11 {
+  font-size: 0.6875rem;
+  line-height: 1rem;
+}
+
+.jarvis-text-11-relaxed {
+  font-size: 0.6875rem;
+  line-height: 1.125rem;
+}
+
+.jarvis-title-md {
+  color: var(--jarvis-text);
+  font-size: 0.9375rem;
+  line-height: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.jarvis-title-sm {
+  color: var(--jarvis-text);
+  font-size: 0.875rem;
+  line-height: 1.125rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.jarvis-copy-sm {
+  color: #6b7280;
+  font-size: 0.75rem;
+  line-height: 1.25rem;
+  font-weight: 500;
+}
+
+.jarvis-copy-xs {
+  color: #6b7280;
+  font-size: 0.6875rem;
+  line-height: 1rem;
+  font-weight: 500;
+}
+
+.jarvis-page-copy {
+  color: #6b7280;
+  font-size: 0.875rem;
+  line-height: 1.375rem;
+  font-weight: 500;
+}
+
+@keyframes jarvis-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes jarvis-slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(1rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}

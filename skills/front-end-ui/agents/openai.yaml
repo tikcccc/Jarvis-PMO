@@ -1,0 +1,4 @@
+interface:
+  display_name: "Front End UI"
+  short_description: "Keep Jarvis PMO UI consistent while editing or migrating to Next.js"
+  default_prompt: "Use $front-end-ui to extend the Jarvis PMO frontend while preserving the current prototype layout, icons, and style consistency."

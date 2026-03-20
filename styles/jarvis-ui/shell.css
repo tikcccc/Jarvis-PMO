@@ -1,0 +1,8 @@
+.jarvis-shell {
+  min-height: 100vh;
+  background: var(--jarvis-bg);
+}
+
+.jarvis-content {
+  background: var(--jarvis-bg);
+}

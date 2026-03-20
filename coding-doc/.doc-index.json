@@ -1,0 +1,450 @@
+{
+  "doc_dir": "/home/tikhong/Jarvis PMO/coding-doc",
+  "files_count": 7,
+  "files": [
+    {
+      "file": "/home/tikhong/Jarvis PMO/coding-doc/acceptance-criteria.md",
+      "title": "Jarvis PMO Prototype Acceptance Criteria",
+      "heading_count": 8,
+      "headings": [
+        {
+          "line": 1,
+          "level": 1,
+          "text": "Jarvis PMO Prototype Acceptance Criteria"
+        },
+        {
+          "line": 3,
+          "level": 2,
+          "text": "1. Source Governance"
+        },
+        {
+          "line": 9,
+          "level": 2,
+          "text": "2. Product Structure"
+        },
+        {
+          "line": 15,
+          "level": 2,
+          "text": "3. Visual Fidelity"
+        },
+        {
+          "line": 22,
+          "level": 2,
+          "text": "4. Layout Consistency"
+        },
+        {
+          "line": 29,
+          "level": 2,
+          "text": "5. Behavioral Consistency"
+        },
+        {
+          "line": 36,
+          "level": 2,
+          "text": "6. Technical Acceptance"
+        },
+        {
+          "line": 43,
+          "level": 2,
+          "text": "7. Delivery Constraint"
+        }
+      ]
+    },
+    {
+      "file": "/home/tikhong/Jarvis PMO/coding-doc/api-spec.md",
+      "title": "Jarvis PMO Prototype API Spec",
+      "heading_count": 7,
+      "headings": [
+        {
+          "line": 1,
+          "level": 1,
+          "text": "Jarvis PMO Prototype API Spec"
+        },
+        {
+          "line": 3,
+          "level": 2,
+          "text": "1. Scope"
+        },
+        {
+          "line": 7,
+          "level": 2,
+          "text": "2. Preferred Access Pattern"
+        },
+        {
+          "line": 22,
+          "level": 2,
+          "text": "3. Optional Future Route Handlers"
+        },
+        {
+          "line": 36,
+          "level": 2,
+          "text": "4. Response Shape Rules"
+        },
+        {
+          "line": 42,
+          "level": 2,
+          "text": "5. Error Handling"
+        },
+        {
+          "line": 50,
+          "level": 2,
+          "text": "6. Source Governance"
+        }
+      ]
+    },
+    {
+      "file": "/home/tikhong/Jarvis PMO/coding-doc/coding-architect.md",
+      "title": "Jarvis PMO Prototype Architecture",
+      "heading_count": 20,
+      "headings": [
+        {
+          "line": 1,
+          "level": 1,
+          "text": "Jarvis PMO Prototype Architecture"
+        },
+        {
+          "line": 3,
+          "level": 2,
+          "text": "1. Objective"
+        },
+        {
+          "line": 7,
+          "level": 2,
+          "text": "2. Source Priority"
+        },
+        {
+          "line": 23,
+          "level": 2,
+          "text": "3. Product Information Architecture"
+        },
+        {
+          "line": 45,
+          "level": 2,
+          "text": "4. Technology Decisions"
+        },
+        {
+          "line": 55,
+          "level": 2,
+          "text": "5. Architectural Principles"
+        },
+        {
+          "line": 57,
+          "level": 3,
+          "text": "5.1 High-Fidelity Before Expansion"
+        },
+        {
+          "line": 63,
+          "level": 3,
+          "text": "5.2 Shared Shell First"
+        },
+        {
+          "line": 73,
+          "level": 3,
+          "text": "5.3 Mocked Data, Real Component Boundaries"
+        },
+        {
+          "line": 82,
+          "level": 2,
+          "text": "6. Proposed Next.js File Structure"
+        },
+        {
+          "line": 149,
+          "level": 2,
+          "text": "7. Rendering Model"
+        },
+        {
+          "line": 156,
+          "level": 2,
+          "text": "8. Shared UI System"
+        },
+        {
+          "line": 160,
+          "level": 3,
+          "text": "8.1 Global Shell"
+        },
+        {
+          "line": 167,
+          "level": 3,
+          "text": "8.2 Primitive Components"
+        },
+        {
+          "line": 185,
+          "level": 3,
+          "text": "8.3 Accent System"
+        },
+        {
+          "line": 193,
+          "level": 3,
+          "text": "8.4 Information Density"
+        },
+        {
+          "line": 200,
+          "level": 2,
+          "text": "9. Module Composition Rules"
+        },
+        {
+          "line": 211,
+          "level": 2,
+          "text": "10. Data Ownership"
+        },
+        {
+          "line": 224,
+          "level": 2,
+          "text": "11. Migration Strategy From Existing Prototype"
+        },
+        {
+          "line": 232,
+          "level": 2,
+          "text": "12. Non-Goals For This Phase"
+        }
+      ]
+    },
+    {
+      "file": "/home/tikhong/Jarvis PMO/coding-doc/coding-plan.md",
+      "title": "Jarvis PMO Prototype Delivery Plan",
+      "heading_count": 10,
+      "headings": [
+        {
+          "line": 1,
+          "level": 1,
+          "text": "Jarvis PMO Prototype Delivery Plan"
+        },
+        {
+          "line": 3,
+          "level": 2,
+          "text": "Goal"
+        },
+        {
+          "line": 7,
+          "level": 2,
+          "text": "Phase 1. Document and Freeze the Baseline"
+        },
+        {
+          "line": 14,
+          "level": 2,
+          "text": "Phase 2. Scaffold the Next.js Frontend"
+        },
+        {
+          "line": 21,
+          "level": 2,
+          "text": "Phase 3. Extract Shared UI"
+        },
+        {
+          "line": 30,
+          "level": 2,
+          "text": "Phase 4. Migrate High-Fidelity Screens"
+        },
+        {
+          "line": 42,
+          "level": 2,
+          "text": "Phase 5. Migrate Remaining Modules"
+        },
+        {
+          "line": 55,
+          "level": 2,
+          "text": "Phase 6. QA and Consistency Pass"
+        },
+        {
+          "line": 62,
+          "level": 2,
+          "text": "Deliverables"
+        },
+        {
+          "line": 69,
+          "level": 2,
+          "text": "Implementation Constraints"
+        }
+      ]
+    },
+    {
+      "file": "/home/tikhong/Jarvis PMO/coding-doc/data-contract.md",
+      "title": "Jarvis PMO Prototype Data Contract",
+      "heading_count": 7,
+      "headings": [
+        {
+          "line": 1,
+          "level": 1,
+          "text": "Jarvis PMO Prototype Data Contract"
+        },
+        {
+          "line": 3,
+          "level": 2,
+          "text": "1. Purpose"
+        },
+        {
+          "line": 7,
+          "level": 2,
+          "text": "2. Core Types"
+        },
+        {
+          "line": 58,
+          "level": 2,
+          "text": "3. Page-Specific Types"
+        },
+        {
+          "line": 108,
+          "level": 2,
+          "text": "4. Data File Ownership"
+        },
+        {
+          "line": 127,
+          "level": 2,
+          "text": "5. Contract Rules"
+        },
+        {
+          "line": 134,
+          "level": 2,
+          "text": "6. Input Source Rule"
+        }
+      ]
+    },
+    {
+      "file": "/home/tikhong/Jarvis PMO/coding-doc/test-strategy.md",
+      "title": "Jarvis PMO Prototype Test Strategy",
+      "heading_count": 10,
+      "headings": [
+        {
+          "line": 1,
+          "level": 1,
+          "text": "Jarvis PMO Prototype Test Strategy"
+        },
+        {
+          "line": 3,
+          "level": 2,
+          "text": "1. Objective"
+        },
+        {
+          "line": 7,
+          "level": 2,
+          "text": "2. Validation Layers"
+        },
+        {
+          "line": 9,
+          "level": 3,
+          "text": "2.1 Static Checks"
+        },
+        {
+          "line": 15,
+          "level": 3,
+          "text": "2.2 Component and Route Smoke Checks"
+        },
+        {
+          "line": 22,
+          "level": 3,
+          "text": "2.3 Visual Regression Focus"
+        },
+        {
+          "line": 32,
+          "level": 2,
+          "text": "3. Manual QA Checklist"
+        },
+        {
+          "line": 47,
+          "level": 2,
+          "text": "4. Recommended Automated UI Coverage"
+        },
+        {
+          "line": 60,
+          "level": 2,
+          "text": "5. Content Integrity Checks"
+        },
+        {
+          "line": 67,
+          "level": 2,
+          "text": "6. Exit Criteria"
+        }
+      ]
+    },
+    {
+      "file": "/home/tikhong/Jarvis PMO/coding-doc/ui-consistency.md",
+      "title": "Jarvis PMO UI Consistency Spec",
+      "heading_count": 17,
+      "headings": [
+        {
+          "line": 1,
+          "level": 1,
+          "text": "Jarvis PMO UI Consistency Spec"
+        },
+        {
+          "line": 3,
+          "level": 2,
+          "text": "1. Visual Intent"
+        },
+        {
+          "line": 9,
+          "level": 2,
+          "text": "2. Reference Baseline"
+        },
+        {
+          "line": 19,
+          "level": 2,
+          "text": "3. Shell Formula"
+        },
+        {
+          "line": 38,
+          "level": 2,
+          "text": "4. Token Direction"
+        },
+        {
+          "line": 40,
+          "level": 3,
+          "text": "Colors"
+        },
+        {
+          "line": 51,
+          "level": 3,
+          "text": "Radius and Elevation"
+        },
+        {
+          "line": 57,
+          "level": 3,
+          "text": "Typography"
+        },
+        {
+          "line": 64,
+          "level": 2,
+          "text": "5. Shared Component Semantics"
+        },
+        {
+          "line": 66,
+          "level": 3,
+          "text": "Cards"
+        },
+        {
+          "line": 73,
+          "level": 3,
+          "text": "Badges"
+        },
+        {
+          "line": 79,
+          "level": 3,
+          "text": "Progress Indicators"
+        },
+        {
+          "line": 85,
+          "level": 3,
+          "text": "Tables and Lists"
+        },
+        {
+          "line": 91,
+          "level": 3,
+          "text": "Dark Panels"
+        },
+        {
+          "line": 101,
+          "level": 2,
+          "text": "6. Icon Rules"
+        },
+        {
+          "line": 108,
+          "level": 2,
+          "text": "7. Page Anatomy"
+        },
+        {
+          "line": 119,
+          "level": 2,
+          "text": "8. Allowed Changes"
+        }
+      ]
+    }
+  ]
+}

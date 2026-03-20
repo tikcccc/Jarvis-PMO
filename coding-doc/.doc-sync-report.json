@@ -1,0 +1,91 @@
+{
+  "doc_dir": "/home/tikhong/Jarvis PMO/coding-doc",
+  "ok": false,
+  "issues": [
+    {
+      "severity": "warn",
+      "code": "ARCH_STACK_INCOMPLETE",
+      "message": "coding-architect.md should explicitly include Next.js and FastAPI."
+    },
+    {
+      "severity": "warn",
+      "code": "PLAN_MILESTONE_WEAK",
+      "message": "coding-plan.md should define at least M0/M1/M2 milestones."
+    },
+    {
+      "severity": "error",
+      "code": "API_ENDPOINT_MISSING",
+      "message": "api-spec.md missing endpoint: /evidence/resolve"
+    },
+    {
+      "severity": "warn",
+      "code": "CONTRACT_KEYWORD_MISSING",
+      "message": "data-contract.md missing keyword: EvidenceAnchor"
+    },
+    {
+      "severity": "error",
+      "code": "API_ENDPOINT_MISSING",
+      "message": "api-spec.md missing endpoint: /exports/report"
+    },
+    {
+      "severity": "warn",
+      "code": "CONTRACT_KEYWORD_MISSING",
+      "message": "data-contract.md missing keyword: ExportRequest"
+    },
+    {
+      "severity": "error",
+      "code": "API_ENDPOINT_MISSING",
+      "message": "api-spec.md missing endpoint: /templates/nec"
+    },
+    {
+      "severity": "warn",
+      "code": "CONTRACT_KEYWORD_MISSING",
+      "message": "data-contract.md missing keyword: StandardTemplate"
+    },
+    {
+      "severity": "warn",
+      "code": "AC_GROUP_MISSING",
+      "message": "acceptance-criteria.md may be missing requirement group: Standard"
+    },
+    {
+      "severity": "warn",
+      "code": "AC_GROUP_MISSING",
+      "message": "acceptance-criteria.md may be missing requirement group: 優先級"
+    },
+    {
+      "severity": "warn",
+      "code": "AC_GROUP_MISSING",
+      "message": "acceptance-criteria.md may be missing requirement group: 卡片"
+    },
+    {
+      "severity": "warn",
+      "code": "AC_GROUP_MISSING",
+      "message": "acceptance-criteria.md may be missing requirement group: 導出"
+    },
+    {
+      "severity": "warn",
+      "code": "TEST_STRATEGY_GAP",
+      "message": "test-strategy.md missing keyword: E2E"
+    },
+    {
+      "severity": "warn",
+      "code": "TEST_STRATEGY_GAP",
+      "message": "test-strategy.md missing keyword: API"
+    },
+    {
+      "severity": "warn",
+      "code": "TEST_STRATEGY_GAP",
+      "message": "test-strategy.md missing keyword: Evidence"
+    },
+    {
+      "severity": "warn",
+      "code": "TEST_STRATEGY_GAP",
+      "message": "test-strategy.md missing keyword: 回歸"
+    },
+    {
+      "severity": "warn",
+      "code": "RULES_SYNC_REFERENCE_GAP",
+      "message": "coding-rules.md should reference api-spec.md and data-contract.md sync."
+    }
+  ]
+}

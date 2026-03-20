@@ -1,0 +1,1213 @@
+import React, { useState, useEffect } from 'react';
+import { 
+  LayoutDashboard, 
+  Layers, 
+  Target, 
+  Milestone, 
+  FileCheck, 
+  ShoppingCart, 
+  PenTool, 
+  Wallet, 
+  CreditCard, 
+  Eye, 
+  ShieldCheck, 
+  HardHat, 
+  Key,
+  Search,
+  Bell,
+  MoreVertical,
+  ChevronRight,
+  ArrowUpRight,
+  TrendingUp,
+  MapPin,
+  Activity,
+  CheckCircle2,
+  AlertCircle,
+  Clock,
+  Scan,
+  Database,
+  Filter,
+  Maximize2,
+  ExternalLink,
+  Info,
+  Calendar,
+  FileText,
+  UploadCloud,
+  Split,
+  ShieldAlert,
+  ArrowRightLeft,
+  DollarSign,
+  BarChart3,
+  Percent,
+  AlertTriangle
+} from 'lucide-react';
+
+// --- Utility Components ---
+
+const Card = ({ children, className = "" }) => (
+  <div className={`bg-white rounded-xl border border-gray-100 shadow-sm transition-all hover:shadow-md ${className}`}>
+    {children}
+  </div>
+);
+
+const Badge = ({ children, variant = "default" }) => {
+  const styles = {
+    default: "bg-gray-100 text-gray-700",
+    success: "bg-emerald-50 text-emerald-700 border border-emerald-100",
+    warning: "bg-amber-50 text-amber-700 border border-amber-100",
+    danger: "bg-rose-50 text-rose-700 border border-rose-100",
+    info: "bg-blue-50 text-blue-700 border border-blue-100",
+  };
+  return (
+    <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${styles[variant]}`}>
+      {children}
+    </span>
+  );
+};
+
+// --- Data Configuration ---
+
+const PROJECTS = [
+  { id: 1, name: "Horizon Estates Phase I", status: "On Track", health: "success", budget: "$120M", approval: "92%", land: "Cleared", lat: 40, lng: 30 },
+  { id: 2, name: "Harbor View Tower", status: "At Risk", health: "warning", budget: "$85M", approval: "45%", land: "Contested", lat: 60, lng: 50 },
+  { id: 3, name: "Oakwood Business Park", status: "Delayed", health: "danger", budget: "$210M", approval: "12%", land: "Pending", lat: 30, lng: 70 },
+  { id: 4, name: "Central Metro Hub", status: "On Track", health: "success", budget: "$340M", approval: "100%", land: "Cleared", lat: 70, lng: 20 },
+];
+
+const HORIZON_MILESTONES = [
+  { id: 1, stage: "Pre-Construction", title: "Land Acquisition & Title Deed", date: "2025-10-15", status: "Completed", health: "success", evidence: "Deed_Ref_772.pdf", agent: true },
+  { id: 2, stage: "Approvals", title: "Master Plan (GBP) Approval", date: "2026-01-20", status: "Completed", health: "success", evidence: "BD_Appr_2026.pdf", agent: true },
+  { id: 3, stage: "Site Works", title: "Foundation & Piling Commencement", date: "2026-03-01", status: "In Progress", health: "success", progress: 85, agent: true },
+  { id: 4, stage: "Site Works", title: "Superstructure Main Contract Award", date: "2026-05-15", status: "Pending", health: "warning", agent: false },
+  { id: 5, stage: "Construction", title: "Tower A Structural Topping Out", date: "2027-02-10", status: "Pending", health: "default", agent: false },
+  { id: 6, stage: "Approvals", title: "Occupation Permit (OP) Issuance", date: "2027-11-30", status: "Pending", health: "default", agent: false },
+  { id: 7, stage: "Handover", title: "Final Unit Handover (DLV)", date: "2028-03-15", status: "Pending", health: "default", agent: false },
+];
+
+const APPROVALS_LIST = [
+  { id: 1, title: "General Building Plan (GBP)", dept: "Buildings Department", ref: "BD/GP/2026/042", status: "Approved", health: "success", conditions: 12, closed: 10, lastUpdate: "2h ago" },
+  { id: 2, title: "Environmental Permit", dept: "EPD", ref: "EPD/A/882-01", status: "Under Review", health: "warning", conditions: 8, closed: 3, lastUpdate: "1d ago" },
+  { id: 3, title: "Tree Preservation Order", dept: "LCSD", ref: "LCSD/TPO/77", status: "Pending", health: "danger", conditions: 4, closed: 0, lastUpdate: "3d ago" },
+  { id: 4, title: "Fire Safety Approval", dept: "FSD", ref: "FSD/FS/992", status: "Approved", health: "success", conditions: 15, closed: 15, lastUpdate: "1w ago" },
+];
+
+const SELECTED_APPROVAL_CONDITIONS = [
+  { id: 101, type: "Precedent", content: "Submit revised Traffic Impact Assessment (TIA) reflecting Metro Hub Phase 2.", status: "Fulfilled", deadline: "2026-03-01", evidence: "TIA_Final_v2.pdf" },
+  { id: 102, type: "Subsequent", content: "Provide on-site air quality monitoring data every 14 days during excavation.", status: "Active", deadline: "2026-04-15", progress: 65 },
+  { id: 103, type: "Precedent", content: "Endorsement of Heritage Protection Plan for East Perimeter Wall.", status: "Pending", deadline: "2026-03-25", health: "danger" },
+  { id: 104, type: "Subsequent", content: "Submission of 'As-Built' drainage records within 30 days of Phase 1 completion.", status: "Pending", deadline: "2027-10-10", health: "default" },
+];
+
+const MODULE_DATA = {
+  Portfolio: {
+    title: "Project Portfolio Management",
+    desc: "Single Source of Truth (SSOT) Digital Command Center",
+    sections: ["Automated Recording via Agents", "SSOT Central Database", "Intelligent Threshold Alerting", "Strategic Dashboard"]
+  },
+  Requirements: {
+    title: "Project Requirements Management",
+    desc: "The Project's Digital Gene Bank (9 Key Elements)",
+    sections: ["Client Requirements", "Project Brief", "Feasibility Studies", "Site Information", "Project Budget", "Project Programme", "Procurement Strategy", "Responsibility Matrix", "Information Requirements"]
+  },
+  Milestones: {
+    title: "Project Milestone Management",
+    desc: "Critical Path Prediction & Control",
+    sections: ["Agent-Driven Plan Parsing", "Multi-Source Evidence Tracking", "Dynamic Baseline Management", "Delay Prediction Engine"]
+  },
+  Approvals: {
+    title: "Project Government Approval Management",
+    desc: "Condition Tracking & Compliance Loop",
+    sections: ["Agent-Driven Condition Extraction", "Compliance Evidence Capture", "Approval SSOT Database", "Delay Impact Simulation"]
+  },
+  Procurement: {
+    title: "Project Procurement Management",
+    desc: "Zero-Dispute Supply Chain & Tender Validation",
+    sections: ["Digital BQ Validation", "Compliance Auditing", "Contractual Risk Prediction", "Intelligent Tender Evaluation", "Service Provider Profiling"]
+  },
+  Design: {
+    title: "Project Design Management",
+    desc: "Real-time BIM-Cost Synchronization",
+    sections: ["Intelligent BIM Consistency", "Digital Specification Management", "Real-Time Cost Estimation", "Design Health Monitoring"]
+  },
+  Finance: {
+    title: "Project Finance Management",
+    desc: "7 Core Financial Elements (Budget to VO Sum)",
+    sections: ["Total Funding & Revenue", "Total Budget Control", "Planned vs Awarded Contracts", "Invoiced vs Paid Tracking", "VO Sum Management", "Cash Flow Forecasting", "Anomaly Detection"]
+  },
+  Payment: {
+    title: "Project Payment Management (Jarvis PAY)",
+    desc: "Zero-Dispute Multi-Contract Engine (NEC/GCC/EPC)",
+    sections: ["Multi-Contract Rule Engine", "Objective Progress Verification", "Real-Time CE/VO Integration", "Blockchain Audit Trail"]
+  },
+  Progress: {
+    title: "Project Progress Management",
+    desc: "Jarvis Eagle Eye & Progress Agent",
+    sections: ["360° Site Data Capture", "AI Trade Recognition", "Visual Quantity Tracking", "4D Progress Dashboard"]
+  },
+  Quality: {
+    title: "Project Quality Management (Jarvis DWSS)",
+    desc: "Zero-Defect Digital Work Supervision",
+    sections: ["Work Commence / Completion Approval", "Biometric Personnel Tracking", "Dynamic RFI Tracking", "Automated Site Daily"]
+  },
+  Safety: {
+    title: "Project Safety Management",
+    desc: "Smart Site CMP & 9 指定 Site Modules",
+    sections: ["Smart Video Analytics", "Personnel Location", "Tower Crane Monitoring", "Hoisting Safety", "Environmental Monitoring", "Excavation/Slope Sensors", "Gas Detection", "Structural Health", "Drone Inspection"]
+  },
+  Handover: {
+    title: "Project Handover Management",
+    desc: "Digital Twin & Zero-Defect Delivery",
+    sections: ["AI Auto-Defect Detection", "Digital Rectification Loop", "Reality-vs-Model Verification", "Interactive User Manual"]
+  }
+};
+
+// --- View Components ---
+
+const FinancePageView = () => {
+  return (
+    <div className="space-y-6 animate-in fade-in duration-500">
+      {/* 7 Core Elements Dashboard */}
+      <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-7 gap-3">
+        {[
+          { label: "Total Funding", val: "$500M", color: "blue", icon: DollarSign },
+          { label: "Total Budget", val: "$450M", color: "slate", icon: Target },
+          { label: "Planned Contracts", val: "$400M", color: "indigo", icon: FileText },
+          { label: "Awarded Contracts", val: "$320M", color: "emerald", icon: CheckCircle2 },
+          { label: "Invoiced Sum", val: "$180M", color: "amber", icon: BarChart3 },
+          { label: "Paid Sum", val: "$165M", color: "blue", icon: CreditCard },
+          { label: "VO Sum (confirmed)", val: "$12.4M", color: "rose", icon: AlertTriangle },
+        ].map((item, i) => (
+          <Card key={i} className="p-3 border-t-2" style={{ borderTopColor: `var(--color-${item.color}-500)` }}>
+            <div className="flex justify-between items-start mb-2">
+              <div className={`p-1.5 rounded bg-${item.color}-50 text-${item.color}-600`}>
+                <item.icon className="w-3.5 h-3.5" />
+              </div>
+              <Badge variant="info">SSOT</Badge>
+            </div>
+            <p className="text-[9px] font-black text-gray-400 uppercase tracking-tighter leading-none">{item.label}</p>
+            <p className="text-sm font-bold text-gray-900 mt-1">{item.val}</p>
+          </Card>
+        ))}
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Cash Flow Forecast Chart (Visual Simulation) */}
+        <Card className="lg:col-span-2 p-6 flex flex-col">
+          <div className="flex justify-between items-center mb-8">
+            <div>
+              <h3 className="text-sm font-bold text-gray-900 uppercase tracking-tight">12-Month Cash Flow Forecast</h3>
+              <p className="text-[10px] text-gray-400 font-medium">Synced with Procurement & Milestone Engine (T+0)</p>
+            </div>
+            <div className="flex space-x-4">
+              <div className="flex items-center space-x-1.5">
+                <div className="w-2 h-2 rounded-full bg-blue-500" />
+                <span className="text-[10px] font-bold text-gray-400">PLANNED</span>
+              </div>
+              <div className="flex items-center space-x-1.5">
+                <div className="w-2 h-2 rounded-full bg-emerald-500" />
+                <span className="text-[10px] font-bold text-gray-400">ACTUAL</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex-1 min-h-[250px] relative flex items-end justify-between px-2 pb-6 border-b border-gray-100">
+            {/* Mock Chart Bars */}
+            {[40, 55, 60, 45, 80, 70, 90, 85, 65, 50, 45, 30].map((h, i) => (
+              <div key={i} className="w-12 group relative flex flex-col items-center">
+                <div className="w-full bg-blue-100/50 rounded-t-sm transition-all group-hover:bg-blue-200" style={{ height: `${h * 2}px` }} />
+                <div className={`absolute bottom-0 w-3 bg-blue-500 rounded-t-sm ${i > 5 ? 'opacity-0' : 'opacity-100'}`} style={{ height: `${(h * 0.8) * 2}px` }} />
+                <span className="absolute -bottom-6 text-[9px] font-bold text-gray-400 uppercase tracking-tighter">
+                  {['M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D', 'J', 'F'][i]}
+                </span>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-12 grid grid-cols-3 gap-6">
+             <div className="space-y-1">
+               <p className="text-[10px] font-bold text-gray-400 uppercase">Projected ROI</p>
+               <div className="flex items-center text-emerald-600">
+                 <span className="text-xl font-black">14.2%</span>
+                 <ArrowUpRight className="w-4 h-4 ml-1" />
+               </div>
+             </div>
+             <div className="space-y-1">
+               <p className="text-[10px] font-bold text-gray-400 uppercase">Uncommitted Budget</p>
+               <div className="flex items-center text-gray-900">
+                 <span className="text-xl font-black">$130M</span>
+               </div>
+             </div>
+             <div className="space-y-1">
+               <p className="text-[10px] font-bold text-gray-400 uppercase">Burn Rate (Avg)</p>
+               <div className="flex items-center text-gray-900">
+                 <span className="text-xl font-black">$18.5M<span className="text-xs font-medium text-gray-400">/mo</span></span>
+               </div>
+             </div>
+          </div>
+        </Card>
+
+        {/* Variation Order (VO) Tracking & Stress Testing */}
+        <div className="space-y-6">
+          <Card className="p-6">
+            <div className="flex justify-between items-start mb-6">
+               <h3 className="text-sm font-bold text-gray-900 uppercase">VO Tracking (Black Box)</h3>
+               <button className="text-blue-600 hover:bg-blue-50 p-1 rounded transition-colors"><Maximize2 className="w-4 h-4" /></button>
+            </div>
+            
+            <div className="space-y-4">
+               <div>
+                  <div className="flex justify-between text-[10px] font-bold mb-1.5 uppercase">
+                    <span className="text-gray-400">Confirmed VOs</span>
+                    <span className="text-gray-900">$12.4M</span>
+                  </div>
+                  <div className="h-1.5 w-full bg-gray-100 rounded-full overflow-hidden">
+                    <div className="h-full bg-rose-500" style={{ width: '45%' }} />
+                  </div>
+               </div>
+               <div>
+                  <div className="flex justify-between text-[10px] font-bold mb-1.5 uppercase">
+                    <span className="text-gray-400">Potential/Pending VOs</span>
+                    <span className="text-gray-900">$4.2M</span>
+                  </div>
+                  <div className="h-1.5 w-full bg-gray-100 rounded-full overflow-hidden">
+                    <div className="h-full bg-amber-400" style={{ width: '15%' }} />
+                  </div>
+               </div>
+
+               <div className="pt-4 border-t border-gray-50 space-y-3">
+                 <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">High-Risk VOs</p>
+                 {[
+                   { label: "VO-042: Ground Cond. Change", val: "$2.1M", risk: "High" },
+                   { label: "VO-056: Facade Mat. Upgrade", val: "$0.8M", risk: "Med" },
+                 ].map((vo, i) => (
+                   <div key={i} className="flex justify-between items-center text-xs group cursor-pointer">
+                      <span className="text-gray-600 font-medium group-hover:text-blue-600 transition-colors">{vo.label}</span>
+                      <span className="text-gray-900 font-bold">{vo.val}</span>
+                   </div>
+                 ))}
+               </div>
+            </div>
+          </Card>
+
+          <Card className="p-6 bg-gray-900 text-white shadow-2xl shadow-blue-200/20">
+             <div className="flex items-center space-x-2 mb-4">
+               <ArrowRightLeft className="w-4 h-4 text-blue-400" />
+               <h3 className="text-sm font-bold uppercase tracking-widest">Scenario Stress Test</h3>
+             </div>
+             <p className="text-[11px] text-gray-400 leading-relaxed mb-6">
+               Simulate financial impact by adjusting core variables. Syncs with Forecast Engine.
+             </p>
+
+             <div className="space-y-6">
+                <div className="space-y-3">
+                  <div className="flex justify-between text-[10px] font-bold uppercase">
+                    <span>VO Sum Escalation</span>
+                    <span className="text-blue-400">+20%</span>
+                  </div>
+                  <input type="range" className="w-full accent-blue-500 h-1 rounded-full cursor-pointer" />
+                </div>
+                <div className="space-y-3">
+                  <div className="flex justify-between text-[10px] font-bold uppercase">
+                    <span>Revenue Delay</span>
+                    <span className="text-amber-400">3 Months</span>
+                  </div>
+                  <input type="range" className="w-full accent-amber-500 h-1 rounded-full cursor-pointer" />
+                </div>
+
+                <div className="pt-4 mt-4 border-t border-white/10">
+                   <p className="text-[10px] font-bold text-white/40 uppercase mb-2 tracking-widest">Simulated Impact</p>
+                   <div className="flex justify-between items-end">
+                      <div>
+                        <p className="text-xs text-rose-400 font-bold italic">Cash Deficit Risk</p>
+                        <p className="text-2xl font-black">HIGH</p>
+                      </div>
+                      <button className="px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all">Apply Strategy</button>
+                   </div>
+                </div>
+             </div>
+          </Card>
+        </div>
+      </div>
+
+      {/* Intelligent Audit & Anomaly Detection */}
+      <Card className="overflow-hidden">
+        <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
+          <div className="flex items-center space-x-3">
+            <ShieldCheck className="w-5 h-5 text-emerald-500" />
+            <h3 className="font-bold text-gray-900 text-sm">Intelligent Auditing & Payment Guardrails</h3>
+          </div>
+          <Badge variant="success">All Safe</Badge>
+        </div>
+        <div className="p-0 overflow-x-auto">
+          <table className="w-full text-left">
+             <thead className="bg-gray-50/20 text-[10px] font-bold text-gray-400 uppercase tracking-widest border-b border-gray-100">
+               <tr>
+                 <th className="px-6 py-4">Contract / Vendor</th>
+                 <th className="px-6 py-4">Total Value</th>
+                 <th className="px-6 py-4">Phys. Progress</th>
+                 <th className="px-6 py-4">Paid Ratio</th>
+                 <th className="px-6 py-4">Anomaly Detection</th>
+                 <th className="px-6 py-4 text-right">SSOT Link</th>
+               </tr>
+             </thead>
+             <tbody className="divide-y divide-gray-50">
+                {[
+                  { name: "Main Contractor - Site A", val: "$142M", phys: "42%", paid: "38%", status: "Healthy" },
+                  { name: "MEP Specialist - Tower B", val: "$48M", phys: "15%", paid: "12%", status: "Healthy" },
+                  { name: "Interior Consultant", val: "$12M", phys: "85%", paid: "82%", status: "Healthy" },
+                ].map((row, i) => (
+                  <tr key={i} className="hover:bg-blue-50/30 transition-colors group cursor-pointer">
+                    <td className="px-6 py-4 text-xs font-bold text-gray-900">{row.name}</td>
+                    <td className="px-6 py-4 text-xs font-medium text-gray-600">{row.val}</td>
+                    <td className="px-6 py-4">
+                      <div className="flex items-center space-x-2">
+                        <span className="text-[10px] font-bold">{row.phys}</span>
+                        <div className="w-12 h-1 bg-gray-100 rounded-full"><div className="h-full bg-blue-500 rounded-full" style={{ width: row.phys }} /></div>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="flex items-center space-x-2">
+                        <span className="text-[10px] font-bold">{row.paid}</span>
+                        <div className="w-12 h-1 bg-gray-100 rounded-full"><div className="h-full bg-emerald-500 rounded-full" style={{ width: row.paid }} /></div>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                       <div className="flex items-center text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded w-fit">
+                         <CheckCircle2 className="w-3 h-3 mr-1.5" /> NO OVERPAYMENT
+                       </div>
+                    </td>
+                    <td className="px-6 py-4 text-right">
+                       <button className="p-1.5 text-gray-300 group-hover:text-blue-500 transition-colors"><ExternalLink className="w-4 h-4" /></button>
+                    </td>
+                  </tr>
+                ))}
+             </tbody>
+          </table>
+        </div>
+      </Card>
+    </div>
+  );
+};
+
+const ApprovalsPageView = () => {
+  const [selectedApproval, setSelectedApproval] = useState(APPROVALS_LIST[0]);
+
+  return (
+    <div className="space-y-6 animate-in fade-in duration-500">
+      {/* Approval Status Header */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <Card className="p-4 bg-emerald-50/30 border-emerald-100">
+          <p className="text-[10px] font-bold text-gray-400 uppercase">Compliance Health</p>
+          <div className="flex items-center justify-between mt-1">
+            <p className="text-xl font-bold text-emerald-600">Secure</p>
+            <ShieldCheck className="w-5 h-5 text-emerald-500" />
+          </div>
+        </Card>
+        <Card className="p-4">
+          <p className="text-[10px] font-bold text-gray-400 uppercase">Total Conditions</p>
+          <div className="flex items-center justify-between mt-1">
+            <p className="text-xl font-bold text-gray-900">39</p>
+            <FileText className="w-5 h-5 text-blue-500" />
+          </div>
+        </Card>
+        <Card className="p-4">
+          <p className="text-[10px] font-bold text-gray-400 uppercase">Fulfilled Rate</p>
+          <div className="flex items-center justify-between mt-1">
+            <p className="text-xl font-bold text-gray-900">72%</p>
+            <Activity className="w-5 h-5 text-blue-500" />
+          </div>
+        </Card>
+        <Card className="p-4 bg-rose-50/30 border-rose-100">
+          <p className="text-[10px] font-bold text-gray-400 uppercase">Imminent Deadlines</p>
+          <div className="flex items-center justify-between mt-1">
+            <p className="text-xl font-bold text-rose-600">3 Tasks</p>
+            <Clock className="w-5 h-5 text-rose-500" />
+          </div>
+        </Card>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Approvals Master List */}
+        <div className="space-y-4">
+          <h3 className="text-xs font-black text-gray-400 uppercase tracking-widest px-1">Active Approval Workflows</h3>
+          {APPROVALS_LIST.map((app) => (
+            <Card 
+              key={app.id} 
+              className={`p-4 cursor-pointer transition-all ${selectedApproval.id === app.id ? 'ring-2 ring-blue-500 bg-blue-50/10' : 'hover:bg-gray-50'}`}
+              onClick={() => setSelectedApproval(app)}
+            >
+              <div className="flex justify-between items-start mb-2">
+                <Badge variant={app.health}>{app.status}</Badge>
+                <span className="text-[9px] text-gray-400 font-bold">{app.lastUpdate}</span>
+              </div>
+              <h4 className="text-sm font-bold text-gray-900">{app.title}</h4>
+              <p className="text-[10px] text-gray-400 font-medium mt-1">{app.dept} | {app.ref}</p>
+              
+              <div className="mt-4 flex items-center justify-between">
+                <div className="flex -space-x-1">
+                  {Array.from({ length: 4 }).map((_, i) => (
+                    <div key={i} className="w-5 h-5 rounded-full border border-white bg-gray-100 flex items-center justify-center text-[8px] font-bold text-gray-500">JD</div>
+                  ))}
+                </div>
+                <span className="text-[10px] font-bold text-gray-900">{app.closed}/{app.conditions} Conditions</span>
+              </div>
+              <div className="h-1 w-full bg-gray-100 rounded-full mt-2 overflow-hidden">
+                <div className="h-full bg-blue-500" style={{ width: `${(app.closed / app.conditions) * 100}%` }} />
+              </div>
+            </Card>
+          ))}
+          <button className="w-full py-4 border-2 border-dashed border-gray-100 rounded-xl flex flex-col items-center justify-center text-gray-400 hover:border-blue-200 hover:text-blue-500 transition-all">
+             <UploadCloud className="w-5 h-5 mb-1" />
+             <span className="text-[10px] font-black uppercase tracking-widest">Upload New Approval Letter</span>
+          </button>
+        </div>
+
+        {/* Detailed Condition Tracker */}
+        <Card className="lg:col-span-2 overflow-hidden flex flex-col">
+          <div className="px-6 py-4 border-b border-gray-50 flex justify-between items-center bg-gray-50/30">
+            <div>
+              <h3 className="font-bold text-gray-900 text-sm">{selectedApproval.title}</h3>
+              <p className="text-[10px] text-gray-400 font-medium tracking-tight">Condition Management (Zero-Forgotten-Conditions Engine)</p>
+            </div>
+            <div className="flex space-x-2">
+               <button className="p-2 hover:bg-white rounded-lg border border-transparent hover:border-gray-200"><Filter className="w-4 h-4 text-gray-400" /></button>
+               <button className="p-2 hover:bg-white rounded-lg border border-transparent hover:border-gray-200"><Search className="w-4 h-4 text-gray-400" /></button>
+            </div>
+          </div>
+
+          <div className="flex-1 overflow-y-auto no-scrollbar">
+            {SELECTED_APPROVAL_CONDITIONS.map((cond) => (
+              <div key={cond.id} className="p-6 border-b border-gray-50 hover:bg-gray-50/50 transition-colors group">
+                <div className="flex justify-between items-start mb-3">
+                  <div className="flex items-center space-x-2">
+                    <div className={`w-2 h-2 rounded-full ${cond.health === 'danger' ? 'bg-rose-500 animate-pulse' : cond.status === 'Fulfilled' ? 'bg-emerald-500' : 'bg-blue-500'}`} />
+                    <span className="text-[9px] font-black uppercase text-gray-400 tracking-widest">{cond.type} Condition</span>
+                  </div>
+                  <span className={`text-[10px] font-bold ${cond.health === 'danger' ? 'text-rose-600' : 'text-gray-400'}`}>
+                    {cond.status === 'Fulfilled' ? 'FULFILLED' : `DEADLINE: ${cond.deadline}`}
+                  </span>
+                </div>
+                
+                <p className="text-xs font-medium text-gray-800 leading-relaxed mb-4">{cond.content}</p>
+
+                {cond.progress && (
+                  <div className="mb-4">
+                    <div className="flex justify-between text-[9px] font-bold mb-1">
+                      <span className="text-gray-400">Agent Verification Progress</span>
+                      <span className="text-blue-600">{cond.progress}%</span>
+                    </div>
+                    <div className="h-1 w-full bg-gray-100 rounded-full overflow-hidden">
+                      <div className="h-full bg-blue-500" style={{ width: `${cond.progress}%` }} />
+                    </div>
+                  </div>
+                )}
+
+                <div className="flex items-center justify-between">
+                  <div className="flex space-x-2">
+                    {cond.evidence ? (
+                      <div className="flex items-center px-2 py-1 bg-emerald-50 border border-emerald-100 rounded text-[9px] font-bold text-emerald-700">
+                        <FileText className="w-3 h-3 mr-1.5" /> {cond.evidence}
+                      </div>
+                    ) : (
+                      <div className="flex items-center px-2 py-1 bg-gray-50 border border-gray-100 rounded text-[9px] font-bold text-gray-400 italic">
+                        No Evidence Linked
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button className="p-1.5 hover:bg-blue-50 text-gray-400 hover:text-blue-600 rounded"><ExternalLink className="w-3.5 h-3.5" /></button>
+                    <button className="p-1.5 hover:bg-100 text-gray-400 rounded"><MoreVertical className="w-3.5 h-3.5" /></button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="p-6 bg-rose-50/50 border-t border-rose-100">
+             <div className="flex items-start space-x-3">
+               <ShieldAlert className="w-5 h-5 text-rose-500 shrink-0" />
+               <div>
+                 <h4 className="text-xs font-bold text-rose-900">Delay Impact Alert: Heritage Endorsement</h4>
+                 <p className="text-[11px] text-rose-800/80 mt-1 leading-relaxed">
+                   Condition 103 (Heritage Wall) is currently 3 days from deadline with no evidence linked. Delaying this will block "Site Clearance Zone C", impacting master completion by <span className="font-bold">+5 Days</span>.
+                 </p>
+                 <div className="flex space-x-4 mt-3">
+                   <button className="text-[10px] font-bold text-rose-600 hover:underline flex items-center uppercase tracking-widest">
+                     <ArrowRightLeft className="w-3 h-3 mr-1" /> Simulation Report
+                   </button>
+                   <button className="text-[10px] font-bold text-rose-600 hover:underline flex items-center uppercase tracking-widest">
+                     <Clock className="w-3 h-3 mr-1" /> Request Extension
+                   </button>
+                 </div>
+               </div>
+             </div>
+          </div>
+        </Card>
+      </div>
+    </div>
+  );
+};
+
+const MilestonesPageView = () => {
+  return (
+    <div className="space-y-6 animate-in fade-in duration-500">
+      {/* Milestone Executive Header */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <Card className="p-4 border-l-4 border-l-blue-500">
+          <p className="text-[10px] font-bold text-gray-400 uppercase">Critical Path Status</p>
+          <div className="flex items-center justify-between mt-1">
+            <p className="text-xl font-bold text-gray-900">On Track</p>
+            <CheckCircle2 className="w-5 h-5 text-emerald-500" />
+          </div>
+        </Card>
+        <Card className="p-4 border-l-4 border-l-amber-500">
+          <p className="text-[10px] font-bold text-gray-400 uppercase">Forecast Handover</p>
+          <div className="flex items-center justify-between mt-1">
+            <p className="text-xl font-bold text-gray-900">Mar 2028</p>
+            <Calendar className="w-5 h-5 text-amber-500" />
+          </div>
+        </Card>
+        <Card className="p-4 border-l-4 border-l-emerald-500">
+          <p className="text-[10px] font-bold text-gray-400 uppercase">Agent Verification Rate</p>
+          <div className="flex items-center justify-between mt-1">
+            <p className="text-xl font-bold text-gray-900">100%</p>
+            <ShieldCheck className="w-5 h-5 text-emerald-500" />
+          </div>
+        </Card>
+        <Card className="p-4 border-l-4 border-l-rose-500">
+          <p className="text-[10px] font-bold text-gray-400 uppercase">Delay Impact Risk</p>
+          <div className="flex items-center justify-between mt-1">
+            <p className="text-xl font-bold text-gray-900">Low</p>
+            <TrendingUp className="w-5 h-5 text-rose-500 rotate-90" />
+          </div>
+        </Card>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Milestone List (SSOT Feed) */}
+        <Card className="lg:col-span-2 overflow-hidden">
+          <div className="px-6 py-4 border-b border-gray-50 flex justify-between items-center bg-gray-50/30">
+            <h3 className="font-bold text-gray-900 flex items-center text-sm uppercase tracking-tight">
+              <Milestone className="w-4 h-4 mr-2 text-blue-500" />
+              Horizon Estate Development: Big Picture Timeline
+            </h3>
+            <button className="flex items-center text-xs font-bold text-blue-600 bg-white px-3 py-1.5 rounded-lg border border-gray-100 shadow-sm">
+              <UploadCloud className="w-3 h-3 mr-2" /> INGEST P6 PLAN
+            </button>
+          </div>
+          
+          <div className="p-0">
+            {HORIZON_MILESTONES.map((m, i) => (
+              <div key={m.id} className="group relative flex items-start px-8 py-6 border-b border-gray-50 last:border-0 hover:bg-gray-50/50 transition-colors">
+                {/* Timeline Line */}
+                {i !== HORIZON_MILESTONES.length - 1 && (
+                  <div className="absolute left-[39.5px] top-12 bottom-0 w-px bg-gray-100" />
+                )}
+                
+                {/* Milestone Node */}
+                <div className={`z-10 w-4 h-4 rounded-full mt-1.5 border-4 border-white shadow-sm shrink-0 ${
+                  m.status === 'Completed' ? 'bg-emerald-500' : 
+                  m.status === 'In Progress' ? 'bg-blue-500' : 'bg-gray-200'
+                }`} />
+
+                <div className="ml-8 flex-1">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <span className="text-[9px] font-black text-gray-300 uppercase tracking-widest leading-none">{m.stage}</span>
+                      <h4 className="text-sm font-bold text-gray-900 group-hover:text-blue-600 transition-colors mt-0.5">{m.title}</h4>
+                      <div className="flex items-center mt-1 space-x-3">
+                        <span className="flex items-center text-[11px] text-gray-400">
+                          <Clock className="w-3 h-3 mr-1" /> Plan Date: {m.date}
+                        </span>
+                        {m.agent && (
+                          <span className="flex items-center text-[10px] font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded uppercase">
+                            <ShieldCheck className="w-2.5 h-2.5 mr-1" /> Agent Verified
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <Badge variant={m.health}>{m.status}</Badge>
+                  </div>
+
+                  {m.progress && (
+                    <div className="mt-4">
+                      <div className="flex justify-between text-[10px] font-bold mb-1.5">
+                        <span className="text-gray-400">Jarvis Progress Detection (Vision AI)</span>
+                        <span className="text-blue-600">{m.progress}%</span>
+                      </div>
+                      <div className="h-1.5 w-full bg-gray-100 rounded-full overflow-hidden">
+                        <div className="h-full bg-blue-500" style={{ width: `${m.progress}%` }} />
+                      </div>
+                    </div>
+                  )}
+
+                  {m.evidence && (
+                    <div className="mt-4 flex items-center space-x-2">
+                       <div className="flex items-center px-2 py-1 bg-gray-50 border border-gray-200 rounded-md text-[10px] font-medium text-gray-500 group-hover:border-blue-200 transition-colors">
+                         <FileText className="w-3 h-3 mr-1.5 text-blue-500" />
+                         {m.evidence}
+                         <ExternalLink className="w-3 h-3 ml-2 cursor-pointer opacity-50 hover:opacity-100" />
+                       </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </Card>
+
+        {/* Prediction & Analytics Panel */}
+        <div className="space-y-6">
+          <Card className="p-6">
+            <h3 className="font-bold text-gray-900 mb-4 flex items-center text-sm">
+              <Split className="w-4 h-4 mr-2 text-rose-500" /> Delay Impact Simulation
+            </h3>
+            <div className="space-y-4">
+              <div className="p-4 bg-rose-50 border border-rose-100 rounded-xl">
+                 <p className="text-[10px] font-bold text-rose-600 uppercase">Scenario: Current Piling Lag</p>
+                 <p className="text-xs text-rose-800 mt-1 font-medium leading-relaxed">
+                   Current site evidence suggests a 4-day lag in Piling. Predicted impact on "Superstructure Commencement" is <span className="font-bold">+3 Days</span> due to buffer compression.
+                 </p>
+              </div>
+
+              <div className="space-y-3">
+                 <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest border-b border-gray-50 pb-2">Downstream Effects</p>
+                 <div className="flex justify-between text-xs items-center">
+                    <span className="text-gray-500">Topping Out</span>
+                    <span className="text-gray-900 font-bold">+2 Days</span>
+                 </div>
+                 <div className="flex justify-between text-xs items-center">
+                    <span className="text-gray-500">Occupation Permit</span>
+                    <span className="text-gray-900 font-bold">Stable</span>
+                 </div>
+                 <div className="flex justify-between text-xs items-center">
+                    <span className="text-gray-500">Final Handover</span>
+                    <span className="text-gray-900 font-bold">On Schedule</span>
+                 </div>
+              </div>
+
+              <button className="w-full py-2.5 text-[10px] font-black text-blue-600 bg-blue-50/50 hover:bg-blue-50 rounded-xl transition-colors uppercase tracking-widest">
+                OPTIMIZE CRITICAL PATH
+              </button>
+            </div>
+          </Card>
+
+          <Card className="p-6">
+            <h3 className="font-bold text-gray-900 mb-4 flex items-center text-sm">
+              <Database className="w-4 h-4 mr-2 text-gray-400" /> Intelligence Logs
+            </h3>
+            <div className="space-y-4">
+               {[
+                 { type: "INGEST", msg: "P6 Schedule baseline-v2 ingested by Agent.", time: "2h ago" },
+                 { type: "VERIFY", msg: "Building Dept approval letter (GBP) scanned & mapped.", time: "1d ago" },
+                 { type: "ALERT", msg: "Foundation log shows ground conditions deviating.", time: "3d ago" },
+               ].map((log, i) => (
+                 <div key={i} className="flex items-start space-x-3">
+                    <div className="text-[8px] font-black px-1 py-0.5 rounded bg-gray-100 text-gray-500 mt-0.5">{log.type}</div>
+                    <div>
+                      <p className="text-[11px] text-gray-700 leading-tight font-medium">{log.msg}</p>
+                      <span className="text-[9px] text-gray-400">{log.time}</span>
+                    </div>
+                 </div>
+               ))}
+            </div>
+          </Card>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const PortfolioPageView = () => {
+  const [selectedProject, setSelectedProject] = useState(PROJECTS[0]);
+
+  return (
+    <div className="space-y-6 animate-in fade-in duration-500">
+      {/* Portfolio Header Stats */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        {[
+          { label: "Total Asset Value", val: "$2.4B", icon: Wallet, color: "blue" },
+          { label: "SSOT Data Integrity", val: "99.8%", icon: Database, color: "emerald" },
+          { label: "Pending Approvals", val: "24", icon: FileCheck, color: "amber" },
+          { label: "Active VO Sum", val: "$12.4M", icon: Activity, color: "rose" },
+        ].map((stat, i) => (
+          <Card key={i} className="p-4 flex items-center space-x-4">
+            <div className={`p-2 rounded-lg bg-${stat.color}-50 text-${stat.color}-600`}>
+              <stat.icon className="w-5 h-5" />
+            </div>
+            <div>
+              <p className="text-[10px] font-bold text-gray-400 uppercase">{stat.label}</p>
+              <p className="text-xl font-bold text-gray-900">{stat.val}</p>
+            </div>
+          </Card>
+        ))}
+      </div>
+
+      {/* Main Map and List Area */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[600px]">
+        {/* Map View (Simulated Google Maps) */}
+        <Card className="lg:col-span-2 relative overflow-hidden group">
+          <div className="absolute top-4 left-4 z-20 flex space-x-2">
+            <div className="bg-white/90 backdrop-blur shadow-sm border border-gray-100 p-1 rounded-lg flex space-x-1">
+              <button className="px-3 py-1 bg-gray-900 text-white rounded-md text-[10px] font-bold">MAP</button>
+              <button className="px-3 py-1 text-gray-400 hover:bg-gray-50 rounded-md text-[10px] font-bold">SATELLITE</button>
+            </div>
+          </div>
+          
+          <div className="absolute top-4 right-4 z-20">
+            <button className="p-2 bg-white/90 backdrop-blur shadow-sm border border-gray-100 rounded-lg text-gray-500 hover:text-gray-900">
+              <Maximize2 className="w-4 h-4" />
+            </button>
+          </div>
+
+          {/* Map Content */}
+          <div className="w-full h-full bg-[#E5E3DF] relative">
+            <div className="absolute inset-0 opacity-40 pointer-events-none" style={{backgroundImage: 'radial-gradient(#94a3b8 1px, transparent 1px)', backgroundSize: '40px 40px'}} />
+            
+            {/* Project Markers */}
+            {PROJECTS.map((p) => (
+              <button 
+                key={p.id}
+                onClick={() => setSelectedProject(p)}
+                className={`absolute transition-all transform hover:scale-110 flex flex-col items-center -translate-x-1/2 -translate-y-full`}
+                style={{ top: `${p.lat}%`, left: `${p.lng}%` }}
+              >
+                <div className={`px-2 py-1 rounded bg-white shadow-xl border border-gray-100 text-[9px] font-bold mb-1 ${selectedProject.id === p.id ? 'ring-2 ring-blue-500' : ''}`}>
+                  {p.name}
+                </div>
+                <div className={`w-6 h-6 rounded-full border-4 border-white shadow-lg flex items-center justify-center ${
+                  p.health === 'success' ? 'bg-emerald-500' : 
+                  p.health === 'warning' ? 'bg-amber-500' : 'bg-rose-500'
+                }`}>
+                  <MapPin className="w-3 h-3 text-white" />
+                </div>
+              </button>
+            ))}
+
+            {/* Scale Bar */}
+            <div className="absolute bottom-4 right-4 text-[9px] font-bold text-gray-500 bg-white/50 px-2 py-1 rounded">
+              500 m
+            </div>
+          </div>
+        </Card>
+
+        {/* Project Contextual Info Panel */}
+        <div className="space-y-4">
+          <Card className="p-6 h-full flex flex-col">
+            <div className="flex justify-between items-start mb-6">
+              <div>
+                <Badge variant={selectedProject.health}>{selectedProject.status}</Badge>
+                <h3 className="text-lg font-bold text-gray-900 mt-2">{selectedProject.name}</h3>
+              </div>
+              <button className="text-gray-400 hover:text-blue-500 transition-colors"><ExternalLink className="w-4 h-4" /></button>
+            </div>
+
+            <div className="space-y-6 flex-1 overflow-y-auto no-scrollbar">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="p-3 bg-gray-50 rounded-xl">
+                  <p className="text-[10px] text-gray-400 font-bold uppercase">Budget (EFC)</p>
+                  <p className="text-sm font-bold text-gray-900">{selectedProject.budget}</p>
+                </div>
+                <div className="p-3 bg-gray-50 rounded-xl">
+                  <p className="text-[10px] text-gray-400 font-bold uppercase">Land Status</p>
+                  <p className="text-sm font-bold text-gray-900">{selectedProject.land}</p>
+                </div>
+              </div>
+
+              <div>
+                <div className="flex justify-between text-[10px] font-bold uppercase mb-2">
+                  <span className="text-gray-400">Government Approval</span>
+                  <span className="text-blue-600">{selectedProject.approval}</span>
+                </div>
+                <div className="h-1.5 w-full bg-gray-100 rounded-full overflow-hidden">
+                  <div className="h-full bg-blue-500" style={{ width: selectedProject.approval }} />
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest border-b border-gray-50 pb-2">SSOT Intelligence Logs</p>
+                {[
+                  { icon: FileCheck, msg: "Lands Dept Condition 4.2 extracted.", time: "2h ago" },
+                  { icon: Clock, msg: "Warning: Planning delay impact +2 days.", time: "1d ago" },
+                  { icon: Target, msg: "Client brief baseline updated.", time: "3d ago" },
+                ].map((log, i) => (
+                  <div key={i} className="flex items-center space-x-3 group cursor-pointer">
+                    <log.icon className="w-3.5 h-3.5 text-gray-300 group-hover:text-blue-500" />
+                    <div className="flex-1">
+                      <p className="text-[11px] text-gray-600 font-medium leading-none">{log.msg}</p>
+                      <span className="text-[9px] text-gray-400">{log.time}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <button className="mt-6 w-full py-3 bg-gray-900 text-white rounded-xl text-xs font-bold shadow-lg shadow-gray-200 hover:bg-black transition-all">
+              VIEW FULL PROJECT RECORD (SSOT)
+            </button>
+          </Card>
+        </div>
+      </div>
+
+      {/* Project Status Table */}
+      <Card className="overflow-hidden">
+        <div className="px-6 py-4 border-b border-gray-50 flex justify-between items-center bg-gray-50/50">
+          <h3 className="font-bold text-gray-900 flex items-center">
+            <Layers className="w-4 h-4 mr-2 text-gray-400" />
+            Project Portfolio Health Matrix
+          </h3>
+          <div className="flex space-x-2">
+            <button className="p-1.5 hover:bg-white rounded-lg border border-transparent hover:border-gray-200"><Filter className="w-4 h-4 text-gray-400" /></button>
+            <button className="p-1.5 hover:bg-white rounded-lg border border-transparent hover:border-gray-200"><Search className="w-4 h-4 text-gray-400" /></button>
+          </div>
+        </div>
+        <table className="w-full text-left">
+          <thead>
+            <tr className="bg-gray-50/20 text-[10px] font-bold text-gray-400 uppercase tracking-wider border-b border-gray-50">
+              <th className="px-6 py-4">Project Name</th>
+              <th className="px-6 py-4">Status</th>
+              <th className="px-6 py-4">Land Condition</th>
+              <th className="px-6 py-4">Approval Progress</th>
+              <th className="px-6 py-4">EFC Budget</th>
+              <th className="px-6 py-4 text-right">Action</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-50">
+            {PROJECTS.map((p) => (
+              <tr key={p.id} className="group hover:bg-blue-50/30 transition-colors cursor-pointer" onClick={() => setSelectedProject(p)}>
+                <td className="px-6 py-4">
+                  <span className="text-xs font-bold text-gray-900">{p.name}</span>
+                </td>
+                <td className="px-6 py-4">
+                  <Badge variant={p.health}>{p.status}</Badge>
+                </td>
+                <td className="px-6 py-4 text-[11px] font-medium text-gray-600">{p.land}</td>
+                <td className="px-6 py-4">
+                  <div className="flex items-center space-x-3">
+                    <div className="h-1.5 w-16 bg-gray-100 rounded-full overflow-hidden">
+                      <div className={`h-full ${p.health === 'success' ? 'bg-emerald-500' : 'bg-blue-500'}`} style={{ width: p.approval }} />
+                    </div>
+                    <span className="text-[10px] font-bold text-gray-900">{p.approval}</span>
+                  </div>
+                </td>
+                <td className="px-6 py-4 text-xs font-bold text-gray-900">{p.budget}</td>
+                <td className="px-6 py-4 text-right">
+                  <button className="p-1.5 text-gray-300 group-hover:text-blue-500 transition-colors"><ChevronRight className="w-4 h-4" /></button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </Card>
+    </div>
+  );
+};
+
+const DashboardView = () => (
+  <div className="space-y-6 animate-in fade-in duration-500">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <Card className="p-5">
+        <div className="flex justify-between items-start">
+          <div className="p-2 bg-blue-50 text-blue-600 rounded-lg"><Layers className="w-5 h-5" /></div>
+          <Badge variant="success">+12%</Badge>
+        </div>
+        <div className="mt-4">
+          <p className="text-xs text-gray-500 font-medium">Portfolio SSOT Integrity</p>
+          <p className="text-2xl font-bold text-gray-900">99.8%</p>
+        </div>
+      </Card>
+      <Card className="p-5">
+        <div className="flex justify-between items-start">
+          <div className="p-2 bg-amber-50 text-amber-600 rounded-lg"><AlertCircle className="w-5 h-5" /></div>
+          <Badge variant="warning">Active</Badge>
+        </div>
+        <div className="mt-4">
+          <p className="text-xs text-gray-500 font-medium">Gov. Approval Conditions</p>
+          <p className="text-2xl font-bold text-gray-900">1,242 <span className="text-xs font-normal text-gray-400">Total</span></p>
+        </div>
+      </Card>
+      <Card className="p-5">
+        <div className="flex justify-between items-start">
+          <div className="p-2 bg-emerald-50 text-emerald-600 rounded-lg"><TrendingUp className="w-5 h-5" /></div>
+          <Badge variant="success">Safe</Badge>
+        </div>
+        <div className="mt-4">
+          <p className="text-xs text-gray-500 font-medium">Estimated Final Cost (EFC)</p>
+          <p className="text-2xl font-bold text-gray-900">$428M</p>
+        </div>
+      </Card>
+      <Card className="p-5">
+        <div className="flex justify-between items-start">
+          <div className="p-2 bg-rose-50 text-rose-600 rounded-lg"><Clock className="w-5 h-5" /></div>
+          <Badge variant="danger">Critical</Badge>
+        </div>
+        <div className="mt-4">
+          <p className="text-xs text-gray-500 font-medium">Milestone Delay Impact</p>
+          <p className="text-2xl font-bold text-gray-900">-4 Days</p>
+        </div>
+      </Card>
+    </div>
+
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <Card className="lg:col-span-2 p-6 overflow-hidden">
+        <div className="flex justify-between items-center mb-6">
+          <h3 className="font-bold text-gray-900">Portfolio Strategic Map (GIS)</h3>
+          <div className="flex space-x-2">
+            <button className="text-[10px] font-bold text-blue-600 px-2 py-1 bg-blue-50 rounded">LAND STATUS</button>
+            <button className="text-[10px] font-bold text-gray-400 px-2 py-1">PLANNING</button>
+          </div>
+        </div>
+        <div className="h-[400px] bg-slate-50 rounded-xl relative border border-gray-100 flex items-center justify-center overflow-hidden">
+          {/* Mock Map Background */}
+          <div className="absolute inset-0 opacity-20 pointer-events-none" style={{backgroundImage: 'radial-gradient(#cbd5e1 1px, transparent 1px)', backgroundSize: '30px 30px'}} />
+          <div className="z-10 text-center">
+            <MapPin className="w-12 h-12 text-blue-500 mx-auto mb-2 animate-bounce" />
+            <p className="text-xs text-gray-400 font-medium">Integrating Single Source of Truth Spatial Data...</p>
+          </div>
+          {/* Interactive Project Indicators */}
+          <div className="absolute top-20 left-40 p-2 bg-white shadow-lg rounded-lg border border-emerald-500 animate-pulse">
+            <div className="w-16 h-1 bg-emerald-500 rounded-full" />
+          </div>
+          <div className="absolute bottom-32 right-48 p-2 bg-white shadow-lg rounded-lg border border-rose-500">
+            <div className="w-16 h-1 bg-rose-500 rounded-full" />
+          </div>
+        </div>
+      </Card>
+
+      <Card className="p-6">
+        <h3 className="font-bold text-gray-900 mb-6">Compliance & Intelligence Feed</h3>
+        <div className="space-y-6">
+          {[
+            { agent: "Recording Agent", msg: "Extracted 42 conditions from Lands Dept Approval.", time: "2m", type: "info" },
+            { agent: "Tender Agent", msg: "Warning: Unbalanced bid in Façade Tender Package.", time: "1h", type: "warning" },
+            { agent: "Eagle Eye", msg: "85% Rebar Completion verified on Block 3-L12.", time: "3h", type: "success" },
+            { agent: "Finance Agent", msg: "VO Sum threshold exceeded for Interior Fitout.", time: "5h", type: "danger" },
+            { agent: "Safety Agent", msg: "Unauthorized entry detected in Deep Excavation Zone B.", time: "6h", type: "danger" },
+          ].map((item, i) => (
+            <div key={i} className="flex space-x-3">
+              <div className={`mt-1.5 w-1.5 h-1.5 rounded-full shrink-0 ${
+                item.type === 'danger' ? 'bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.6)]' : 
+                item.type === 'warning' ? 'bg-amber-500' : 'bg-blue-500'
+              }`} />
+              <div className="flex-1">
+                <div className="flex justify-between items-center mb-0.5">
+                  <span className="text-[10px] font-bold text-gray-400 uppercase tracking-tighter">{item.agent}</span>
+                  <span className="text-[10px] text-gray-400">{item.time} ago</span>
+                </div>
+                <p className="text-xs text-gray-700 leading-tight font-medium">{item.msg}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+        <button className="w-full mt-6 py-2.5 text-xs font-bold text-blue-600 bg-blue-50/50 hover:bg-blue-50 rounded-xl transition-colors">
+          OPEN COMMAND LOGS
+        </button>
+      </Card>
+    </div>
+  </div>
+);
+
+const ModulesView = ({ activeModule }) => {
+  // Direct module mapping to rich page views
+  if (activeModule === "Portfolio") return <PortfolioPageView />;
+  if (activeModule === "Milestones") return <MilestonesPageView />;
+  if (activeModule === "Approvals") return <ApprovalsPageView />;
+  if (activeModule === "Finance") return <FinancePageView />;
+
+  const module = MODULE_DATA[activeModule] || MODULE_DATA.Portfolio;
+
+  return (
+    <div className="space-y-6 animate-in slide-in-from-right-4 duration-300">
+      <div className="flex items-end justify-between">
+        <div>
+          <h2 className="text-2xl font-bold text-gray-900">{module.title}</h2>
+          <p className="text-gray-400 text-sm mt-1">{module.desc}</p>
+        </div>
+        <div className="flex space-x-2">
+          <button className="px-4 py-2 bg-white border border-gray-200 rounded-lg text-xs font-bold hover:bg-gray-50">AUDIT LOGS</button>
+          <button className="px-4 py-2 bg-gray-900 text-white rounded-lg text-xs font-bold hover:bg-gray-800 shadow-lg shadow-gray-200">INITIATE AGENT</button>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {module.sections.map((section, i) => (
+          <Card key={i} className="p-5 border-l-4 border-l-gray-100 hover:border-l-blue-500 group cursor-pointer">
+            <div className="flex justify-between items-start mb-4">
+              <div className="p-2 bg-gray-50 rounded-lg group-hover:bg-blue-50 transition-colors">
+                <Database className="w-4 h-4 text-gray-400 group-hover:text-blue-500" />
+              </div>
+              <Badge variant="info">Synced</Badge>
+            </div>
+            <h4 className="font-bold text-gray-900 text-sm mb-1">{section}</h4>
+            <p className="text-[11px] text-gray-400 line-clamp-2 leading-relaxed">
+              Managing SSOT records and automated agent workflows for {section.toLowerCase()}.
+            </p>
+            <div className="mt-4 pt-4 border-t border-gray-50 flex items-center justify-between">
+              <span className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Integrity 99.9%</span>
+              <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-blue-500 group-hover:translate-x-1 transition-all" />
+            </div>
+          </Card>
+        ))}
+      </div>
+
+      {/* Specialty View for Visual Modules */}
+      {(activeModule === "Progress" || activeModule === "Payment") && (
+        <Card className="overflow-hidden">
+          <div className="p-4 bg-gray-50 border-b border-gray-100 flex justify-between items-center">
+             <div className="flex items-center space-x-2">
+               <div className="w-2 h-2 bg-rose-500 rounded-full animate-pulse" />
+               <span className="text-[10px] font-bold text-gray-900 uppercase">Live Site Perception: Jarvis Eagle Eye</span>
+             </div>
+             <div className="flex space-x-2">
+               <button className="p-1 hover:bg-gray-200 rounded"><Scan className="w-4 h-4 text-gray-500" /></button>
+               <button className="p-1 hover:bg-gray-200 rounded"><Eye className="w-4 h-4 text-gray-500" /></button>
+             </div>
+          </div>
+          <div className="h-[400px] bg-black relative flex items-center justify-center">
+            <div className="absolute top-4 left-4 z-20 space-y-2">
+              <div className="bg-white/10 backdrop-blur px-2 py-1 rounded text-[10px] text-white border border-white/20">AI Progress Agent: ACTIVE</div>
+              <div className="bg-blue-500/20 backdrop-blur px-2 py-1 rounded text-[10px] text-blue-400 border border-blue-500/30 font-bold tracking-tight">MEP Installation: 64.2% Detected</div>
+            </div>
+            <div className="text-center text-gray-600 space-y-4">
+               <Activity className="w-12 h-12 mx-auto opacity-20" />
+               <p className="text-xs uppercase tracking-widest font-bold">Connecting to Site Camera Network...</p>
+            </div>
+            {/* Visual AI Overlays Mock */}
+            <div className="absolute inset-0 opacity-40 pointer-events-none">
+               <div className="absolute top-1/2 left-1/3 w-20 h-20 border border-blue-500/50" />
+               <div className="absolute top-1/4 right-1/4 w-32 h-12 border border-emerald-500/50" />
+            </div>
+          </div>
+        </Card>
+      )}
+    </div>
+  );
+};
+
+// --- App Shell ---
+
+export default function App() {
+  const [activeModule, setActiveModule] = useState("Dashboard");
+  const [isSidebarOpen, setSidebarOpen] = useState(true);
+
+  const sidebarItems = [
+    { id: "Dashboard", label: "Strategic Overview", icon: LayoutDashboard },
+    { type: "divider", label: "Portfolio Management" },
+    { id: "Portfolio", label: "Portfolio (SSOT)", icon: Layers },
+    { id: "Requirements", label: "Requirements", icon: Target },
+    { id: "Milestones", label: "Milestones", icon: Milestone },
+    { id: "Approvals", label: "Gov Approvals", icon: FileCheck },
+    { type: "divider", label: "Execution" },
+    { id: "Procurement", label: "Procurement", icon: ShoppingCart },
+    { id: "Design", label: "Design (BIM-Cost)", icon: PenTool },
+    { id: "Finance", label: "Finance", icon: Wallet },
+    { id: "Payment", label: "Jarvis PAY", icon: CreditCard },
+    { type: "divider", label: "Site & Quality" },
+    { id: "Progress", label: "Progress (Eagle Eye)", icon: Eye },
+    { id: "Quality", label: "Quality (DWSS)", icon: ShieldCheck },
+    { id: "Safety", label: "Safety (Smart Site)", icon: HardHat },
+    { id: "Handover", label: "Handover", icon: Key },
+  ];
+
+  return (
+    <div className="min-h-screen bg-[#FDFDFE] flex font-sans text-gray-900 antialiased overflow-hidden">
+      {/* Sidebar */}
+      <aside className={`bg-white border-r border-gray-100 transition-all duration-300 flex flex-col shrink-0 ${isSidebarOpen ? 'w-64' : 'w-20'}`}>
+        <div className="p-6 flex items-center space-x-3 h-16 shrink-0">
+          <div className="w-8 h-8 bg-gray-900 rounded-lg flex items-center justify-center shadow-xl">
+             <span className="text-white font-black text-sm italic">J</span>
+          </div>
+          {isSidebarOpen && <span className="font-bold text-lg tracking-tight">JARVIS<span className="text-blue-600">PMO</span></span>}
+        </div>
+
+        <nav className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto no-scrollbar scroll-smooth">
+          {sidebarItems.map((item, idx) => {
+            if (item.type === 'divider') {
+              return isSidebarOpen ? (
+                <div key={idx} className="px-3 pt-6 pb-2 text-[10px] font-black text-gray-300 uppercase tracking-widest">
+                  {item.label}
+                </div>
+              ) : <div key={idx} className="h-4" />;
+            }
+
+            const isActive = activeModule === item.id;
+            return (
+              <button
+                key={item.id}
+                onClick={() => setActiveModule(item.id)}
+                className={`w-full flex items-center space-x-3 px-3 py-2 rounded-xl transition-all group ${
+                  isActive ? 'bg-blue-50 text-blue-600 font-bold' : 'text-gray-500 hover:bg-gray-50'
+                }`}
+              >
+                <item.icon className={`w-4 h-4 shrink-0 transition-colors ${isActive ? 'text-blue-600' : 'text-gray-400 group-hover:text-gray-900'}`} />
+                {isSidebarOpen && <span className="text-xs truncate">{item.label}</span>}
+                {isActive && isSidebarOpen && <div className="ml-auto w-1 h-1 bg-blue-600 rounded-full" />}
+              </button>
+            );
+          })}
+        </nav>
+
+        <div className="p-4 border-t border-gray-50">
+           <div className={`p-2 bg-gray-50 rounded-xl flex items-center ${isSidebarOpen ? 'space-x-3' : 'justify-center'}`}>
+              <div className="w-8 h-8 rounded-lg bg-gray-200 border border-white flex items-center justify-center font-bold text-gray-500 text-xs">JD</div>
+              {isSidebarOpen && (
+                <div className="flex-1 overflow-hidden">
+                  <p className="text-[10px] font-black uppercase">John Doe</p>
+                  <p className="text-[10px] text-gray-400">PMO Lead</p>
+                </div>
+              )}
+           </div>
+        </div>
+      </aside>
+
+      {/* Main Content */}
+      <main className="flex-1 flex flex-col h-screen overflow-hidden">
+        {/* Header */}
+        <header className="bg-white/80 backdrop-blur-md border-b border-gray-100 h-16 flex items-center justify-between px-8 shrink-0 z-30">
+          <div className="flex items-center space-x-4">
+             <button onClick={() => setSidebarOpen(!isSidebarOpen)} className="p-1.5 hover:bg-gray-100 rounded-lg text-gray-400">
+               <ChevronRight className={`w-5 h-5 transition-transform ${isSidebarOpen ? 'rotate-180' : ''}`} />
+             </button>
+             <div className="h-4 w-px bg-gray-100 mx-2" />
+             <div className="flex items-center text-[11px] font-bold text-gray-400 uppercase tracking-widest">
+                Portfolios <ChevronRight className="w-3 h-3 mx-1" /> <span className="text-gray-900">Horizon Estates</span>
+             </div>
+          </div>
+
+          <div className="flex items-center space-x-6">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" />
+              <input 
+                type="text" 
+                placeholder="SSOT DATA SEARCH..." 
+                className="pl-9 pr-4 py-2 bg-gray-50 border-none rounded-xl text-[10px] font-bold focus:ring-2 focus:ring-blue-100 outline-none w-64 transition-all"
+              />
+            </div>
+            <div className="flex items-center space-x-2">
+               <button className="p-2 text-gray-400 hover:bg-gray-50 rounded-lg relative">
+                 <Bell className="w-4 h-4" />
+                 <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-rose-500 rounded-full border border-white" />
+               </button>
+               <button className="p-2 text-gray-400 hover:bg-gray-50 rounded-lg"><MoreVertical className="w-4 h-4" /></button>
+            </div>
+          </div>
+        </header>
+
+        {/* Scrollable Area */}
+        <div className="flex-1 overflow-y-auto p-8 no-scrollbar bg-[#FDFDFE] relative">
+          <div className="max-w-6xl mx-auto pb-20">
+             {activeModule === "Dashboard" ? <DashboardView /> : <ModulesView activeModule={activeModule} />}
+          </div>
+        </div>
+      </main>
+
+      {/* Jarvis Intelligence Overlay Toggle */}
+      <button className="fixed bottom-8 right-8 w-14 h-14 bg-gray-900 text-white rounded-2xl shadow-2xl flex items-center justify-center hover:scale-105 transition-all group z-50">
+        <Activity className="w-6 h-6 group-hover:rotate-12 transition-transform" />
+        <div className="absolute -top-1 -right-1 w-4 h-4 bg-blue-500 rounded-full border-2 border-white flex items-center justify-center">
+          <div className="w-1.5 h-1.5 bg-white rounded-full animate-ping" />
+        </div>
+      </button>
+    </div>
+  );
+}

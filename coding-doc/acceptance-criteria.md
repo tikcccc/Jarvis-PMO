@@ -1,0 +1,49 @@
+# Jarvis PMO Prototype Acceptance Criteria
+
+## 1. Source Governance
+
+- Only approved `reference-doc/IN/` files are treated as active agent input.
+- `reference-doc/OUT/` is reference output, not the primary implementation baseline.
+- `reference-doc/PENDING/` is ignored unless explicitly approved by a human.
+
+## 2. Product Structure
+
+- The frontend includes the strategic dashboard plus the twelve documented modules.
+- Module labels match the PMO documentation and existing prototype naming.
+- Sidebar grouping and navigation hierarchy remain consistent with the current prototype.
+
+## 3. Visual Fidelity
+
+- The interface preserves the white executive command-center style from the current prototype.
+- Sidebar, top header, card structure, badge language, and floating action button stay visually consistent across all pages.
+- Accent colors remain blue, emerald, amber, and rose for their current semantic roles.
+- `lucide-react` remains the icon family unless the user explicitly changes that decision.
+
+## 4. Layout Consistency
+
+- Expanded and collapsed sidebar states both render correctly.
+- Main header stays stable across all module routes.
+- Main content area preserves the same padding and information density as the source prototype.
+- Tables, KPI grids, and dark emphasis panels use the same spacing and card language.
+
+## 5. Behavioral Consistency
+
+- Sidebar navigation switches modules without breaking shell layout.
+- Hover, focus, and active states follow the same interaction tone as the prototype.
+- Scroll regions behave predictably for sidebar, page body, and detail panels.
+- Module pages keep existing local interactions such as selected approval detail and selected portfolio project.
+- The dashboard `Portfolio Strategic Map (GIS)` renders the same geographic project dataset as the portfolio route instead of a placeholder panel.
+- The portfolio route supports `MAP` and `SATELLITE` mode switching without breaking project selection behavior.
+- If `NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN` is missing, the portfolio route falls back to a safe preview state instead of a runtime failure.
+
+## 6. Technical Acceptance
+
+- Frontend architecture is based on Next.js App Router.
+- Shared UI primitives are reused instead of duplicated.
+- Mock data is typed and stored outside page components.
+- The architecture, data contract, API seam, acceptance criteria, and test strategy docs stay mutually consistent.
+
+## 7. Delivery Constraint
+
+- Changes should be incremental relative to the existing prototype.
+- The first implementation pass is not a redesign exercise.
