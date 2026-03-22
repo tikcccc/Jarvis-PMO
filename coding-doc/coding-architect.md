@@ -54,7 +54,9 @@ Module naming must stay aligned with the reference documents. Do not rename modu
 - Icons: `lucide-react`
 - Fonts: `Inter` or equivalent neutral sans for app chrome
 - Data source: local typed mock data for prototype phase
+- Analytical charts: `ECharts` in isolated client components when a module needs richer trend, comparison, distribution, heatmap, or forecast views than shared CSS/SVG patterns can provide
 - Portfolio map: `react-map-gl` backed by Mapbox GL JS, with public token provided through `NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN`
+- GIS and geographic portfolio views stay on Mapbox-backed components rather than ECharts map surfaces
 - Dashboard strategic GIS and portfolio GIS should reuse the same project coordinate dataset and shared map component logic
 - State approach: local component state first; avoid a global store until there is real cross-page application state
 
@@ -165,6 +167,7 @@ lib/
 - Sidebar collapse state is client-side UI state.
 - Module pages can stay thin and render typed sections.
 - Rich interactive views such as approvals, portfolio map selection, and finance simulations should be isolated into client components.
+- Client-only charting integrations should be wrapped in isolated client components so route render stays stable when a chart is absent or data is incomplete.
 - External browser-only integrations such as the portfolio map should degrade gracefully when configuration is absent, rather than breaking route render.
 
 ## 8. Shared UI System
@@ -222,12 +225,18 @@ The current prototype already defines a stable visual language. Preserve these p
 
 ## 9. Module Composition Rules
 
-Each route should assemble:
+Each route should define a task-led composition, not a fixed page formula. Most routes should still identify these roles:
 
-1. a module-level page header or summary row
-2. one or more KPI or overview grids
-3. one primary deep-work panel
-4. one secondary insight, log, or action panel
+1. a module entry state such as a page header, summary row, or embedded context header
+2. summary signals only when they materially improve scan speed; these may appear as a KPI grid, compact ribbon, inline strip, or be embedded in the primary surface
+3. one primary deep-work surface that matches the module's archetype
+4. one secondary support zone for insight, log, action, or selected detail; this may appear as a sidecar, lower panel, tabbed same-route view, or contextual drawer
+
+Do not default unrelated modules to the same `top KPI + main workbench + right side panel` rhythm.
+Similar compositions are acceptable when the underlying operator task is similar; the test is task fit, not forced novelty.
+Choose the module archetype before implementation, for example map-first, queue/casework-first, timeline/dependency-first, comparison/risk-first, live-operations-first, finance/scenario-first, or coordination/canvas-first.
+
+Analytical charts are optional, not mandatory. Use them when the module's primary questions are about trend, spread, forecast, or anomaly concentration; otherwise prefer tables, queues, maps, timelines, detail canvases, or coordination surfaces.
 
 The dashboard and the modules should feel like parts of one system. New pages must inherit the same shell and component semantics.
 
@@ -242,6 +251,7 @@ Recommended ownership:
 - portfolio list and map markers: `lib/mock-data/portfolio.ts`
 - milestone timeline: `lib/mock-data/milestones.ts`
 - approvals master/detail data: `lib/mock-data/approvals.ts`
+- chart series, labels, thresholds, and comparison bands: module-specific `lib/mock-data/*` files
 - generic module overviews: `lib/mock-data/modules.ts`
 
 ## 11. Migration Strategy From Existing Prototype

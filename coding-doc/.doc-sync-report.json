@@ -20,11 +20,6 @@
     {
       "severity": "warn",
       "code": "MISSING_MODULE_DOC",
-      "message": "Missing module doc: /home/dministrator/Jarvis-PMO/coding-doc/modules/design.md"
-    },
-    {
-      "severity": "warn",
-      "code": "MISSING_MODULE_DOC",
       "message": "Missing module doc: /home/dministrator/Jarvis-PMO/coding-doc/modules/finance.md"
     },
     {

@@ -39,6 +39,11 @@ Implement the complex reference-heavy pages first:
 5. Finance
 
 These pages define most of the shell, grid, table, progress bar, and dark-panel patterns used elsewhere.
+- During each screen migration, decide whether the module needs a chart-first, map-first, or workbench-first analytical surface.
+- Before implementation, classify the module archetype and reading path, for example map-first, queue/casework-first, comparison/risk-first, timeline-first, live-operations-first, finance/scenario-first, or coordination/canvas-first.
+- Record whether summary signals belong in a top KPI band, compact ribbon, inline strip, or inside the primary surface instead of assuming every route needs the same top section.
+- Only introduce charting when a trend, comparison, distribution, or forecast view materially reduces operator scan time.
+- Record approved chart surfaces in the corresponding module doc instead of assuming every module should gain charts.
 
 ## Phase 5. Migrate Remaining Modules
 
@@ -52,6 +57,9 @@ These pages define most of the shell, grid, table, progress bar, and dark-panel 
 - Handover
 
 During this phase, reuse existing shared sections whenever possible instead of cloning new markup.
+- Keep workbench-first modules such as requirements and approvals focused on queue, table, detail, and evidence patterns unless a chart has a clear operational role.
+- Do not reuse the exact same `top KPI + main workbench + right side panel` rhythm across unrelated modules just because it already exists.
+- If two modules share a similar composition, document the workflow reason in the module doc instead of implying the similarity is the default.
 
 ## Phase 6. QA and Consistency Pass
 
@@ -59,6 +67,8 @@ During this phase, reuse existing shared sections whenever possible instead of c
 - Verify motion stays inside the approved shell and module hierarchy guardrails.
 - Confirm icon family, spacing, and card language remain consistent.
 - Verify reduced-motion fallbacks for non-essential animation.
+- Verify analytical charts, when present, keep shared color semantics, readable legends, and stable empty states.
+- Verify module differences are rational and task-led, while similarities are justified by genuinely similar operator workflows.
 - Run responsive checks for desktop and mobile.
 - Compare the migrated pages against the original reference prototype.
 

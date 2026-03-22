@@ -1,10 +1,11 @@
 {
   "doc_dir": "/home/dministrator/Jarvis-PMO/coding-doc",
-  "files_count": 12,
+  "files_count": 13,
   "folders": [
     "modules"
   ],
   "module_docs": [
+    "modules/design.md",
     "modules/procurement.md",
     "modules/requirements.md"
   ],
@@ -36,22 +37,22 @@
           "text": "3. Visual Fidelity"
         },
         {
-          "line": 22,
+          "line": 23,
           "level": 2,
           "text": "4. Layout Consistency"
         },
         {
-          "line": 29,
+          "line": 32,
           "level": 2,
           "text": "5. Behavioral Consistency"
         },
         {
-          "line": 44,
+          "line": 47,
           "level": 2,
           "text": "6. Technical Acceptance"
         },
         {
-          "line": 53,
+          "line": 57,
           "level": 2,
           "text": "7. Delivery Constraint"
         }
@@ -245,82 +246,82 @@
           "text": "4. Technology Decisions"
         },
         {
-          "line": 61,
+          "line": 63,
           "level": 2,
           "text": "5. Architectural Principles"
         },
         {
-          "line": 63,
+          "line": 65,
           "level": 3,
           "text": "5.1 High-Fidelity Before Expansion"
         },
         {
-          "line": 69,
+          "line": 71,
           "level": 3,
           "text": "5.2 Shared Shell First"
         },
         {
-          "line": 79,
+          "line": 81,
           "level": 3,
           "text": "5.3 Mocked Data, Real Component Boundaries"
         },
         {
-          "line": 88,
+          "line": 90,
           "level": 2,
           "text": "6. Proposed Next.js File Structure"
         },
         {
-          "line": 162,
+          "line": 164,
           "level": 2,
           "text": "7. Rendering Model"
         },
         {
-          "line": 170,
+          "line": 173,
           "level": 2,
           "text": "8. Shared UI System"
         },
         {
-          "line": 174,
+          "line": 177,
           "level": 3,
           "text": "8.1 Global Shell"
         },
         {
-          "line": 181,
+          "line": 184,
           "level": 3,
           "text": "8.2 Primitive Components"
         },
         {
-          "line": 199,
+          "line": 202,
           "level": 3,
           "text": "8.3 Accent System"
         },
         {
-          "line": 207,
+          "line": 210,
           "level": 3,
           "text": "8.4 Information Density"
         },
         {
-          "line": 214,
+          "line": 217,
           "level": 3,
           "text": "8.5 Motion System"
         },
         {
-          "line": 223,
+          "line": 226,
           "level": 2,
           "text": "9. Module Composition Rules"
         },
         {
-          "line": 234,
+          "line": 243,
           "level": 2,
           "text": "10. Data Ownership"
         },
         {
-          "line": 247,
+          "line": 257,
           "level": 2,
           "text": "11. Migration Strategy From Existing Prototype"
         },
         {
-          "line": 255,
+          "line": 265,
           "level": 2,
           "text": "12. Non-Goals For This Phase"
         }
@@ -363,22 +364,22 @@
           "text": "Phase 4. Migrate High-Fidelity Screens"
         },
         {
-          "line": 43,
+          "line": 48,
           "level": 2,
           "text": "Phase 5. Migrate Remaining Modules"
         },
         {
-          "line": 56,
+          "line": 64,
           "level": 2,
           "text": "Phase 6. QA and Consistency Pass"
         },
         {
-          "line": 65,
+          "line": 75,
           "level": 2,
           "text": "Deliverables"
         },
         {
-          "line": 73,
+          "line": 83,
           "level": 2,
           "text": "Implementation Constraints"
         }
@@ -411,22 +412,22 @@
           "text": "3. Stack and Tooling"
         },
         {
-          "line": 29,
+          "line": 30,
           "level": 2,
           "text": "4. UI and Component Rules"
         },
         {
-          "line": 41,
+          "line": 50,
           "level": 2,
           "text": "5. Data and Typing Rules"
         },
         {
-          "line": 48,
+          "line": 58,
           "level": 2,
           "text": "6. Environment and Integration Rules"
         },
         {
-          "line": 55,
+          "line": 65,
           "level": 2,
           "text": "7. Review Baseline"
         }
@@ -512,32 +513,100 @@
           "text": "5. Required UI Composition"
         },
         {
-          "line": 35,
+          "line": 38,
           "level": 2,
           "text": "6. Data and Code Ownership"
         },
         {
-          "line": 43,
+          "line": 46,
           "level": 2,
           "text": "7. Interaction Notes"
         },
         {
-          "line": 50,
+          "line": 54,
           "level": 2,
           "text": "8. Do Not Drift"
         },
         {
-          "line": 55,
+          "line": 59,
           "level": 2,
           "text": "9. Implementation Tasks"
         },
         {
-          "line": 61,
+          "line": 65,
           "level": 2,
           "text": "10. Acceptance Checks"
         },
         {
-          "line": 67,
+          "line": 71,
+          "level": 2,
+          "text": "11. Documentation Sync"
+        }
+      ]
+    },
+    {
+      "file": "modules/design.md",
+      "folder": "modules",
+      "title": "Design",
+      "heading_count": 12,
+      "headings": [
+        {
+          "line": 1,
+          "level": 1,
+          "text": "Design"
+        },
+        {
+          "line": 3,
+          "level": 2,
+          "text": "1. Module Identity"
+        },
+        {
+          "line": 10,
+          "level": 2,
+          "text": "2. Approved Source Inputs"
+        },
+        {
+          "line": 31,
+          "level": 2,
+          "text": "3. Business Intent"
+        },
+        {
+          "line": 43,
+          "level": 2,
+          "text": "4. Current State and Gap"
+        },
+        {
+          "line": 54,
+          "level": 2,
+          "text": "5. Required UI Composition"
+        },
+        {
+          "line": 81,
+          "level": 2,
+          "text": "6. Data and Code Ownership"
+        },
+        {
+          "line": 98,
+          "level": 2,
+          "text": "7. Interaction Notes"
+        },
+        {
+          "line": 116,
+          "level": 2,
+          "text": "8. Do Not Drift"
+        },
+        {
+          "line": 129,
+          "level": 2,
+          "text": "9. Implementation Tasks"
+        },
+        {
+          "line": 137,
+          "level": 2,
+          "text": "10. Acceptance Checks"
+        },
+        {
+          "line": 147,
           "level": 2,
           "text": "11. Documentation Sync"
         }
@@ -716,22 +785,22 @@
           "text": "2.3 Visual Regression Focus"
         },
         {
-          "line": 35,
+          "line": 36,
           "level": 2,
           "text": "3. Manual QA Checklist"
         },
         {
-          "line": 61,
+          "line": 65,
           "level": 2,
           "text": "4. Recommended Automated UI Coverage"
         },
         {
-          "line": 75,
+          "line": 79,
           "level": 2,
           "text": "5. Content Integrity Checks"
         },
         {
-          "line": 82,
+          "line": 86,
           "level": 2,
           "text": "6. Exit Criteria"
         }
@@ -741,7 +810,7 @@
       "file": "ui-consistency.md",
       "folder": "",
       "title": "Jarvis PMO UI Consistency Spec",
-      "heading_count": 37,
+      "heading_count": 38,
       "headings": [
         {
           "line": 1,
@@ -854,77 +923,82 @@
           "text": "5.1 Consistency Is Not Sameness"
         },
         {
-          "line": 175,
+          "line": 180,
           "level": 3,
           "text": "5.2 Attention Hierarchy and Heatmap Rules"
         },
         {
-          "line": 191,
+          "line": 196,
           "level": 3,
           "text": "5.3 Typography Hierarchy"
         },
         {
-          "line": 211,
+          "line": 216,
           "level": 3,
           "text": "5.4 Layout Rhythm"
         },
         {
-          "line": 224,
+          "line": 235,
           "level": 3,
           "text": "5.5 Emphasis Budget"
         },
         {
-          "line": 239,
+          "line": 250,
           "level": 3,
           "text": "5.6 Responsive Reprioritization"
         },
         {
-          "line": 250,
+          "line": 261,
           "level": 3,
           "text": "5.7 Motion Hierarchy"
         },
         {
-          "line": 257,
+          "line": 268,
+          "level": 3,
+          "text": "5.8 Analytical Visualization Rules"
+        },
+        {
+          "line": 279,
           "level": 2,
           "text": "6. Module Archetype Guidance"
         },
         {
-          "line": 261,
+          "line": 283,
           "level": 3,
           "text": "Finance"
         },
         {
-          "line": 266,
+          "line": 288,
           "level": 3,
           "text": "Approvals"
         },
         {
-          "line": 271,
+          "line": 293,
           "level": 3,
           "text": "Procurement"
         },
         {
-          "line": 276,
+          "line": 298,
           "level": 3,
           "text": "Milestones"
         },
         {
-          "line": 281,
+          "line": 303,
           "level": 3,
           "text": "Portfolio"
         },
         {
-          "line": 286,
+          "line": 308,
           "level": 3,
           "text": "Progress, Quality, Safety"
         },
         {
-          "line": 291,
+          "line": 313,
           "level": 2,
           "text": "7. Skill Usage Guidance"
         },
         {
-          "line": 297,
+          "line": 319,
           "level": 2,
           "text": "8. Allowed Changes"
         }

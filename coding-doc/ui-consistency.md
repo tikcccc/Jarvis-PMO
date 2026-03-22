@@ -165,12 +165,17 @@ Allowed variation includes:
 - different ratios between workspace and detail
 - different use of dark analytical panels
 - different information density between sections
+- different placement of support zones such as sidecars, lower panels, drawers, or tabbed same-route views
+
+Modules with similar operator tasks may legitimately share the same broad archetype.
+Difference is not a goal by itself; the goal is a composition that matches the module task without collapsing unrelated modules into one repeated formula.
 
 Not allowed:
 
 - changing the shell structure per module
 - inventing a new design language unrelated to the approved prototype
 - turning operational modules into marketing-style pages
+- copying one module's exact `top KPI + main workbench + right side panel` rhythm into unrelated modules without task justification
 
 ### 5.2 Attention Hierarchy and Heatmap Rules
 
@@ -221,6 +226,12 @@ Module pages may emphasize different rhythms such as:
 - comparison matrix plus risk interpretation sidecar
 - live alert wall plus remediation log
 
+Guidance:
+
+- a KPI band is optional when summary signals are clearer inside the primary surface or selected context header
+- a secondary support zone does not have to live on the right; it may live below the main surface, inside tabs, in a same-route alternate view, or in a drawer
+- choose the simplest rhythm that matches the module task; do not add variation only to appear different
+
 ### 5.5 Emphasis Budget
 
 Every page has a limited emphasis budget.
@@ -253,6 +264,17 @@ On smaller widths:
 - Secondary support zones may animate more softly or only on explicit user interaction.
 - Tertiary context should usually stay still.
 - If more than one major surface is looping at the same time, the page is overspending its emphasis budget.
+
+### 5.8 Analytical Visualization Rules
+
+- Analytical charts are optional. They should appear only when they compress trend, comparison, distribution, forecast, or anomaly-density questions better than KPI cards, tables, queues, or detail panels.
+- Geography-first views should keep map surfaces as the dominant visualization instead of replacing them with generic charts.
+- Preferred operational chart types are line, bar, stacked bar, scatter, heatmap, bullet, and limited waterfall-style comparisons.
+- Avoid pie-heavy layouts, decorative gauges, 3D charts, and other novelty visuals unless a human explicitly approves the exception.
+- A page should usually have no more than one dominant chart surface. Additional charts should stay secondary and must not erase the module's main workbench or detail-reading path.
+- Charts must inherit the shared card shell, Jarvis semantic colors, compact uppercase metadata language, and restrained density; vendor default themes are not an acceptable final presentation.
+- Legends, thresholds, and annotations should read like PMO controls, not like marketing dashboard decoration.
+- Charts should degrade to stable placeholders or empty states when data is incomplete, and non-essential chart animation must respect reduced-motion settings.
 
 ## 6. Module Archetype Guidance
 

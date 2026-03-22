@@ -27,10 +27,13 @@
 
 ## 5. Required UI Composition
 
+- Page archetype and why it fits:
 - Header or summary row:
-- KPI or overview grid:
-- Primary working panel:
-- Secondary insight, log, or action panel:
+- KPI or overview strategy:
+- Primary focal zone:
+- Secondary support zone:
+- Same-route alternate view, if justified:
+- Chart surfaces, if justified:
 
 ## 6. Data and Code Ownership
 
@@ -44,6 +47,7 @@
 
 - Primary user actions:
 - Selection or drill-down behavior:
+- Chart drill-down, legend, or filter behavior:
 - Empty or fallback behavior:
 - Responsive notes:
 
@@ -67,4 +71,5 @@
 ## 11. Documentation Sync
 
 - Update this file when:
+- Update chart surfaces, chart roles, or visualization rules here when they change.
 - Also update:

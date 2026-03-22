@@ -22,10 +22,13 @@ Mirror this structure in `coding-doc/modules/<module>.md`.
    - what exists today
    - what is still missing
 5. `Required UI Composition`
+   - page archetype and why it fits the module task
    - header or summary row
-   - KPI or overview grid
-   - primary working panel
-   - secondary panel or log
+   - KPI or overview strategy
+   - primary focal zone
+   - secondary support zone
+   - same-route alternate view when justified
+   - chart surfaces when justified
 6. `Data and Code Ownership`
    - route file
    - page component
@@ -53,4 +56,5 @@ Mirror this structure in `coding-doc/modules/<module>.md`.
 - Record current implementation status explicitly.
 - Separate current state from target state.
 - Prefer route names and module labels that exactly match approved sources.
+- Do not force uniqueness for its own sake; justify layout similarity by task similarity and justify layout differences by operator need.
 - Keep the module doc short enough to guide implementation quickly.

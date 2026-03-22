@@ -13,11 +13,13 @@ Use this checklist before finishing a module implementation or module-doc update
 
 - Route has a module-specific purpose, not only generic section cards.
 - Page keeps the shared shell, spacing, badge language, and card semantics.
-- Page follows the documented anatomy:
-  - summary/header
-  - KPI grid or overview
-  - primary working panel
-  - secondary insight/log/action panel
+- Page follows the documented anatomy by role, not by one fixed page formula:
+  - entry/header or embedded context header
+  - summary signals only when they improve scan speed
+  - primary focal zone
+  - secondary support zone
+- The chosen layout is justified by the module task, not by template reuse alone.
+- If two modules share a similar rhythm, the similarity is explained by similar operator workflows rather than copied by default.
 
 ## Data and Code
 

@@ -29,6 +29,7 @@ The highest-risk failures are visual consistency failures, not data logic bugs. 
 - card radius, border, shadow, and padding drift
 - icon replacement or inconsistent icon sizing
 - table row density and progress bar style drift
+- chart card drift, unreadable legends, or default vendor theming that breaks Jarvis visual language
 - motion drift that makes shell navigation feel theatrical or unstable
 - reduced-motion regressions on animated module surfaces
 
@@ -47,6 +48,9 @@ The highest-risk failures are visual consistency failures, not data logic bugs. 
 - On `/procurement`, verify the expanded sidebar `Procurement` entry can reach both `Workbench` and `Logs` states.
 - On `/procurement`, verify the bidder comparison table scrolls horizontally on smaller widths while KPI cards and side panels stack cleanly.
 - On animated module surfaces, verify motion clarifies the primary focal zone and does not block selection, scrolling, or reading.
+- On routes with analytical charts, verify legends, thresholds, empty states, and semantic colors remain readable inside the shared Jarvis card shell.
+- On routes with analytical charts, verify the chart supports the module's primary operator question and does not displace an approved map-first or workbench-first composition.
+- Compare at least one queue/casework module, one comparison/risk module, and one map, timeline, or canvas-led module; verify layout differences are task-led and no unrelated route is using a copied formula without need.
 - With reduced motion enabled at OS level, verify non-essential ambient motion stops and major state changes remain understandable.
 - On `/`, verify `Portfolio Strategic Map (GIS)` renders real GIS tiles or the configured fallback preview, not a placeholder skeleton.
 - On `/portfolio`, verify both `MAP` and `SATELLITE` modes render and keep marker selection synchronized with the detail panel.

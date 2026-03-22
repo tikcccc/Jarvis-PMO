@@ -18,6 +18,7 @@
 - Sidebar, top header, card structure, badge language, and floating action button stay visually consistent across all pages.
 - Accent colors remain blue, emerald, amber, and rose for their current semantic roles.
 - `lucide-react` remains the icon family unless the user explicitly changes that decision.
+- Analytical charts, when used, inherit the same shell, card language, and semantic color system instead of introducing a vendor-default dashboard style.
 
 ## 4. Layout Consistency
 
@@ -25,6 +26,8 @@
 - Main header stays stable across all module routes.
 - Main content area preserves the same padding and information density as the source prototype.
 - Tables, KPI grids, and dark emphasis panels use the same spacing and card language.
+- Analytical charts do not displace approved map-first or workbench-first compositions when those are the module's primary task surface.
+- Module-level compositions remain task-led: unrelated modules do not all collapse into the same `top KPI + main workbench + right side panel` formula, while similar task types may still share an archetype when justified.
 
 ## 5. Behavioral Consistency
 
@@ -46,6 +49,7 @@
 - Frontend architecture is based on Next.js App Router.
 - Shared UI primitives are reused instead of duplicated.
 - Shared motion tokens and CSS classes are reused before heavier runtime animation layers are introduced.
+- If analytical charts are introduced, they use the approved charting approach, keep GIS on the Mapbox stack, and fail safely when data is absent.
 - Mock data is typed and stored outside page components.
 - Procurement page-specific data lives in `lib/mock-data/procurement.ts` and the route file remains a thin composition layer.
 - The architecture, data contract, API seam, acceptance criteria, and test strategy docs stay mutually consistent.

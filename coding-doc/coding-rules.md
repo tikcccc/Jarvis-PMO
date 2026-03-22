@@ -20,6 +20,7 @@ Keep the Next.js prototype implementation consistent with the approved reference
 - Spatial transitions: Motion for React (`motion/react`) only when layout or presence animation is required
 - Timeline-heavy sequences: GSAP only when CSS or Motion for React is not sufficient
 - Branded loop assets: Lottie only for contained approved surfaces
+- Analytical charts: `ECharts` only when a module needs richer trend, comparison, distribution, or forecast views than shared CSS/SVG patterns can provide
 - Icons: `lucide-react`
 - Quality gates:
   - `npm run lint`
@@ -33,6 +34,14 @@ Keep the Next.js prototype implementation consistent with the approved reference
 - Reuse the shared motion layer before adding a runtime animation dependency.
 - Keep route files thin; place rich interactivity in module components.
 - Keep runtime animation logic isolated in client components instead of spreading transition objects across route files.
+- Do not add charts by default; first justify that a chart improves operator scan speed relative to KPI cards, tables, queues, maps, or detail panels.
+- Keep charts inside shared card surfaces and style them with Jarvis tokens, semantic colors, and compact metadata language rather than vendor default themes.
+- Avoid novelty chart choices such as 3D, decorative gauge, or pie-heavy dashboards unless a human explicitly approves the exception.
+- Keep GIS surfaces on the approved Mapbox stack instead of introducing ECharts maps.
+- Do not default every module route to the same `top KPI row + main workbench + right side panel` composition.
+- Similar layouts across modules are acceptable when the operator workflow is genuinely similar; do not force variation for novelty alone.
+- Summary signals may live in a top grid, compact ribbon, inline strip, selected-context header, or primary surface depending on the task.
+- Secondary support zones may be sidecars, lower panels, drawers, or same-route alternate views.
 - Do not replace dense operational layouts with marketing-style sections.
 - Do not animate the global shell theatrically; motion should clarify state and hierarchy inside module-local surfaces.
 - Keep icon size, badge tone, border radius, and card shadow behavior consistent across modules.
@@ -42,6 +51,7 @@ Keep the Next.js prototype implementation consistent with the approved reference
 
 - Store prototype datasets in `lib/mock-data/*`, not inline inside route files.
 - Keep display-ready strings when the UI already expects formatted labels such as currency or percentages.
+- Store chart series, threshold bands, legends, and comparison labels in typed mock-data files rather than inline chart config blobs inside components.
 - Update `coding-doc/data-contract.md` whenever typed mock-data fields change.
 - Prefer explicit field names when semantics change, for example geographic `latitude` and `longitude` over layout-only placeholder coordinates.
 
