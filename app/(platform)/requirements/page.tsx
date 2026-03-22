@@ -1,5 +1,5 @@
-import { GenericModulePage } from "@/components/modules/generic/generic-module-page";
+import { RequirementsPage } from "@/components/modules/requirements/requirements-page";
 
 export default function RequirementsRoute() {
-  return <GenericModulePage moduleId="requirements" />;
+  return <RequirementsPage />;
 }

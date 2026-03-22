@@ -106,6 +106,66 @@ export interface ApprovalCondition {
   evidenceLabel?: string;
 }
 
+export interface RequirementAttribute {
+  label: string;
+  value: string;
+}
+
+export interface RequirementEvidence {
+  id: string;
+  label: string;
+  kind: string;
+  sourceLabel: string;
+}
+
+export interface RequirementImpactLink {
+  id: string;
+  targetLabel: string;
+  targetType: "module" | "requirement";
+  impactLabel: string;
+  tone: Tone;
+  note: string;
+}
+
+export interface RequirementHistoryEntry {
+  id: string;
+  version: string;
+  dateLabel: string;
+  author: string;
+  action: string;
+  tone: Tone;
+  type: "baseline" | "review" | "drift";
+}
+
+export interface RequirementRiskAlert {
+  id: string;
+  severityLabel: string;
+  sourceLabel: string;
+  message: string;
+  budgetImpactLabel: string;
+  timelineImpactLabel: string;
+  recommendedAction: string;
+}
+
+export interface RequirementRecord {
+  id: string;
+  title: string;
+  integrityScore: number;
+  owner: string;
+  version: string;
+  statusLabel: string;
+  tone: Tone;
+  syncTimeLabel: string;
+  statement: string;
+  openChangeCount: number;
+  relatedModules: string[];
+  specificFields: RequirementAttribute[];
+  evidence: RequirementEvidence[];
+  linkages: RequirementImpactLink[];
+  history: RequirementHistoryEntry[];
+  riskAlert?: RequirementRiskAlert;
+}
+
 export interface ProcurementMetric {
   id: string;
   label: string;

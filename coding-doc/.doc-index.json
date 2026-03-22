@@ -1,11 +1,12 @@
 {
-  "doc_dir": "/home/tikhong/Jarvis PMO/coding-doc",
-  "files_count": 11,
+  "doc_dir": "/home/dministrator/Jarvis-PMO/coding-doc",
+  "files_count": 12,
   "folders": [
     "modules"
   ],
   "module_docs": [
-    "modules/procurement.md"
+    "modules/procurement.md",
+    "modules/requirements.md"
   ],
   "files": [
     {
@@ -45,12 +46,12 @@
           "text": "5. Behavioral Consistency"
         },
         {
-          "line": 42,
+          "line": 44,
           "level": 2,
           "text": "6. Technical Acceptance"
         },
         {
-          "line": 51,
+          "line": 53,
           "level": 2,
           "text": "7. Delivery Constraint"
         }
@@ -458,17 +459,17 @@
           "text": "3. Page-Specific Types"
         },
         {
-          "line": 195,
+          "line": 255,
           "level": 2,
           "text": "4. Data File Ownership"
         },
         {
-          "line": 222,
+          "line": 285,
           "level": 2,
           "text": "5. Contract Rules"
         },
         {
-          "line": 230,
+          "line": 293,
           "level": 2,
           "text": "6. Input Source Rule"
         }
@@ -611,6 +612,74 @@
       ]
     },
     {
+      "file": "modules/requirements.md",
+      "folder": "modules",
+      "title": "Requirements",
+      "heading_count": 12,
+      "headings": [
+        {
+          "line": 1,
+          "level": 1,
+          "text": "Requirements"
+        },
+        {
+          "line": 3,
+          "level": 2,
+          "text": "1. Module Identity"
+        },
+        {
+          "line": 10,
+          "level": 2,
+          "text": "2. Approved Source Inputs"
+        },
+        {
+          "line": 30,
+          "level": 2,
+          "text": "3. Business Intent"
+        },
+        {
+          "line": 42,
+          "level": 2,
+          "text": "4. Current State and Gap"
+        },
+        {
+          "line": 54,
+          "level": 2,
+          "text": "5. Required UI Composition"
+        },
+        {
+          "line": 76,
+          "level": 2,
+          "text": "6. Data and Code Ownership"
+        },
+        {
+          "line": 92,
+          "level": 2,
+          "text": "7. Interaction Notes"
+        },
+        {
+          "line": 109,
+          "level": 2,
+          "text": "8. Do Not Drift"
+        },
+        {
+          "line": 121,
+          "level": 2,
+          "text": "9. Implementation Tasks"
+        },
+        {
+          "line": 129,
+          "level": 2,
+          "text": "10. Acceptance Checks"
+        },
+        {
+          "line": 138,
+          "level": 2,
+          "text": "11. Documentation Sync"
+        }
+      ]
+    },
+    {
       "file": "test-strategy.md",
       "folder": "",
       "title": "Jarvis PMO Prototype Test Strategy",
@@ -642,27 +711,27 @@
           "text": "2.2 Component and Route Smoke Checks"
         },
         {
-          "line": 22,
+          "line": 23,
           "level": 3,
           "text": "2.3 Visual Regression Focus"
         },
         {
-          "line": 34,
+          "line": 35,
           "level": 2,
           "text": "3. Manual QA Checklist"
         },
         {
-          "line": 58,
+          "line": 61,
           "level": 2,
           "text": "4. Recommended Automated UI Coverage"
         },
         {
-          "line": 72,
+          "line": 75,
           "level": 2,
           "text": "5. Content Integrity Checks"
         },
         {
-          "line": 79,
+          "line": 82,
           "level": 2,
           "text": "6. Exit Criteria"
         }

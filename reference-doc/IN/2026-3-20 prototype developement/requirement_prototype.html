@@ -1,0 +1,631 @@
+import React, { useState } from 'react';
+import { 
+  LayoutDashboard, Layers, Target, Milestone, FileCheck, ShoppingCart, 
+  PenTool, Wallet, CreditCard, Eye, ShieldCheck, HardHat, Key, Search, 
+  Bell, MoreVertical, ChevronRight, Activity, Clock, Scan, Database, 
+  FileText, ArrowRightLeft, ShieldAlert, History, Edit3, Link as LinkIcon,
+  AlertTriangle, CheckCircle2, GitCommit, GitBranch, RefreshCw
+} from 'lucide-react';
+
+// --- Shared UI Components ---
+
+const Card = ({ children, className = "" }) => (
+  <div className={`bg-white rounded-xl border border-gray-100 shadow-sm transition-all hover:shadow-md ${className}`}>
+    {children}
+  </div>
+);
+
+const Badge = ({ children, variant = "default" }) => {
+  const styles = {
+    default: "bg-gray-100 text-gray-700",
+    success: "bg-emerald-50 text-emerald-700 border border-emerald-100",
+    warning: "bg-amber-50 text-amber-700 border border-amber-100",
+    danger: "bg-rose-50 text-rose-700 border border-rose-100",
+    info: "bg-blue-50 text-blue-700 border border-blue-100",
+  };
+  return (
+    <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${styles[variant]}`}>
+      {children}
+    </span>
+  );
+};
+
+const ProgressBar = ({ progress, variant = "blue" }) => {
+  const colors = {
+    blue: "bg-blue-500",
+    emerald: "bg-emerald-500",
+    amber: "bg-amber-500",
+    rose: "bg-rose-500",
+  };
+  return (
+    <div className="h-1.5 w-full bg-gray-100 rounded-full overflow-hidden">
+      <div className={`h-full ${colors[variant]} transition-all duration-500`} style={{ width: `${progress}%` }} />
+    </div>
+  );
+}
+
+// --- Deep Mock Data (Aligned with JPM PDF Section 2.2 & 2.3) ---
+
+const REQUIREMENTS_DATA = [
+  { 
+    id: 'client_req', 
+    title: "Client Requirements", 
+    integrity: 100, 
+    owner: "PMO Lead", 
+    version: "v2.1", 
+    status: "Synced", 
+    syncTime: "2h ago", 
+    statement: "Deliver a premium estate with strict ESG-S standards.", 
+    specificFields: [
+      { label: "Vision Tags", value: "Timeless Elegance, Net-Zero" },
+      { label: "Functional Specs", value: "120k sqm mixed-use, ADA Compliant" },
+      { label: "Experience KPIs", value: "Acoustics < 35dB, WELL Gold" }
+    ],
+    evidence: ["Vision_Statement_v2.pdf", "Board_Minutes_03.docx"], 
+    linkages: [{ target: "Project Brief", impact: "Direct" }, { target: "Information Requirements", impact: "Indirect" }]
+  },
+  { 
+    id: 'feasibility', 
+    title: "Feasibility Studies", 
+    integrity: 100, 
+    owner: "Finance Dir", 
+    version: "v3.0", 
+    status: "Synced", 
+    syncTime: "5d ago", 
+    statement: "Financial and technical viability baseline.", 
+    specificFields: [
+      { label: "Target IRR", value: "15.2%" },
+      { label: "NPV", value: "$45M" },
+      { label: "Market Assumption", value: "Luxury Retail $120/sqm/mo" }
+    ],
+    evidence: ["Feasibility_Final.pdf", "Market_Analysis.xlsx"], 
+    linkages: [{ target: "Project Budget", impact: "Direct" }]
+  },
+  { 
+    id: 'site_info', 
+    title: "Site Information", 
+    integrity: 82, 
+    owner: "Site Eng", 
+    version: "v1.2", 
+    status: "Drift Detected", 
+    syncTime: "1h ago", 
+    statement: "Geotechnical conditions require deep piling. Minor soil contamination detected.", 
+    specificFields: [
+      { label: "Geotechnical", value: "Deep bedrock at 45m" },
+      { label: "Contamination", value: "Zone B heavy metals detected" },
+      { label: "Constraints", value: "Max height 120m (Aviation constraint)" }
+    ],
+    evidence: ["Geotech_Report_Rev2.pdf", "GIS_Survey.zip"], 
+    linkages: [{ target: "Project Programme", impact: "High Risk" }, { target: "Project Budget", impact: "High Risk" }]
+  },
+  { 
+    id: 'budget', 
+    title: "Project Budget", 
+    integrity: 100, 
+    owner: "Commercial Dir", 
+    version: "v4.1", 
+    status: "Synced", 
+    syncTime: "10m ago", 
+    statement: "Approved Baseline Budget with contingencies.", 
+    specificFields: [
+      { label: "Total EFC", value: "$428.4M" },
+      { label: "Contingency", value: "5% ($21.4M)" },
+      { label: "VO Threshold", value: "10% of Awarded" }
+    ],
+    evidence: ["Budget_Approval_Signed.pdf"], 
+    linkages: [{ target: "Procurement Strategy", impact: "Direct" }]
+  },
+  { 
+    id: 'programme', 
+    title: "Project Programme", 
+    integrity: 95, 
+    owner: "Planning Mgr", 
+    version: "v2.0", 
+    status: "Pending Review", 
+    syncTime: "2h ago", 
+    statement: "Master Schedule baseline-v2. Project Handover Mar 2028.", 
+    specificFields: [
+      { label: "Critical Path", value: "Zone B Foundation -> Tower A Struct" },
+      { label: "Handover Date", value: "15-Mar-2028" },
+      { label: "Float", value: "14 Days" }
+    ],
+    evidence: ["P6_Baseline_v2.xer"], 
+    linkages: [{ target: "Responsibility Matrix", impact: "Indirect" }]
+  },
+  { 
+    id: 'procurement', 
+    title: "Procurement Strategy", 
+    integrity: 90, 
+    owner: "Procurement Lead", 
+    version: "v1.5", 
+    status: "Synced", 
+    syncTime: "4h ago", 
+    statement: "Target 80% total value via GMP contracts (NEC4 Option C).", 
+    specificFields: [
+      { label: "Contract Model", value: "NEC4 Option C (Target Contract)" },
+      { label: "Tender Packages", value: "14 Main Packages" },
+      { label: "ESG Criteria", value: "Mandatory 20% local sourcing" }
+    ],
+    evidence: ["Procurement_Strategy_Update.pdf"], 
+    linkages: [{ target: "Project Budget", impact: "Direct" }]
+  },
+  { 
+    id: 'info_req', 
+    title: "Information Requirements", 
+    integrity: 100, 
+    owner: "BIM Manager", 
+    version: "v2.2", 
+    status: "Synced", 
+    syncTime: "2d ago", 
+    statement: "BIM and digital twin data delivery standards.", 
+    specificFields: [
+      { label: "LOD Standard", value: "LOD 400 (Const), LOD 500 (FM)" },
+      { label: "Classification", value: "OmniClass v2024" },
+      { label: "Format", value: "IFC 4x3, RVT 2024" }
+    ],
+    evidence: ["EIR_Document_v2.pdf", "BIM_Execution_Plan.pdf"], 
+    linkages: [{ target: "Client Requirements", impact: "Direct" }]
+  },
+];
+
+const VERSION_HISTORY = [
+  { version: "v1.2", date: "Today, 08:30", author: "Recording Agent", action: "Updated Geotech constraints based on new GIS_Survey.zip.", type: "drift" },
+  { version: "v1.1", date: "12 Oct 2025", author: "Site Eng (J.Doe)", action: "Initial site boundary coordinates logged.", type: "baseline" },
+  { version: "v1.0", date: "05 Oct 2025", author: "System", action: "Element initialized from Feasibility output.", type: "baseline" }
+];
+
+// --- Specialized Module View ---
+
+const RequirementsPageView = () => {
+  const [activeElementId, setActiveElementId] = useState('site_info'); // Default to the drifted one to show UI features
+  const activeElement = REQUIREMENTS_DATA.find(r => r.id === activeElementId);
+  const [activeTab, setActiveTab] = useState('attributes'); // Added tab state
+
+  return (
+    <div className="space-y-6 animate-in fade-in duration-500 pb-20">
+      
+      {/* 1. Header & Summary Row */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div>
+          <div className="flex items-center space-x-3 mb-1">
+            <h2 className="text-2xl font-bold text-gray-900">Project Requirements Management</h2>
+            <Badge variant="info">SSOT Master Record</Badge>
+          </div>
+          <p className="text-gray-400 text-sm">The Project's Digital Gene Bank (9 Key Elements)</p>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <button className="px-4 py-2 bg-white border border-gray-200 text-gray-700 rounded-lg text-xs font-bold hover:bg-gray-50 flex items-center shadow-sm">
+            <Edit3 className="w-3.5 h-3.5 mr-1.5" /> Change Requests
+          </button>
+          <button className="px-4 py-2 bg-white border border-gray-200 text-gray-700 rounded-lg text-xs font-bold hover:bg-gray-50 flex items-center shadow-sm">
+            <History className="w-3.5 h-3.5 mr-1.5" /> Global Audit Logs
+          </button>
+        </div>
+      </div>
+
+      {/* 2. KPI Overview Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <Card className="p-4 border-l-4 border-l-emerald-500">
+          <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Elements in Baseline</p>
+          <div className="flex items-center justify-between mt-1">
+            <p className="text-xl font-bold text-gray-900">9 <span className="text-sm font-medium text-gray-400">/ 9</span></p>
+            <CheckCircle2 className="w-5 h-5 text-emerald-500" />
+          </div>
+        </Card>
+        <Card className="p-4 border-l-4 border-l-rose-500">
+          <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Baseline Drift Alerts</p>
+          <div className="flex items-center justify-between mt-1">
+            <p className="text-xl font-bold text-rose-600">1</p>
+            <ShieldAlert className="w-5 h-5 text-rose-500 animate-pulse" />
+          </div>
+        </Card>
+        <Card className="p-4 border-l-4 border-l-amber-500">
+          <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Pending Reviews</p>
+          <div className="flex items-center justify-between mt-1">
+            <p className="text-xl font-bold text-amber-600">1</p>
+            <Clock className="w-5 h-5 text-amber-500" />
+          </div>
+        </Card>
+        <Card className="p-4">
+          <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Last Master Sync</p>
+          <div className="flex items-center justify-between mt-1">
+            <p className="text-xl font-bold text-blue-600">10m ago</p>
+            <Database className="w-5 h-5 text-blue-500" />
+          </div>
+        </Card>
+      </div>
+
+      {/* 3. Main Working Surfaces */}
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+        
+        {/* Left Col: Primary Working Panel */}
+        <Card className="xl:col-span-2 overflow-hidden flex flex-col h-[750px]">
+          <div className="px-6 py-4 border-b border-gray-100 bg-gray-50/50 flex justify-between items-center shrink-0">
+            <div className="flex items-center space-x-2">
+              <Database className="w-4 h-4 text-blue-500" />
+              <h3 className="font-bold text-gray-900 text-sm uppercase tracking-tight">Requirements Baseline Workbench</h3>
+            </div>
+            <div className="flex space-x-2">
+               <button className="text-[10px] font-bold text-blue-600 bg-blue-50 px-3 py-1.5 rounded flex items-center">
+                 <RefreshCw className="w-3 h-3 mr-1" /> SYNC ALL AGENTS
+               </button>
+            </div>
+          </div>
+          
+          <div className="flex-1 overflow-y-auto no-scrollbar bg-white">
+            <table className="w-full text-left border-collapse">
+              <thead className="bg-white sticky top-0 z-10 shadow-sm">
+                <tr className="text-[10px] font-bold text-gray-400 uppercase tracking-wider border-b border-gray-100">
+                  <th className="px-6 py-4 font-bold">Element Name</th>
+                  <th className="px-4 py-4 font-bold">Version</th>
+                  <th className="px-4 py-4 font-bold">Owner</th>
+                  <th className="px-4 py-4 font-bold">Integrity</th>
+                  <th className="px-6 py-4 font-bold text-right">Status</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-50">
+                {REQUIREMENTS_DATA.map((req) => {
+                  const isActive = activeElementId === req.id;
+                  const isDrift = req.status === "Drift Detected";
+                  const isPending = req.status === "Pending Review";
+
+                  return (
+                    <tr 
+                      key={req.id} 
+                      onClick={() => setActiveElementId(req.id)}
+                      className={`group cursor-pointer transition-all ${
+                        isActive ? 'bg-blue-50/40' : 'hover:bg-gray-50'
+                      }`}
+                    >
+                      <td className="px-6 py-4 relative">
+                        {isActive && <div className={`absolute left-0 top-0 bottom-0 w-1 ${isDrift ? 'bg-rose-500' : 'bg-blue-500'}`} />}
+                        <div className="flex items-center space-x-3">
+                          <div className={`p-1.5 rounded-md ${
+                            isActive 
+                              ? (isDrift ? 'bg-rose-100 text-rose-600' : 'bg-blue-100 text-blue-600') 
+                              : 'bg-gray-100 text-gray-500 group-hover:bg-white group-hover:text-blue-500'
+                          }`}>
+                            <Target className="w-4 h-4" />
+                          </div>
+                          <div>
+                            <span className={`text-xs font-bold block ${isActive ? 'text-gray-900' : 'text-gray-700'}`}>
+                              {req.title}
+                            </span>
+                            <span className="text-[9px] text-gray-400 mt-0.5">{req.syncTime}</span>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-4 py-4">
+                        <span className={`text-[10px] font-mono font-bold px-2 py-1 rounded ${isActive ? 'bg-white text-gray-700 border border-gray-200' : 'text-gray-500 bg-gray-100'}`}>
+                          {req.version}
+                        </span>
+                      </td>
+                      <td className="px-4 py-4">
+                        <span className="text-[11px] font-medium text-gray-600">{req.owner}</span>
+                      </td>
+                      <td className="px-4 py-4">
+                        <div className="flex items-center space-x-2 w-24">
+                          <span className="text-[10px] font-bold text-gray-600 w-6">{req.integrity}%</span>
+                          <ProgressBar 
+                            progress={req.integrity} 
+                            variant={req.integrity === 100 ? 'emerald' : isDrift ? 'rose' : 'blue'} 
+                          />
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 text-right">
+                        <Badge variant={isDrift ? 'danger' : isPending ? 'warning' : 'success'}>
+                          {req.status}
+                        </Badge>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </Card>
+
+        {/* Right Col: Deep Insight & Linkage Panel */}
+        <div className="space-y-6 flex flex-col h-[750px]">
+          
+          {/* Baseline Drift Radar (Intelligent Consistency Alert) - Pinned at top */}
+          {activeElement?.status === "Drift Detected" && (
+            <Card className="p-0 bg-gray-900 text-white shadow-xl shrink-0 border border-rose-500/50 overflow-hidden relative">
+              {/* Subtle background glow for urgency */}
+              <div className="absolute top-0 right-0 w-32 h-32 bg-rose-500/10 rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none" />
+
+              <div className="px-5 py-4 border-b border-white/10 flex justify-between items-center relative z-10">
+                <div className="flex items-center space-x-2">
+                  <div className="p-1.5 bg-rose-500/20 rounded-md">
+                    <AlertTriangle className="w-4 h-4 text-rose-500" />
+                  </div>
+                  <h3 className="text-xs font-black uppercase tracking-widest text-rose-400">Consistency Alert</h3>
+                </div>
+                <Badge variant="danger">Severity: CRITICAL</Badge>
+              </div>
+
+              <div className="p-5 space-y-5 relative z-10">
+                <div>
+                  <div className="flex justify-between items-center mb-1.5">
+                    <span className="text-[10px] text-gray-400 font-mono">ID: ALT-8829-ZN</span>
+                    <span className="text-[10px] text-gray-400 flex items-center">
+                      <Activity className="w-3 h-3 mr-1" /> Source: Recording Agent
+                    </span>
+                  </div>
+                  <p className="text-[11.5px] text-gray-300 leading-relaxed">
+                    Recording Agent detected new soil contamination data in Zone B. This contradicts the feasibility assumptions and poses a <span className="text-rose-400 font-bold bg-rose-500/10 px-1 py-0.5 rounded border border-rose-500/20">High Risk</span> to downstream budget and timeline baselines.
+                  </p>
+                </div>
+
+                {/* Quantified Impact Grid */}
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="bg-black/40 border border-white/5 p-3 rounded-lg">
+                    <p className="text-[9px] font-bold text-gray-500 uppercase tracking-widest mb-1">Est. Budget Impact</p>
+                    <p className="text-sm font-bold text-rose-400">+$2.5M - $4.0M</p>
+                  </div>
+                  <div className="bg-black/40 border border-white/5 p-3 rounded-lg">
+                    <p className="text-[9px] font-bold text-gray-500 uppercase tracking-widest mb-1">Est. Timeline Impact</p>
+                    <p className="text-sm font-bold text-rose-400">+14 to 21 Days</p>
+                  </div>
+                </div>
+
+                <div className="flex space-x-3 pt-1">
+                  <button className="flex-1 py-2.5 bg-rose-600 hover:bg-rose-500 rounded-lg text-[10px] font-black uppercase tracking-widest transition-colors flex justify-center items-center shadow-lg shadow-rose-900/50">
+                    <Edit3 className="w-3.5 h-3.5 mr-1.5" /> Initiate Change Request
+                  </button>
+                  <button className="px-4 py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-[10px] font-black uppercase tracking-widest transition-colors text-gray-300">
+                    Dismiss
+                  </button>
+                </div>
+              </div>
+            </Card>
+          )}
+
+          {/* Unified Tabbed Detail Card */}
+          <Card className="flex-1 flex flex-col shrink-0 overflow-hidden">
+            {/* Card Header */}
+            <div className="px-6 py-5 border-b border-gray-100 shrink-0 bg-white z-10">
+              <div className="flex justify-between items-start mb-1">
+                <h3 className="text-sm font-bold text-gray-900 uppercase tracking-tight">{activeElement?.title}</h3>
+                <Badge variant="default">{activeElement?.version}</Badge>
+              </div>
+              <p className="text-[10.5px] text-gray-500 font-medium leading-relaxed">{activeElement?.statement}</p>
+            </div>
+            
+            {/* Tab Navigation */}
+            <div className="flex px-2 border-b border-gray-100 bg-gray-50/80 shrink-0">
+              {[
+                { id: 'attributes', label: 'Attributes & Evidence', icon: Database },
+                { id: 'linkage', label: 'SSOT Linkage', icon: GitBranch },
+                { id: 'history', label: 'Audit Trail', icon: History }
+              ].map(tab => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`flex items-center px-4 py-3 text-[10px] font-bold uppercase tracking-widest border-b-2 transition-colors ${
+                    activeTab === tab.id
+                      ? 'border-blue-500 text-blue-600'
+                      : 'border-transparent text-gray-400 hover:text-gray-700'
+                  }`}
+                >
+                  <tab.icon className="w-3.5 h-3.5 mr-2" />
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+
+            {/* Scrollable Tab Content */}
+            <div className="flex-1 overflow-y-auto p-6 no-scrollbar bg-white">
+              
+              {/* TAB 1: Attributes & Evidence */}
+              {activeTab === 'attributes' && (
+                <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
+                  {/* Structured Fields */}
+                  <div>
+                    <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-3 border-b border-gray-50 pb-2">Structured Data Attributes</p>
+                    <div className="grid grid-cols-1 gap-3">
+                      {activeElement?.specificFields.map((field, idx) => (
+                        <div key={idx} className="bg-gray-50/50 p-2.5 rounded-lg border border-gray-100 flex justify-between items-center">
+                          <span className="text-[10px] font-bold text-gray-500">{field.label}</span>
+                          <span className="text-xs font-bold text-gray-900 text-right">{field.value}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* SSOT Evidence */}
+                  <div>
+                    <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-3 border-b border-gray-50 pb-2">Source Evidence</p>
+                    <div className="space-y-2">
+                      {activeElement?.evidence.map((doc, i) => (
+                        <div key={i} className="flex items-center px-3 py-2 bg-blue-50/30 border border-blue-100 hover:border-blue-300 rounded-md text-[11px] font-medium text-blue-800 transition-colors cursor-pointer group">
+                          <FileText className="w-3.5 h-3.5 mr-2 text-blue-500" />
+                          {doc}
+                          <LinkIcon className="w-3 h-3 ml-auto text-blue-300 group-hover:text-blue-500" />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* TAB 2: SSOT Linkage */}
+              {activeTab === 'linkage' && (
+                <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
+                  <div>
+                    <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-3 border-b border-gray-50 pb-2">Downstream Impact</p>
+                    <div className="space-y-2">
+                      {activeElement?.linkages.map((link, idx) => (
+                        <div key={idx} className="flex items-center justify-between px-3 py-2 bg-white border border-gray-100 rounded-md text-[11px] font-medium transition-colors">
+                          <div className="flex items-center text-gray-700">
+                            <GitBranch className="w-3.5 h-3.5 mr-2 text-blue-400" />
+                            {link.target}
+                          </div>
+                          <span className={`text-[9px] font-black uppercase ${link.impact === 'High Risk' ? 'text-rose-500' : 'text-gray-400'}`}>
+                            {link.impact}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* TAB 3: Audit Trail */}
+              {activeTab === 'history' && (
+                <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
+                  <div className="relative border-l border-gray-100 ml-3 pl-5 space-y-6">
+                    {VERSION_HISTORY.map((hist, i) => (
+                      <div key={i} className="relative">
+                        {/* Timeline dot */}
+                        <div className={`absolute -left-[25px] top-1 w-2.5 h-2.5 rounded-full border-2 border-white shadow-sm ${hist.type === 'drift' ? 'bg-rose-500' : 'bg-blue-500'}`} />
+                        
+                        <div className="flex justify-between items-start mb-0.5">
+                          <span className="text-[10px] font-black text-gray-900">{hist.version}</span>
+                          <span className="text-[9px] text-gray-400">{hist.date}</span>
+                        </div>
+                        <p className="text-[11px] text-gray-700 font-medium leading-relaxed mt-1">{hist.action}</p>
+                        <span className="inline-block mt-1.5 text-[9px] font-bold text-gray-400 uppercase tracking-widest">
+                          By: {hist.author}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+              
+            </div>
+          </Card>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// --- Core Application Shell ---
+
+export default function App() {
+  const [activeModule, setActiveModule] = useState("Requirements");
+  const [isSidebarOpen, setSidebarOpen] = useState(true);
+
+  const sidebarItems = [
+    { id: "Dashboard", label: "Strategic Overview", icon: LayoutDashboard },
+    { type: "divider", label: "Portfolio Management" },
+    { id: "Portfolio", label: "Portfolio (SSOT)", icon: Layers },
+    { id: "Requirements", label: "Requirements", icon: Target },
+    { id: "Milestones", label: "Milestones", icon: Milestone },
+    { id: "Approvals", label: "Gov Approvals", icon: FileCheck },
+    { type: "divider", label: "Execution" },
+    { id: "Procurement", label: "Procurement", icon: ShoppingCart },
+    { id: "Design", label: "Design (BIM-Cost)", icon: PenTool },
+    { id: "Finance", label: "Finance", icon: Wallet },
+    { id: "Payment", label: "Jarvis PAY", icon: CreditCard },
+    { type: "divider", label: "Site & Quality" },
+    { id: "Progress", label: "Progress (Eagle Eye)", icon: Eye },
+    { id: "Quality", label: "Quality (DWSS)", icon: ShieldCheck },
+    { id: "Safety", label: "Safety (Smart Site)", icon: HardHat },
+    { id: "Handover", label: "Handover", icon: Key },
+  ];
+
+  return (
+    <div className="min-h-screen bg-[#FDFDFE] flex font-sans text-gray-900 antialiased overflow-hidden">
+      
+      {/* Sidebar Shell */}
+      <aside className={`bg-white border-r border-gray-100 transition-all duration-300 flex flex-col shrink-0 ${isSidebarOpen ? 'w-64' : 'w-20'}`}>
+        <div className="p-6 flex items-center space-x-3 h-16 shrink-0">
+          <div className="w-8 h-8 bg-gray-900 rounded-lg flex items-center justify-center shadow-xl">
+             <span className="text-white font-black text-sm italic">J</span>
+          </div>
+          {isSidebarOpen && <span className="font-bold text-lg tracking-tight">JARVIS<span className="text-blue-600">PMO</span></span>}
+        </div>
+
+        <nav className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto no-scrollbar scroll-smooth">
+          {sidebarItems.map((item, idx) => {
+            if (item.type === 'divider') {
+              return isSidebarOpen ? (
+                <div key={idx} className="px-3 pt-6 pb-2 text-[10px] font-black text-gray-300 uppercase tracking-widest">
+                  {item.label}
+                </div>
+              ) : <div key={idx} className="h-4" />;
+            }
+            const isActive = activeModule === item.id;
+            return (
+              <button
+                key={item.id}
+                onClick={() => setActiveModule(item.id)}
+                className={`w-full flex items-center space-x-3 px-3 py-2 rounded-xl transition-all group ${
+                  isActive ? 'bg-blue-50 text-blue-600 font-bold' : 'text-gray-500 hover:bg-gray-50'
+                }`}
+              >
+                <item.icon className={`w-4 h-4 shrink-0 transition-colors ${isActive ? 'text-blue-600' : 'text-gray-400 group-hover:text-gray-900'}`} />
+                {isSidebarOpen && <span className="text-xs truncate">{item.label}</span>}
+                {isActive && isSidebarOpen && <div className="ml-auto w-1 h-1 bg-blue-600 rounded-full" />}
+              </button>
+            );
+          })}
+        </nav>
+
+        <div className="p-4 border-t border-gray-50">
+           <div className={`p-2 bg-gray-50 rounded-xl flex items-center ${isSidebarOpen ? 'space-x-3' : 'justify-center'}`}>
+              <div className="w-8 h-8 rounded-lg bg-gray-200 border border-white flex items-center justify-center font-bold text-gray-500 text-xs">JD</div>
+              {isSidebarOpen && (
+                <div className="flex-1 overflow-hidden">
+                  <p className="text-[10px] font-black uppercase">John Doe</p>
+                  <p className="text-[10px] text-gray-400">PMO Lead</p>
+                </div>
+              )}
+           </div>
+        </div>
+      </aside>
+
+      {/* Main Content Area */}
+      <main className="flex-1 flex flex-col h-screen overflow-hidden">
+        
+        {/* Header Shell */}
+        <header className="bg-white/80 backdrop-blur-md border-b border-gray-100 h-16 flex items-center justify-between px-8 shrink-0 z-30">
+          <div className="flex items-center space-x-4">
+             <button onClick={() => setSidebarOpen(!isSidebarOpen)} className="p-1.5 hover:bg-gray-100 rounded-lg text-gray-400">
+               <ChevronRight className={`w-5 h-5 transition-transform ${isSidebarOpen ? 'rotate-180' : ''}`} />
+             </button>
+             <div className="h-4 w-px bg-gray-100 mx-2" />
+             <div className="flex items-center text-[11px] font-bold text-gray-400 uppercase tracking-widest">
+                Portfolios <ChevronRight className="w-3 h-3 mx-1" /> <span className="text-gray-900">Horizon Estates</span>
+             </div>
+          </div>
+          <div className="flex items-center space-x-6">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" />
+              <input 
+                type="text" 
+                placeholder="SSOT DATA SEARCH..." 
+                className="pl-9 pr-4 py-2 bg-gray-50 border-none rounded-xl text-[10px] font-bold focus:ring-2 focus:ring-blue-100 outline-none w-64 transition-all"
+              />
+            </div>
+            <div className="flex items-center space-x-2">
+               <button className="p-2 text-gray-400 hover:bg-gray-50 rounded-lg relative">
+                 <Bell className="w-4 h-4" />
+               </button>
+               <button className="p-2 text-gray-400 hover:bg-gray-50 rounded-lg"><MoreVertical className="w-4 h-4" /></button>
+            </div>
+          </div>
+        </header>
+
+        {/* Scrollable View Area */}
+        <div className="flex-1 overflow-y-auto p-4 md:p-8 no-scrollbar bg-[#FDFDFE] relative">
+          <div className="max-w-[1400px] mx-auto">
+             {activeModule === "Requirements" ? (
+               <RequirementsPageView />
+             ) : (
+               <div className="flex flex-col items-center justify-center h-64 text-gray-400">
+                  <Activity className="w-12 h-12 mb-4 opacity-20" />
+                  <p className="text-sm font-bold uppercase tracking-widest">{activeModule} Module Selected</p>
+                  <p className="text-xs mt-2">Switch back to Requirements to view the implementation.</p>
+               </div>
+             )}
+          </div>
+        </div>
+      </main>
+
+    </div>
+  );
+}

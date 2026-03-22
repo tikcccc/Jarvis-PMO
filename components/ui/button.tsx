@@ -13,6 +13,7 @@ const buttonVariantClassMap = {
 } as const;
 
 const buttonSizeClassMap = {
+  xs: "h-7 px-3",
   sm: "h-8 px-3.5",
   md: "h-9 px-4",
   inline: "h-auto px-0 py-0"
@@ -29,7 +30,7 @@ export function Button({ className, type = "button", variant = "secondary", size
       type={type}
       className={cn(
         "inline-flex cursor-pointer items-center justify-center gap-1.5 rounded-lg border whitespace-nowrap transition-[background-color,border-color,color,box-shadow,transform] duration-200 motion-safe:hover:-translate-y-px motion-safe:active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-100 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg]:size-3.5",
-        size === "inline" ? "jarvis-control-label-compact" : "jarvis-control-label",
+        size === "inline" || size === "xs" ? "jarvis-control-label-compact" : "jarvis-control-label",
         buttonSizeClassMap[size],
         buttonVariantClassMap[variant],
         className

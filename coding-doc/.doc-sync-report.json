@@ -1,61 +1,56 @@
 {
-  "doc_dir": "/home/tikhong/Jarvis PMO/coding-doc",
+  "doc_dir": "/home/dministrator/Jarvis-PMO/coding-doc",
   "ok": true,
   "issues": [
     {
       "severity": "warn",
       "code": "MISSING_MODULE_DOC",
-      "message": "Missing module doc: /home/tikhong/Jarvis PMO/coding-doc/modules/portfolio.md"
+      "message": "Missing module doc: /home/dministrator/Jarvis-PMO/coding-doc/modules/portfolio.md"
     },
     {
       "severity": "warn",
       "code": "MISSING_MODULE_DOC",
-      "message": "Missing module doc: /home/tikhong/Jarvis PMO/coding-doc/modules/requirements.md"
+      "message": "Missing module doc: /home/dministrator/Jarvis-PMO/coding-doc/modules/milestones.md"
     },
     {
       "severity": "warn",
       "code": "MISSING_MODULE_DOC",
-      "message": "Missing module doc: /home/tikhong/Jarvis PMO/coding-doc/modules/milestones.md"
+      "message": "Missing module doc: /home/dministrator/Jarvis-PMO/coding-doc/modules/approvals.md"
     },
     {
       "severity": "warn",
       "code": "MISSING_MODULE_DOC",
-      "message": "Missing module doc: /home/tikhong/Jarvis PMO/coding-doc/modules/approvals.md"
+      "message": "Missing module doc: /home/dministrator/Jarvis-PMO/coding-doc/modules/design.md"
     },
     {
       "severity": "warn",
       "code": "MISSING_MODULE_DOC",
-      "message": "Missing module doc: /home/tikhong/Jarvis PMO/coding-doc/modules/design.md"
+      "message": "Missing module doc: /home/dministrator/Jarvis-PMO/coding-doc/modules/finance.md"
     },
     {
       "severity": "warn",
       "code": "MISSING_MODULE_DOC",
-      "message": "Missing module doc: /home/tikhong/Jarvis PMO/coding-doc/modules/finance.md"
+      "message": "Missing module doc: /home/dministrator/Jarvis-PMO/coding-doc/modules/payment.md"
     },
     {
       "severity": "warn",
       "code": "MISSING_MODULE_DOC",
-      "message": "Missing module doc: /home/tikhong/Jarvis PMO/coding-doc/modules/payment.md"
+      "message": "Missing module doc: /home/dministrator/Jarvis-PMO/coding-doc/modules/progress.md"
     },
     {
       "severity": "warn",
       "code": "MISSING_MODULE_DOC",
-      "message": "Missing module doc: /home/tikhong/Jarvis PMO/coding-doc/modules/progress.md"
+      "message": "Missing module doc: /home/dministrator/Jarvis-PMO/coding-doc/modules/quality.md"
     },
     {
       "severity": "warn",
       "code": "MISSING_MODULE_DOC",
-      "message": "Missing module doc: /home/tikhong/Jarvis PMO/coding-doc/modules/quality.md"
+      "message": "Missing module doc: /home/dministrator/Jarvis-PMO/coding-doc/modules/safety.md"
     },
     {
       "severity": "warn",
       "code": "MISSING_MODULE_DOC",
-      "message": "Missing module doc: /home/tikhong/Jarvis PMO/coding-doc/modules/safety.md"
-    },
-    {
-      "severity": "warn",
-      "code": "MISSING_MODULE_DOC",
-      "message": "Missing module doc: /home/tikhong/Jarvis PMO/coding-doc/modules/handover.md"
+      "message": "Missing module doc: /home/dministrator/Jarvis-PMO/coding-doc/modules/handover.md"
     }
   ]
 }
