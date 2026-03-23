@@ -365,12 +365,6 @@ export interface ProgressSummaryMetric {
   icon: IconName;
 }
 
-export interface ProgressCaptureGate {
-  id: string;
-  shortLabel: string;
-  stage: string;
-}
-
 export interface ProgressTradeQuantity {
   id: string;
   trade: string;
@@ -378,6 +372,17 @@ export interface ProgressTradeQuantity {
   tone: Tone;
   actualPercent: number;
   plannedPercent: number;
+}
+
+export interface ProgressSnapshot {
+  id: string;
+  stageLabel: string;
+  captureLabel: string;
+  timestampLabel: string;
+  gpsLabel: string;
+  weatherLabel: string;
+  noteLabel: string;
+  tone: Tone;
 }
 
 export interface ProgressImpactRow {
@@ -409,9 +414,8 @@ export interface ProgressZone {
   longitude: number;
   cameraId: string;
   cameraLocationLabel: string;
-  activeGateId: string;
-  flaggedGateId?: string;
-  captureDates: Record<string, string>;
+  activeSnapshotId: string;
+  snapshots: ProgressSnapshot[];
   tradeQuantities: ProgressTradeQuantity[];
   impactAnalysis: ProgressImpactAnalysis;
 }
@@ -458,7 +462,6 @@ Suggested file mapping:
   - `DesignDfmaSignal[]`
 - `lib/mock-data/progress.ts`
   - `ProgressSummaryMetric[]`
-  - `ProgressCaptureGate[]`
   - `ProgressZone[]`
 
 ## 5. Contract Rules

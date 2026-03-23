@@ -45,7 +45,7 @@
 - The portfolio route supports `MAP` and `SATELLITE` mode switching without breaking project selection behavior.
 - If `NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN` is missing, the portfolio route falls back to a safe preview state instead of a runtime failure.
 - The progress route keeps GIS-led zone overview and in-place zone drill-down on the same route instead of reverting to a generic placeholder module page.
-- The progress detail view uses fixed project-stage Eagle Eye capture gates, not a continuous video-player scrubber, and reserves the only dark emphasis panel on the route for delay impact analysis.
+- The progress detail view uses timestamped discrete Eagle Eye capture events with stage context, not a continuous video-player scrubber, and reserves the only dark emphasis panel on the route for delay impact analysis.
 - Reduced-motion settings disable non-essential ambient motion and replace large travel with lighter or instant transitions.
 
 ## 6. Technical Acceptance
@@ -57,7 +57,7 @@
 - Mock data is typed and stored outside page components.
 - Requirements page-specific data lives in `lib/mock-data/requirements.ts`, and the detail view contract includes governance, automation, and validation structures rather than inline JSX-only content.
 - Procurement page-specific data lives in `lib/mock-data/procurement.ts` and the route file remains a thin composition layer.
-- Progress page-specific data lives in `lib/mock-data/progress.ts`, and the route composes dedicated progress components rather than inline generic-module placeholder content.
+- Progress page-specific data lives in `lib/mock-data/progress.ts`, including timestamp, GPS, weather, and stage context for capture events, and the route composes dedicated progress components rather than inline generic-module placeholder content.
 - Module docs record their matching split PRD source files when those working copies exist in the active input set.
 - The architecture, data contract, API seam, acceptance criteria, and test strategy docs stay mutually consistent.
 

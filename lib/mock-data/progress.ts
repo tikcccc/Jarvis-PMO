@@ -1,4 +1,4 @@
-import type { ProgressCaptureGate, ProgressSummaryMetric, ProgressZone } from "@/lib/types";
+import type { ProgressSummaryMetric, ProgressZone } from "@/lib/types";
 
 export const progressSummaryMetrics: ProgressSummaryMetric[] = [
   {
@@ -35,39 +35,6 @@ export const progressSummaryMetrics: ProgressSummaryMetric[] = [
   }
 ];
 
-export const progressCaptureGates: ProgressCaptureGate[] = [
-  {
-    id: "structure",
-    shortLabel: "STR",
-    stage: "Structure Release"
-  },
-  {
-    id: "mep",
-    shortLabel: "MEP",
-    stage: "MEP Rough-in"
-  },
-  {
-    id: "masonry",
-    shortLabel: "MAS",
-    stage: "Masonry Baseline"
-  },
-  {
-    id: "drywall",
-    shortLabel: "DRY",
-    stage: "Drywall Close-up"
-  },
-  {
-    id: "ceiling",
-    shortLabel: "CEIL",
-    stage: "Ceiling Closure"
-  },
-  {
-    id: "handover",
-    shortLabel: "DLV",
-    stage: "Handover Gate"
-  }
-];
-
 export const progressSiteViewport = {
   latitude: 22.30345,
   longitude: 114.18163,
@@ -90,15 +57,49 @@ export const progressZones: ProgressZone[] = [
     longitude: 114.18116,
     cameraId: "EE-ZONEA-01",
     cameraLocationLabel: "Zone A (Podium - Level 1)",
-    activeGateId: "handover",
-    captureDates: {
-      structure: "2026-01-06",
-      mep: "2026-01-24",
-      masonry: "2026-02-08",
-      drywall: "2026-02-20",
-      ceiling: "2026-03-05",
-      handover: "2026-03-18"
-    },
+    activeSnapshotId: "zone-a-0318-0800",
+    snapshots: [
+      {
+        id: "zone-a-0308-0800",
+        stageLabel: "Closeout Readiness",
+        captureLabel: "08 Mar",
+        timestampLabel: "2026-03-08 08:00 HKT",
+        gpsLabel: "22.30382, 114.18116",
+        weatherLabel: "25°C | Overcast",
+        noteLabel: "Podium finishes substantially complete. Archive capture initiated.",
+        tone: "info"
+      },
+      {
+        id: "zone-a-0311-0800",
+        stageLabel: "Closeout Readiness",
+        captureLabel: "11 Mar",
+        timestampLabel: "2026-03-11 08:00 HKT",
+        gpsLabel: "22.30382, 114.18116",
+        weatherLabel: "24°C | Light rain",
+        noteLabel: "Minor snag closure verified against turnover checklist.",
+        tone: "info"
+      },
+      {
+        id: "zone-a-0314-0800",
+        stageLabel: "Archive Capture",
+        captureLabel: "14 Mar",
+        timestampLabel: "2026-03-14 08:00 HKT",
+        gpsLabel: "22.30382, 114.18116",
+        weatherLabel: "26°C | Clear",
+        noteLabel: "Daily fixed-time capture preserved complete evidence pack for turnover.",
+        tone: "success"
+      },
+      {
+        id: "zone-a-0318-0800",
+        stageLabel: "Archive Capture",
+        captureLabel: "18 Mar",
+        timestampLabel: "2026-03-18 08:00 HKT",
+        gpsLabel: "22.30382, 114.18116",
+        weatherLabel: "27°C | Clear",
+        noteLabel: "Final closeout panorama stored with timestamp, GPS, and weather metadata.",
+        tone: "success"
+      }
+    ],
     tradeQuantities: [
       {
         id: "zone-a-mep",
@@ -167,15 +168,49 @@ export const progressZones: ProgressZone[] = [
     longitude: 114.18224,
     cameraId: "EE-ZONEB-03",
     cameraLocationLabel: "Zone B (Tower 1 - Level 9)",
-    activeGateId: "ceiling",
-    captureDates: {
-      structure: "2026-01-09",
-      mep: "2026-01-30",
-      masonry: "2026-02-16",
-      drywall: "2026-03-01",
-      ceiling: "2026-03-29",
-      handover: "2026-04-18"
-    },
+    activeSnapshotId: "zone-b-0329-0800",
+    snapshots: [
+      {
+        id: "zone-b-0317-0800",
+        stageLabel: "Ceiling Closure Prep",
+        captureLabel: "17 Mar",
+        timestampLabel: "2026-03-17 08:00 HKT",
+        gpsLabel: "22.30371, 114.18224",
+        weatherLabel: "24°C | Humid",
+        noteLabel: "Daily fixed-time capture confirms corridor framing ready for closure.",
+        tone: "info"
+      },
+      {
+        id: "zone-b-0321-0800",
+        stageLabel: "Ceiling Closure Prep",
+        captureLabel: "21 Mar",
+        timestampLabel: "2026-03-21 08:00 HKT",
+        gpsLabel: "22.30371, 114.18224",
+        weatherLabel: "25°C | Cloudy",
+        noteLabel: "HVAC finish package remains slightly behind but float is still protected.",
+        tone: "warning"
+      },
+      {
+        id: "zone-b-0325-0800",
+        stageLabel: "Closure Verification",
+        captureLabel: "25 Mar",
+        timestampLabel: "2026-03-25 08:00 HKT",
+        gpsLabel: "22.30371, 114.18224",
+        weatherLabel: "26°C | Clear",
+        noteLabel: "Secondary capture verifies ceiling close-up sequencing remains viable.",
+        tone: "info"
+      },
+      {
+        id: "zone-b-0329-0800",
+        stageLabel: "Closure Verification",
+        captureLabel: "29 Mar",
+        timestampLabel: "2026-03-29 08:00 HKT",
+        gpsLabel: "22.30371, 114.18224",
+        weatherLabel: "27°C | Clear",
+        noteLabel: "Latest panorama confirms on-time handoff into floor-finish workfront.",
+        tone: "success"
+      }
+    ],
     tradeQuantities: [
       {
         id: "zone-b-mep",
@@ -244,16 +279,59 @@ export const progressZones: ProgressZone[] = [
     longitude: 114.18168,
     cameraId: "EE-ZONEC-05",
     cameraLocationLabel: "Zone C (Block A - Floor 5)",
-    activeGateId: "drywall",
-    flaggedGateId: "drywall",
-    captureDates: {
-      structure: "2026-01-11",
-      mep: "2026-02-03",
-      masonry: "2026-02-19",
-      drywall: "2026-03-23",
-      ceiling: "2026-04-09",
-      handover: "2026-04-26"
-    },
+    activeSnapshotId: "zone-c-0323-0800",
+    snapshots: [
+      {
+        id: "zone-c-0311-0800",
+        stageLabel: "Masonry Baseline",
+        captureLabel: "11 Mar",
+        timestampLabel: "2026-03-11 08:00 HKT",
+        gpsLabel: "22.30296, 114.18168",
+        weatherLabel: "24°C | Cloudy",
+        noteLabel: "Fixed-time panorama shows drywall boarding below planned density.",
+        tone: "warning"
+      },
+      {
+        id: "zone-c-0315-0800",
+        stageLabel: "Masonry Baseline",
+        captureLabel: "15 Mar",
+        timestampLabel: "2026-03-15 08:00 HKT",
+        gpsLabel: "22.30296, 114.18168",
+        weatherLabel: "25°C | Clear",
+        noteLabel: "Progress Agent detects recurring lag on corridor edge and service wall package.",
+        tone: "warning"
+      },
+      {
+        id: "zone-c-0319-0800",
+        stageLabel: "Drywall Close-up",
+        captureLabel: "19 Mar",
+        timestampLabel: "2026-03-19 08:00 HKT",
+        gpsLabel: "22.30296, 114.18168",
+        weatherLabel: "26°C | Hazy",
+        noteLabel: "Deviation threshold approaches as planned area remains incomplete.",
+        tone: "warning"
+      },
+      {
+        id: "zone-c-0323-0800",
+        stageLabel: "Drywall Close-up",
+        captureLabel: "23 Mar",
+        timestampLabel: "2026-03-23 08:00 HKT",
+        gpsLabel: "22.30296, 114.18168",
+        weatherLabel: "27°C | Clear",
+        noteLabel: "Threshold triggered. Zone C is now more than 3 days behind the Master P6 schedule.",
+        tone: "danger"
+      },
+      {
+        id: "zone-c-0330-0800",
+        stageLabel: "Recovery Re-scan",
+        captureLabel: "30 Mar",
+        timestampLabel: "2026-03-30 08:00 HKT",
+        gpsLabel: "22.30296, 114.18168",
+        weatherLabel: "26°C | Forecast",
+        noteLabel: "Next scheduled capture reserved for recovery verification after manpower rebalance.",
+        tone: "info"
+      }
+    ],
     tradeQuantities: [
       {
         id: "zone-c-mep",

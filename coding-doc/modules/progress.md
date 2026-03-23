@@ -23,7 +23,7 @@
 
 ## 4. Current State and Gap
 
-- Current state: the route now replaces the generic placeholder with a dedicated overview-to-detail workflow, including a Mapbox-backed GIS site map with safe fallback, monitored-zone drill-down, stage-based snapshot timeline, Eagle Eye evidence image, AI trade progress bars, and a dark analytical delay-impact panel.
+- Current state: the route now replaces the generic placeholder with a dedicated overview-to-detail workflow, including a Mapbox-backed GIS site map with safe fallback, monitored-zone drill-down, timestamped Eagle Eye snapshot timeline, Eagle Eye evidence image, AI trade progress bars, and a dark analytical delay-impact panel.
 - Gap to target: the page still uses typed mock data and a single shared Eagle Eye evidence image rather than live site imagery, BIM overlays, and schedule APIs.
 
 ## 5. Required UI Composition
@@ -47,7 +47,7 @@
 
 ## 7. Interaction Notes
 
-- Primary user actions: scan zone status on the GIS map, hover/select a zone, open the zone detail, inspect the Eagle Eye capture, and switch between available project-stage snapshots.
+- Primary user actions: scan zone status on the GIS map, hover/select a zone, open the zone detail, inspect the Eagle Eye capture, and switch between available timestamped snapshots.
 - Selection or drill-down behavior: map marker hover updates the selected-zone context, clicking a marker or monitored-zone row opens the in-place detail view for that zone, and the back action returns to the overview without leaving the route.
 - Chart drill-down, legend, or filter behavior: not applicable for the current implementation.
 - Empty or fallback behavior: if `NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN` is missing, the GIS surface falls back to a styled preview state instead of failing route render.
@@ -55,19 +55,19 @@
 
 ## 8. Do Not Drift
 
-- Preserve: route name, `Progress (Eagle Eye)` terminology, white command-center shell, GIS-first overview, stage-gated snapshot logic, and the single dark emphasis panel reserved for delay impact analysis.
-- Avoid: turning the route into a generic KPI dashboard, replacing the GIS surface with a placeholder card, using a continuous video-player timeline, or moving the main operator story away from zone anomaly detection and evidence-backed schedule impact.
+- Preserve: route name, `Progress (Eagle Eye)` terminology, white command-center shell, GIS-first overview, discrete timestamped snapshot logic, and the single dark emphasis panel reserved for delay impact analysis.
+- Avoid: turning the route into a generic KPI dashboard, replacing the GIS surface with a placeholder card, using a continuous video-player timeline, or dropping timestamp / GPS / weather capture metadata from the selected snapshot story.
 
 ## 9. Implementation Tasks
 
 - [x] Replace the generic progress placeholder with a dedicated module page and thin route wrapper.
 - [x] Add typed progress mock data for summary metrics, GIS zones, capture gates, trade quantities, and delay-impact outputs.
-- [x] Implement overview-to-detail drill-down with GIS map, Eagle Eye evidence image, discrete project-stage timeline, and a single dark analytical pressure panel.
+- [x] Implement overview-to-detail drill-down with GIS map, Eagle Eye evidence image, discrete timestamped capture timeline, and a single dark analytical pressure panel.
 
 ## 10. Acceptance Checks
 
 - [x] `/progress` renders a GIS-led overview and an in-place zone detail view without shell drift.
-- [x] The detail view uses fixed project-stage capture gates rather than a continuous media scrubber.
+- [x] The detail view uses discrete timestamped capture events with stage context rather than a continuous media scrubber.
 - [x] Delay impact analysis is the only dark emphasis panel on the route, while the remaining surfaces keep the shared white Jarvis card language.
 
 ## 11. Documentation Sync

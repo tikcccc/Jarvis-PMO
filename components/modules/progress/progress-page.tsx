@@ -5,6 +5,7 @@ import Image from "next/image";
 import {
   AlertCircle,
   AlertTriangle,
+  Calendar,
   ChevronLeft,
   ChevronRight,
   Database,
@@ -23,7 +24,7 @@ import { IconButton } from "@/components/ui/icon-button";
 import { ProgressBar } from "@/components/ui/progress-bar";
 import { getIcon } from "@/lib/icons";
 import { moduleMetaById } from "@/lib/mock-data/modules";
-import { progressCaptureGates, progressSiteViewport, progressSummaryMetrics, progressZones } from "@/lib/mock-data/progress";
+import { progressSiteViewport, progressSummaryMetrics, progressZones } from "@/lib/mock-data/progress";
 import type { ProgressZone, Tone } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
@@ -241,10 +242,10 @@ function ProgressOverviewView({
 }
 
 function ProgressDetailView({ zone, onBack }: { zone: ProgressZone; onBack: () => void }) {
-  const [selectedGateId, setSelectedGateId] = useState(zone.activeGateId);
+  const [selectedSnapshotId, setSelectedSnapshotId] = useState(zone.activeSnapshotId);
 
-  const activeGateIndex = progressCaptureGates.findIndex((gate) => gate.id === zone.activeGateId);
-  const selectedGate = progressCaptureGates.find((gate) => gate.id === selectedGateId) ?? progressCaptureGates[activeGateIndex];
+  const activeSnapshotIndex = zone.snapshots.findIndex((snapshot) => snapshot.id === zone.activeSnapshotId);
+  const selectedSnapshot = zone.snapshots.find((snapshot) => snapshot.id === selectedSnapshotId) ?? zone.snapshots[activeSnapshotIndex];
 
   return (
     <div className="space-y-6 animate-in slide-in-from-right-4 duration-500">
@@ -265,15 +266,15 @@ function ProgressDetailView({ zone, onBack }: { zone: ProgressZone; onBack: () =
               <div>
                 <h3 className="text-sm font-bold uppercase tracking-tight text-gray-900">Eagle Eye 360° Panorama</h3>
                 <p className="jarvis-text-10 font-medium text-gray-500">
-                  Camera ID: {zone.cameraId} | {zone.cameraLocationLabel} | Reviewing {selectedGate.stage}
+                  Camera ID: {zone.cameraId} | {zone.cameraLocationLabel} | Reviewing {selectedSnapshot.stageLabel}
                 </p>
               </div>
             </div>
             <div className="flex items-center space-x-3">
-              <Badge tone="success" className="gap-1.5">
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 motion-safe:animate-pulse" />
-                Ground Truth
-              </Badge>
+              <Button variant="secondary" size="xs">
+                <Download className="h-3 w-3" />
+                Export Evidence
+              </Button>
               <div className="h-4 w-px bg-gray-200" />
               <IconButton variant="ghost" size="sm" className="text-gray-500 hover:bg-gray-100">
                 <Maximize2 className="h-4 w-4" />
@@ -292,39 +293,40 @@ function ProgressDetailView({ zone, onBack }: { zone: ProgressZone; onBack: () =
             />
             <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-slate-950 via-slate-950/10 to-transparent" />
             <div className="absolute bottom-4 left-4 rounded-xl border border-white/10 bg-black/45 px-3 py-2 text-white backdrop-blur-md">
-              <p className="jarvis-text-10 font-bold uppercase tracking-widest text-white/45">Selected Project Gate</p>
-              <p className="text-xs font-bold">{selectedGate.stage}</p>
-              <p className="jarvis-text-10 mt-1 text-white/60">{zone.captureDates[selectedGate.id]}</p>
+              <p className="jarvis-text-10 font-bold uppercase tracking-widest text-white/45">Selected Capture</p>
+              <p className="text-xs font-bold">{selectedSnapshot.stageLabel}</p>
+              <p className="jarvis-text-10 mt-1 text-white/60">{selectedSnapshot.timestampLabel}</p>
             </div>
           </div>
 
           <div className="flex flex-col border-t border-gray-100 bg-white px-6 py-4 shadow-[0_-4px_20px_rgba(0,0,0,0.02)]">
-            <div className="mb-4 flex items-center justify-between">
+            <div className="mb-4 flex items-center justify-between gap-4">
               <div className="flex items-center space-x-2">
                 <Database className="h-4 w-4 text-gray-400" />
-                <h4 className="text-xs font-bold uppercase tracking-widest text-gray-900">Project Gate Capture Timeline</h4>
+                <h4 className="text-xs font-bold uppercase tracking-widest text-gray-900">Automated Capture Timeline</h4>
                 <Badge tone="info">Select Snapshot</Badge>
               </div>
-              <Button variant="secondary" size="xs">
-                <Download className="h-3 w-3" />
-                Export Evidence
-              </Button>
+              <p className="jarvis-text-10 font-bold uppercase tracking-widest text-gray-400">
+                Latest capture: <span className="text-gray-900">{zone.snapshots[activeSnapshotIndex]?.captureLabel}</span>
+              </p>
             </div>
 
             <div className="flex items-start gap-6">
-              <div className="w-[176px] shrink-0 rounded-lg border border-blue-100 bg-blue-50/50 px-4 py-3">
-                <span className="jarvis-text-10 font-bold uppercase tracking-widest text-blue-600">Selected Snapshot</span>
-                <span className="mt-1 block text-sm font-black text-gray-900">{zone.captureDates[selectedGate.id]}</span>
-                <p className="jarvis-text-10 mt-1 font-bold uppercase text-gray-500">{selectedGate.stage}</p>
-                <p className="jarvis-text-10 mt-2 text-gray-400">Zone progress {zone.progressPercent}%</p>
+              <div className="w-[160px] shrink-0 rounded-lg border border-blue-100 bg-blue-50/50 px-4 py-3">
+                <div className="flex items-center gap-2 text-blue-600">
+                  <Calendar className="h-3.5 w-3.5" />
+                  <span className="text-sm font-black text-gray-900">{selectedSnapshot.captureLabel}</span>
+                </div>
+                <p className="jarvis-text-10 mt-2 text-gray-400">{selectedSnapshot.timestampLabel}</p>
               </div>
 
               <div className="flex-1">
                 <div className="mb-2 flex items-center justify-between">
-                  <p className="jarvis-text-10 font-bold uppercase tracking-widest text-gray-400">Fixed capture windows by project stage</p>
-                  <p className="jarvis-text-10 font-bold uppercase text-gray-400">
-                    Current gate: <span className="text-gray-900">{progressCaptureGates[activeGateIndex]?.stage}</span>
-                  </p>
+                  <p className="jarvis-text-10 font-bold uppercase tracking-widest text-gray-400">Scheduled discrete snapshots</p>
+                  <div className="flex items-center gap-1.5 text-gray-400">
+                    <Calendar className="h-3.5 w-3.5" />
+                    <span className="jarvis-text-10 font-bold uppercase tracking-widest">Choose date</span>
+                  </div>
                 </div>
 
                 <div className="relative h-16">
@@ -333,57 +335,62 @@ function ProgressDetailView({ zone, onBack }: { zone: ProgressZone; onBack: () =
                     className="absolute left-0 top-4 h-1 rounded-full bg-blue-500"
                     style={{
                       width:
-                        progressCaptureGates.length > 1
-                          ? `${(activeGateIndex / (progressCaptureGates.length - 1)) * 100}%`
+                        zone.snapshots.length > 1
+                          ? `${(activeSnapshotIndex / (zone.snapshots.length - 1)) * 100}%`
                           : "0%"
                     }}
                   />
 
-                  {progressCaptureGates.map((gate, index) => {
-                    const left = progressCaptureGates.length > 1 ? `${(index / (progressCaptureGates.length - 1)) * 100}%` : "0%";
-                    const isSelected = gate.id === selectedGate.id;
-                    const isCurrent = gate.id === zone.activeGateId;
-                    const isFlagged = gate.id === zone.flaggedGateId;
-                    const isAvailable = index <= activeGateIndex;
+                  {zone.snapshots.map((snapshot, index) => {
+                    const left = zone.snapshots.length > 1 ? `${(index / (zone.snapshots.length - 1)) * 100}%` : "0%";
+                    const isSelected = snapshot.id === selectedSnapshot.id;
+                    const isCurrent = snapshot.id === zone.activeSnapshotId;
+                    const isFuture = index > activeSnapshotIndex;
 
                     return (
                       <button
-                        key={gate.id}
+                        key={snapshot.id}
                         type="button"
-                        disabled={!isAvailable}
-                        onClick={() => setSelectedGateId(gate.id)}
+                        onClick={() => setSelectedSnapshotId(snapshot.id)}
                         className="absolute top-0 -translate-x-1/2 text-center disabled:cursor-default"
                         style={{ left }}
                       >
-                        <span className={cn("jarvis-text-10 block font-bold uppercase tracking-widest", isAvailable ? "text-gray-500" : "text-gray-300")}>
-                          {gate.shortLabel}
+                        <span className={cn("jarvis-text-10 block font-bold uppercase tracking-widest", isFuture ? "text-gray-300" : "text-gray-500")}>
+                          {snapshot.captureLabel}
                         </span>
                         <span
                           className={cn(
                             "mx-auto mt-1 flex h-3.5 w-3.5 rounded-full border-2 shadow-sm",
-                            isFlagged
+                            snapshot.tone === "danger"
                               ? "border-white bg-rose-500"
                               : isCurrent
                                 ? "border-white bg-blue-600"
-                                : isAvailable
-                                  ? "border-gray-300 bg-white"
-                                  : "border-gray-200 bg-gray-100",
+                                : isFuture
+                                  ? "border-gray-200 bg-gray-100"
+                                  : "border-gray-300 bg-white",
                             isSelected ? "ring-4 ring-blue-100" : ""
                           )}
                         />
-                        <span className={cn("jarvis-text-10 mt-2 block font-bold", isAvailable ? "text-gray-500" : "text-gray-300")}>
-                          {formatGateDate(zone.captureDates[gate.id])}
+                        <span className={cn("jarvis-text-10 mt-1.5 block font-bold", isFuture ? "text-gray-300" : "text-gray-500")}>
+                          {formatSnapshotTime(snapshot.timestampLabel)}
                         </span>
                       </button>
                     );
                   })}
+                </div>
+
+                <div className="rounded-xl border border-gray-100 bg-gray-50/70 px-4 py-3">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="jarvis-text-10 font-bold uppercase tracking-widest text-gray-400">{selectedSnapshot.weatherLabel}</span>
+                  </div>
+                  <p className="jarvis-copy-xs mt-2 text-gray-500">{selectedSnapshot.noteLabel}</p>
                 </div>
               </div>
             </div>
           </div>
         </Card>
 
-        <div className="h-[700px] space-y-6 overflow-y-auto pb-10 no-scrollbar">
+        <div className="self-start space-y-6">
           <Card className="border-t-4 border-t-blue-500 p-5">
             <div className="mb-5 flex items-center justify-between">
               <div>
@@ -472,7 +479,7 @@ function ProgressDetailView({ zone, onBack }: { zone: ProgressZone; onBack: () =
   );
 }
 
-function formatGateDate(dateLabel: string) {
-  const [, month = "", day = ""] = dateLabel.split("-");
-  return `${month}/${day}`;
+function formatSnapshotTime(timestampLabel: string) {
+  const [, time = ""] = timestampLabel.split(" ");
+  return time;
 }
