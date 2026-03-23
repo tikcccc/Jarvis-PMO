@@ -152,7 +152,7 @@ export function ProcurementPage() {
       <ProcurementHeader />
       <ProcurementSummaryGrid />
 
-      <div className="grid grid-cols-1 items-stretch gap-6 lg:grid-cols-3">
+      <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-3">
         <TenderValidationMatrix
           activeBidder={activeBidder}
           activePackage={activePackage}
@@ -438,7 +438,7 @@ function SupplierProfilePanel({
   }
 
   return (
-    <Card className="flex h-full flex-col rounded-2xl p-6">
+    <Card className="flex flex-col rounded-2xl p-6 lg:sticky lg:top-6">
       <div className="mb-4 flex items-center justify-between gap-3">
         <h3 className="flex items-center text-sm font-bold text-slate-900">
           <ShieldCheck className="mr-2 h-4 w-4 text-emerald-500" />
