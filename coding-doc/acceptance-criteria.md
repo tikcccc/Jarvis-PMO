@@ -37,6 +37,8 @@
 - Motion remains supportive and does not turn route changes or shell chrome into theatrical full-page transitions.
 - Scroll regions behave predictably for sidebar, page body, and detail panels.
 - Module pages keep existing local interactions such as selected approval detail and selected portfolio project.
+- The requirements route keeps the `Global Drift Radar`, the `Digital Gene Bank (9 Key Elements)` overview, and in-place dossier drill-down on the same route.
+- Each requirements dossier exposes captured fields, governance metadata, agent automation routines, validation checks, evidence, impact linkages, and audit history for the selected element.
 - The procurement route keeps tender package and bidder selection in-page, updating supplier and risk detail panels without route navigation.
 - The procurement sidebar entry opens the main procurement page directly without an intermediate child-view chooser.
 - The dashboard `Portfolio Strategic Map (GIS)` renders the same geographic project dataset as the portfolio route instead of a placeholder panel.
@@ -51,6 +53,7 @@
 - Shared motion tokens and CSS classes are reused before heavier runtime animation layers are introduced.
 - If analytical charts are introduced, they use the approved charting approach, keep GIS on the Mapbox stack, and fail safely when data is absent.
 - Mock data is typed and stored outside page components.
+- Requirements page-specific data lives in `lib/mock-data/requirements.ts`, and the detail view contract includes governance, automation, and validation structures rather than inline JSX-only content.
 - Procurement page-specific data lives in `lib/mock-data/procurement.ts` and the route file remains a thin composition layer.
 - Module docs record their matching split PRD source files when those working copies exist in the active input set.
 - The architecture, data contract, API seam, acceptance criteria, and test strategy docs stay mutually consistent.

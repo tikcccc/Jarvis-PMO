@@ -153,6 +153,26 @@ export interface RequirementRiskAlert {
   recommendedAction: string;
 }
 
+export interface RequirementAutomationAction {
+  id: string;
+  title: string;
+  description: string;
+  sourceLabel: string;
+  cadenceLabel: string;
+  statusLabel: string;
+  tone: Tone;
+  lastRunLabel: string;
+}
+
+export interface RequirementValidationCheck {
+  id: string;
+  label: string;
+  targetLabel: string;
+  statusLabel: string;
+  tone: Tone;
+  detail: string;
+}
+
 export interface RequirementRecord {
   id: string;
   title: string;
@@ -166,6 +186,9 @@ export interface RequirementRecord {
   openChangeCount: number;
   relatedModules: string[];
   specificFields: RequirementAttribute[];
+  governance: RequirementAttribute[];
+  automationActions: RequirementAutomationAction[];
+  validationChecks: RequirementValidationCheck[];
   evidence: RequirementEvidence[];
   linkages: RequirementImpactLink[];
   history: RequirementHistoryEntry[];
@@ -380,6 +403,7 @@ Suggested file mapping:
 - Add raw numeric fields only when a component actually needs math or sorting.
 - Keep module labels and section names aligned with the reference docs.
 - Do not invent extra domain concepts in mock data unless the UI needs them.
+- Requirements records may include governance metadata, agent automation routines, and validation checks when the route needs to expose SSOT control behavior directly.
 - Portfolio records use real geographic coordinates for map rendering; any no-token preview layout must be derived in the UI layer, not stored in the data file.
 
 ## 6. Input Source Rule

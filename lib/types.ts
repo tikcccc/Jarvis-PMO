@@ -147,6 +147,26 @@ export interface RequirementRiskAlert {
   recommendedAction: string;
 }
 
+export interface RequirementAutomationAction {
+  id: string;
+  title: string;
+  description: string;
+  sourceLabel: string;
+  cadenceLabel: string;
+  statusLabel: string;
+  tone: Tone;
+  lastRunLabel: string;
+}
+
+export interface RequirementValidationCheck {
+  id: string;
+  label: string;
+  targetLabel: string;
+  statusLabel: string;
+  tone: Tone;
+  detail: string;
+}
+
 export interface RequirementRecord {
   id: string;
   title: string;
@@ -160,6 +180,9 @@ export interface RequirementRecord {
   openChangeCount: number;
   relatedModules: string[];
   specificFields: RequirementAttribute[];
+  governance: RequirementAttribute[];
+  automationActions: RequirementAutomationAction[];
+  validationChecks: RequirementValidationCheck[];
   evidence: RequirementEvidence[];
   linkages: RequirementImpactLink[];
   history: RequirementHistoryEntry[];

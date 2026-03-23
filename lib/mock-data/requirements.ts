@@ -16,16 +16,16 @@ export const requirementSummaryCards: MetricCard[] = [
     icon: "shieldAlert"
   },
   {
-    id: "pending-reviews",
-    label: "Pending Reviews",
-    value: "2",
+    id: "cross-check-domains",
+    label: "Cross-Check Domains",
+    value: "8",
     tone: "warning",
     icon: "clock"
   },
   {
-    id: "last-master-sync",
-    label: "Last Master Sync",
-    value: "10m ago",
+    id: "agent-routines",
+    label: "Agent Routines",
+    value: "18",
     tone: "info",
     icon: "database"
   }
@@ -41,17 +41,73 @@ export const requirementRecords: RequirementRecord[] = [
     statusLabel: "Synced",
     tone: "success",
     syncTimeLabel: "2h ago",
-    statement: "Deliver a premium mixed-use estate with strong ESG-S performance and hospitality-grade user experience.",
+    statement: "Sponsor intent, user experience KPIs, and ESG-S expectations translated into a locked delivery baseline.",
     openChangeCount: 0,
     relatedModules: ["Design", "Handover", "Quality"],
     specificFields: [
-      { label: "Vision Tags", value: "Timeless elegance, net-zero, hospitality-grade" },
-      { label: "Functional Brief", value: "120k sqm mixed-use, fully accessible public realm" },
-      { label: "Experience KPIs", value: "Acoustics < 35dB, WELL Gold, premium arrival sequence" }
+      { label: "Vision Tags", value: "Timeless elegance, net-zero-ready estate, hospitality-grade public realm" },
+      { label: "Functional Requirement List", value: "120k sqm mixed-use, accessible podium circulation, premium arrival experience" },
+      { label: "Experience Standards", value: "Acoustics < 35dB, arrival illuminance > 500 Lux, WELL Gold indoor-air target" },
+      { label: "Change Log", value: "3 sponsor clarifications closed, no unresolved client clauses in current baseline" }
+    ],
+    governance: [
+      { label: "Active Baseline", value: "CRB v2.1" },
+      { label: "Approved By", value: "Sponsor Board + PMO Lead" },
+      { label: "Approval Date", value: "22 Mar 2026" },
+      { label: "Source Coverage", value: "Board pack, minutes, and executive email digest synchronized" }
+    ],
+    automationActions: [
+      {
+        id: "client-req-auto-minutes",
+        title: "Meeting Minutes Extraction",
+        description: "Recording Agent parses sponsor minutes and converts narrative demands into structured KPI-ready clauses.",
+        sourceLabel: "Board minutes + workshop notes",
+        cadenceLabel: "Event-driven",
+        statusLabel: "Locked",
+        tone: "success",
+        lastRunLabel: "22 Mar 2026, 09:08"
+      },
+      {
+        id: "client-req-auto-mail",
+        title: "Client Mail Triage",
+        description: "New sponsor emails are reconciled against the baseline and routed for PMO review when language is ambiguous.",
+        sourceLabel: "Executive mailbox",
+        cadenceLabel: "15 min polling",
+        statusLabel: "Monitoring",
+        tone: "info",
+        lastRunLabel: "22 Mar 2026, 09:32"
+      }
+    ],
+    validationChecks: [
+      {
+        id: "client-req-check-brief",
+        label: "Narrative alignment",
+        targetLabel: "Project Brief",
+        statusLabel: "Aligned",
+        tone: "success",
+        detail: "Project brief success metrics and positioning language remain consistent with the latest client baseline."
+      },
+      {
+        id: "client-req-check-design",
+        label: "Brand-to-design handoff",
+        targetLabel: "Design",
+        statusLabel: "Aligned",
+        tone: "success",
+        detail: "Facade performance and premium-space standards are reflected in the active design health rules."
+      },
+      {
+        id: "client-req-check-handover",
+        label: "Operational KPI continuity",
+        targetLabel: "Handover",
+        statusLabel: "Aligned",
+        tone: "success",
+        detail: "FM-facing comfort and ESG proof points are already tagged for closeout evidence capture."
+      }
     ],
     evidence: [
       { id: "client-req-vision", label: "Vision_Statement_v2.pdf", kind: "PDF", sourceLabel: "Board Approved" },
-      { id: "client-req-minutes", label: "Board_Minutes_03.docx", kind: "DOCX", sourceLabel: "Executive Office" }
+      { id: "client-req-minutes", label: "Board_Minutes_03.docx", kind: "DOCX", sourceLabel: "Executive Office" },
+      { id: "client-req-workshop", label: "Brand_Experience_Workshop.xlsx", kind: "XLSX", sourceLabel: "PMO Workshop Pack" }
     ],
     linkages: [
       {
@@ -60,7 +116,7 @@ export const requirementRecords: RequirementRecord[] = [
         targetType: "requirement",
         impactLabel: "Direct",
         tone: "info",
-        note: "Forms the narrative and success criteria used by the project brief and design governance."
+        note: "Forms the project narrative, success metrics, and stage-gate framing used by the brief."
       },
       {
         id: "client-req-design",
@@ -68,7 +124,7 @@ export const requirementRecords: RequirementRecord[] = [
         targetType: "module",
         impactLabel: "Direct",
         tone: "info",
-        note: "Drives material quality, facade performance, and premium space standards."
+        note: "Drives premium-material performance criteria, facade tolerances, and hospitality-grade experience standards."
       },
       {
         id: "client-req-info-req",
@@ -76,7 +132,7 @@ export const requirementRecords: RequirementRecord[] = [
         targetType: "requirement",
         impactLabel: "Indirect",
         tone: "default",
-        note: "Client experience KPIs influence digital twin acceptance datasets and commissioning evidence."
+        note: "Client-facing comfort and ESG KPIs define which digital proof points must exist at handover."
       }
     ],
     history: [
@@ -85,7 +141,7 @@ export const requirementRecords: RequirementRecord[] = [
         version: "v2.1",
         dateLabel: "22 Mar 2026, 09:10",
         author: "Recording Agent",
-        action: "Confirmed the latest board-approved vision statement and ESG targets as the active client baseline.",
+        action: "Confirmed the latest board-approved client vision statement and ESG-S targets as the active baseline.",
         tone: "success",
         type: "baseline"
       },
@@ -94,7 +150,7 @@ export const requirementRecords: RequirementRecord[] = [
         version: "v2.0",
         dateLabel: "11 Mar 2026, 15:45",
         author: "PMO Lead",
-        action: "Accepted revised hospitality and accessibility KPIs after sponsor review.",
+        action: "Accepted revised hospitality and accessibility KPI wording after sponsor review.",
         tone: "info",
         type: "review"
       }
@@ -109,17 +165,73 @@ export const requirementRecords: RequirementRecord[] = [
     statusLabel: "Synced",
     tone: "success",
     syncTimeLabel: "5h ago",
-    statement: "Consolidated project scope, commercial objectives, and stage-gate deliverables for Horizon Estates.",
+    statement: "Project constitution baseline covering scope, positioning, constraints, and stage-gate commitments for Horizon Estates.",
     openChangeCount: 1,
     relatedModules: ["Portfolio", "Milestones", "Approvals"],
     specificFields: [
-      { label: "Delivery Scope", value: "Retail podium, two residential towers, public plaza, mobility basement" },
-      { label: "Stage Gates", value: "Concept, statutory approvals, procurement release, phased handover" },
-      { label: "Success Metric", value: "Handover by Mar 2028 within approved target return envelope" }
+      { label: "Project Overview", value: "120k sqm GFA, 92k sqm saleable area, plot ratio 5.0, height cap 120m" },
+      { label: "Product Positioning", value: "Premium residential + retail podium, branded amenity level, Grade-A finish standard" },
+      { label: "Key Constraints", value: "Aviation corridor, protected view corridor, mobility-basement interface, public-plaza setback" },
+      { label: "Baseline Version", value: "v1.8 effective 22 Mar 2026, signed by Development Director and PMO Lead" }
+    ],
+    governance: [
+      { label: "Signed Baseline", value: "Project Brief v1.8" },
+      { label: "Approval Chain", value: "Development Director -> Sponsor -> PMO" },
+      { label: "Notice Window", value: "24h stakeholder broadcast on approved deltas" },
+      { label: "SSOT Subscribers", value: "Portfolio, Milestones, Approvals, Design" }
+    ],
+    automationActions: [
+      {
+        id: "project-brief-auto-delta",
+        title: "Revision Delta Monitor",
+        description: "New brief uploads are diffed against the last signed version and material deltas are tagged by discipline.",
+        sourceLabel: "Document repository",
+        cadenceLabel: "Event-driven",
+        statusLabel: "Running",
+        tone: "success",
+        lastRunLabel: "22 Mar 2026, 06:21"
+      },
+      {
+        id: "project-brief-auto-notify",
+        title: "Stakeholder Notification Wave",
+        description: "Approved scope deltas are routed to downstream module owners with affected sections pre-highlighted.",
+        sourceLabel: "PMO notification bus",
+        cadenceLabel: "On approval",
+        statusLabel: "Delivered",
+        tone: "success",
+        lastRunLabel: "22 Mar 2026, 06:25"
+      }
+    ],
+    validationChecks: [
+      {
+        id: "project-brief-check-budget",
+        label: "Finish standard affordability",
+        targetLabel: "Project Budget",
+        statusLabel: "Review",
+        tone: "warning",
+        detail: "Premium fit-out language remains approved, but commercial control requested one more check against the latest EFC stress case."
+      },
+      {
+        id: "project-brief-check-approvals",
+        label: "Authority scope alignment",
+        targetLabel: "Gov Approvals",
+        statusLabel: "Aligned",
+        tone: "success",
+        detail: "Current approval inventory still covers the active project scope and setback assumptions."
+      },
+      {
+        id: "project-brief-check-programme",
+        label: "Stage-gate sequencing",
+        targetLabel: "Project Programme",
+        statusLabel: "Aligned",
+        tone: "success",
+        detail: "Milestone gates continue to reflect the approved delivery strategy and handover sequence."
+      }
     ],
     evidence: [
       { id: "project-brief-core", label: "Project_Brief_Master_v1.8.pdf", kind: "PDF", sourceLabel: "Development Office" },
-      { id: "project-brief-exco", label: "ExCo_Approval_Note.msg", kind: "MSG", sourceLabel: "Executive Approval" }
+      { id: "project-brief-exco", label: "ExCo_Approval_Note.msg", kind: "MSG", sourceLabel: "Executive Approval" },
+      { id: "project-brief-delta", label: "Brief_Delta_Register_v1.8.xlsx", kind: "XLSX", sourceLabel: "PMO Controls" }
     ],
     linkages: [
       {
@@ -128,7 +240,7 @@ export const requirementRecords: RequirementRecord[] = [
         targetType: "module",
         impactLabel: "Direct",
         tone: "info",
-        note: "Feeds the executive summary and route-level reporting narrative for Horizon Estates."
+        note: "Feeds the route-level reporting narrative and executive summary for Horizon Estates."
       },
       {
         id: "project-brief-milestones",
@@ -136,7 +248,7 @@ export const requirementRecords: RequirementRecord[] = [
         targetType: "module",
         impactLabel: "Direct",
         tone: "info",
-        note: "Stage-gate commitments define the major programme checkpoints and delay exposure."
+        note: "Stage-gate commitments define the major programme checkpoints and delay exposure surfaces."
       },
       {
         id: "project-brief-approvals",
@@ -144,7 +256,7 @@ export const requirementRecords: RequirementRecord[] = [
         targetType: "module",
         impactLabel: "Indirect",
         tone: "default",
-        note: "Approval sequences and assumptions must remain aligned with the approved project delivery scope."
+        note: "Approval strategy and condition closeout must stay aligned with the approved delivery scope."
       }
     ],
     history: [
@@ -162,7 +274,7 @@ export const requirementRecords: RequirementRecord[] = [
         version: "v1.7",
         dateLabel: "18 Mar 2026, 11:10",
         author: "Development Manager",
-        action: "Logged sponsor comment requesting refined mobility-basement scope narrative.",
+        action: "Logged sponsor comment requesting refined mobility-basement scope narrative and branded amenity wording.",
         tone: "warning",
         type: "review"
       }
@@ -171,23 +283,79 @@ export const requirementRecords: RequirementRecord[] = [
   {
     id: "feasibility-studies",
     title: "Feasibility Studies",
-    integrityScore: 100,
+    integrityScore: 96,
     owner: "Finance Director",
     version: "v3.0",
     statusLabel: "Synced",
     tone: "success",
     syncTimeLabel: "5d ago",
-    statement: "Financial, commercial, and technical viability baseline for land use, funding, and market absorption.",
+    statement: "Approved economic and technical assumptions governing target returns, ground strategy, and market absorption.",
     openChangeCount: 0,
     relatedModules: ["Finance", "Portfolio", "Payment"],
     specificFields: [
-      { label: "Target IRR", value: "15.2%" },
-      { label: "Net Present Value", value: "$45M" },
-      { label: "Market Assumption", value: "Luxury retail at $120/sqm/month" }
+      { label: "Market Assumptions", value: "Luxury retail at $120/sqm/month, 18-month residential absorption, premium occupancy uplift" },
+      { label: "Technical Parameters", value: "Bored piling with deep basement, utility diversion allowance, podium transfer structure" },
+      { label: "Financial Metrics", value: "IRR 15.2%, NPV $45M, payback within approved sponsor hurdle" },
+      { label: "Risk Summary", value: "Ground-condition sensitivity, infrastructure tie-in risk, premium-finish inflation sensitivity" }
+    ],
+    governance: [
+      { label: "Approved Study", value: "Feasibility Pack v3.0" },
+      { label: "Scenario Owner", value: "Finance Director" },
+      { label: "Freeze Date", value: "17 Mar 2026" },
+      { label: "Assumption Index", value: "36 traceable assumptions linked to budget and programme" }
+    ],
+    automationActions: [
+      {
+        id: "feasibility-auto-extract",
+        title: "Assumption Extraction",
+        description: "Key market, technical, and finance assumptions are extracted from the approved report into the SSOT baseline.",
+        sourceLabel: "Feasibility report bundle",
+        cadenceLabel: "On report issue",
+        statusLabel: "Captured",
+        tone: "success",
+        lastRunLabel: "17 Mar 2026, 10:18"
+      },
+      {
+        id: "feasibility-auto-watch",
+        title: "Downstream Variance Watch",
+        description: "When site, design, or budget values drift from the approved assumptions, the Feasibility baseline is flagged for PMO review.",
+        sourceLabel: "Cross-module event stream",
+        cadenceLabel: "Continuous",
+        statusLabel: "Watching",
+        tone: "info",
+        lastRunLabel: "22 Mar 2026, 08:31"
+      }
+    ],
+    validationChecks: [
+      {
+        id: "feasibility-check-site",
+        label: "Ground assumption continuity",
+        targetLabel: "Site Information",
+        statusLabel: "Watch",
+        tone: "warning",
+        detail: "Zone B contamination and deeper bedrock now sit outside the original feasibility assumption envelope."
+      },
+      {
+        id: "feasibility-check-budget",
+        label: "Contingency resilience",
+        targetLabel: "Project Budget",
+        statusLabel: "Aligned",
+        tone: "success",
+        detail: "Current contingency is still within feasibility sensitivity tolerances pending final remediation pricing."
+      },
+      {
+        id: "feasibility-check-finance",
+        label: "Funding model continuity",
+        targetLabel: "Finance",
+        statusLabel: "Aligned",
+        tone: "success",
+        detail: "Finance stress-test assumptions continue to use the approved feasibility funding inputs."
+      }
     ],
     evidence: [
       { id: "feasibility-model", label: "Feasibility_Final.pdf", kind: "PDF", sourceLabel: "Finance" },
-      { id: "feasibility-market", label: "Market_Analysis.xlsx", kind: "XLSX", sourceLabel: "Research Consultant" }
+      { id: "feasibility-market", label: "Market_Analysis.xlsx", kind: "XLSX", sourceLabel: "Research Consultant" },
+      { id: "feasibility-risk", label: "Sensitivity_Register.csv", kind: "CSV", sourceLabel: "Finance Modelling" }
     ],
     linkages: [
       {
@@ -204,7 +372,15 @@ export const requirementRecords: RequirementRecord[] = [
         targetType: "requirement",
         impactLabel: "Direct",
         tone: "info",
-        note: "Cost allowances and contingency logic roll into the baseline budget structure."
+        note: "Contingency logic and cost allowances roll into the baseline budget structure."
+      },
+      {
+        id: "feasibility-site",
+        targetLabel: "Site Information",
+        targetType: "requirement",
+        impactLabel: "Direct",
+        tone: "warning",
+        note: "Ground and utility assumptions must remain consistent with the active site dossier."
       }
     ],
     history: [
@@ -237,13 +413,68 @@ export const requirementRecords: RequirementRecord[] = [
     statusLabel: "Drift Detected",
     tone: "danger",
     syncTimeLabel: "1h ago",
-    statement: "Geotechnical constraints and contamination conditions now indicate deeper piling and remediation risk in Zone B.",
+    statement: "Geotechnical and contamination updates in Zone B now create immediate baseline exposure for budget, programme, and package scope.",
     openChangeCount: 2,
     relatedModules: ["Milestones", "Finance", "Procurement"],
     specificFields: [
-      { label: "Geotechnical", value: "Deep bedrock at 45m with additional treatment zones" },
-      { label: "Contamination", value: "Zone B heavy metals detected above assumption envelope" },
-      { label: "Constraints", value: "Max height 120m due to aviation control corridor" }
+      { label: "GIS Coordinates & Boundaries", value: "WGS84 control points validated, red-line boundary refreshed on latest Lands reference" },
+      { label: "Underground Conditions", value: "Bedrock at 45m, high water table, utility clashes, heavy-metal contamination in Zone B" },
+      { label: "Surrounding Constraints", value: "Residential edge within 50m, traffic interface on east frontage, aviation corridor height limit" },
+      { label: "Reality Capture Index", value: "Drone ortho, 360 scan, point-cloud and survey revision set merged into the SSOT model" }
+    ],
+    governance: [
+      { label: "Active Survey Bundle", value: "Site Dossier v1.2" },
+      { label: "Verified By", value: "Site Engineer + Environmental Consultant" },
+      { label: "Last Field Merge", value: "22 Mar 2026, 08:30" },
+      { label: "Open Change Requests", value: "2 downstream change controls pending" }
+    ],
+    automationActions: [
+      {
+        id: "site-auto-gis",
+        title: "GIS and Survey Ingest",
+        description: "Government GIS layers, survey files, and red-line updates are merged into the active site baseline automatically.",
+        sourceLabel: "GIS platform + survey uploads",
+        cadenceLabel: "Continuous",
+        statusLabel: "Merged",
+        tone: "success",
+        lastRunLabel: "22 Mar 2026, 08:28"
+      },
+      {
+        id: "site-auto-scan",
+        title: "Reality Capture Fusion",
+        description: "Contamination tests and latest scan data were fused into the terrain model, triggering a cross-module exception.",
+        sourceLabel: "Drone, lab, and point-cloud feeds",
+        cadenceLabel: "On new capture",
+        statusLabel: "Escalated",
+        tone: "danger",
+        lastRunLabel: "22 Mar 2026, 08:30"
+      }
+    ],
+    validationChecks: [
+      {
+        id: "site-check-feasibility",
+        label: "Ground assumption conflict",
+        targetLabel: "Feasibility Studies",
+        statusLabel: "Conflict",
+        tone: "danger",
+        detail: "Current contamination and piling conditions contradict the feasibility-stage cost and constructability assumptions."
+      },
+      {
+        id: "site-check-programme",
+        label: "Foundation resequencing",
+        targetLabel: "Project Programme",
+        statusLabel: "Review",
+        tone: "warning",
+        detail: "Zone B enabling and foundation activities need resequencing before the next issued baseline."
+      },
+      {
+        id: "site-check-procurement",
+        label: "Remediation package scope",
+        targetLabel: "Procurement Strategy",
+        statusLabel: "Review",
+        tone: "warning",
+        detail: "Deep piling and remediation scope must be surfaced in the next tender packaging decision."
+      }
     ],
     evidence: [
       { id: "site-info-geotech", label: "Geotech_Report_Rev2.pdf", kind: "PDF", sourceLabel: "Ground Investigation" },
@@ -319,23 +550,79 @@ export const requirementRecords: RequirementRecord[] = [
   {
     id: "project-budget",
     title: "Project Budget",
-    integrityScore: 100,
+    integrityScore: 94,
     owner: "Commercial Director",
     version: "v4.1",
-    statusLabel: "Synced",
-    tone: "success",
+    statusLabel: "Variance Review",
+    tone: "warning",
     syncTimeLabel: "10m ago",
-    statement: "Approved baseline budget, contingency structure, and change-control thresholds for Horizon Estates.",
-    openChangeCount: 0,
+    statement: "Approved cost baseline remains active, but current EFC and premium-finish exposure require a controlled review loop.",
+    openChangeCount: 1,
     relatedModules: ["Finance", "Procurement", "Payment"],
     specificFields: [
-      { label: "Total EFC", value: "$428.4M" },
-      { label: "Contingency", value: "5% ($21.4M)" },
-      { label: "VO Threshold", value: "10% of awarded value before escalation" }
+      { label: "Approved Cost Limit", value: "$420.0M target cost with 5% contingency under PMO control" },
+      { label: "Package Allocation", value: "Civil, MEP, finishes, and enabling packages aligned to 14 release envelopes" },
+      { label: "Committed Cost & VO", value: "$185.2M committed, $8.6M VO exposure, remediation allowance not yet locked" },
+      { label: "EFC Variance", value: "$428.4M current EFC, +2.0% over approved target pending package refinement" }
+    ],
+    governance: [
+      { label: "Cost Baseline", value: "Budget v4.1" },
+      { label: "Approved By", value: "Commercial Director + PMO Controls" },
+      { label: "Threshold Logic", value: "Variance > 5% or package overrun > 10% triggers escalation" },
+      { label: "Last Reconciliation", value: "22 Mar 2026, 10:05" }
+    ],
+    automationActions: [
+      {
+        id: "budget-auto-ingest",
+        title: "Contract and Invoice Ingest",
+        description: "Awarded values, invoices, and VO instructions are ingested into the baseline budget roll-up automatically.",
+        sourceLabel: "Contract log + finance workflow",
+        cadenceLabel: "Hourly",
+        statusLabel: "Running",
+        tone: "success",
+        lastRunLabel: "22 Mar 2026, 10:01"
+      },
+      {
+        id: "budget-auto-variance",
+        title: "Variance Threshold Monitor",
+        description: "Budget vs committed vs EFC deltas are watched against PMO thresholds and routed into review queues when breached.",
+        sourceLabel: "Commercial controls engine",
+        cadenceLabel: "Continuous",
+        statusLabel: "Review",
+        tone: "warning",
+        lastRunLabel: "22 Mar 2026, 10:05"
+      }
+    ],
+    validationChecks: [
+      {
+        id: "budget-check-brief",
+        label: "Finish standard affordability",
+        targetLabel: "Project Brief",
+        statusLabel: "Review",
+        tone: "warning",
+        detail: "Premium amenity and finish commitments remain feasible, but the latest EFC reduces contingency headroom."
+      },
+      {
+        id: "budget-check-procurement",
+        label: "Package limit conformity",
+        targetLabel: "Procurement Strategy",
+        statusLabel: "Review",
+        tone: "warning",
+        detail: "Potential standalone remediation package needs confirmation before final package caps are re-issued."
+      },
+      {
+        id: "budget-check-finance",
+        label: "Funding buffer coverage",
+        targetLabel: "Finance",
+        statusLabel: "Aligned",
+        tone: "success",
+        detail: "Funding plan still covers the forecast burn, assuming remediation stays inside current commercial range."
+      }
     ],
     evidence: [
       { id: "budget-approved", label: "Budget_Approval_Signed.pdf", kind: "PDF", sourceLabel: "Commercial Control" },
-      { id: "budget-log", label: "Budget_Baseline_Log.xlsx", kind: "XLSX", sourceLabel: "Cost Manager" }
+      { id: "budget-log", label: "Budget_Baseline_Log.xlsx", kind: "XLSX", sourceLabel: "Cost Manager" },
+      { id: "budget-recon", label: "EFC_Reconciliation_2026-03-22.csv", kind: "CSV", sourceLabel: "Commercial Controls Engine" }
     ],
     linkages: [
       {
@@ -351,8 +638,8 @@ export const requirementRecords: RequirementRecord[] = [
         targetLabel: "Procurement Strategy",
         targetType: "requirement",
         impactLabel: "Direct",
-        tone: "info",
-        note: "Target contract strategy and package sizing are bounded by the approved cost envelope."
+        tone: "warning",
+        note: "Tender package sizing and target-cost assumptions are constrained by the active commercial envelope."
       },
       {
         id: "budget-payment",
@@ -369,9 +656,9 @@ export const requirementRecords: RequirementRecord[] = [
         version: "v4.1",
         dateLabel: "22 Mar 2026, 10:05",
         author: "Recording Agent",
-        action: "Reconciled the approved baseline log with the latest contingency release memo.",
-        tone: "success",
-        type: "baseline"
+        action: "Reconciled the approved baseline log with the latest contingency release memo and remediation watch item.",
+        tone: "warning",
+        type: "review"
       },
       {
         id: "budget-h2",
@@ -380,7 +667,7 @@ export const requirementRecords: RequirementRecord[] = [
         author: "Commercial Director",
         action: "Approved contingency structure and change-control thresholds for package release.",
         tone: "info",
-        type: "review"
+        type: "baseline"
       }
     ]
   },
@@ -393,17 +680,73 @@ export const requirementRecords: RequirementRecord[] = [
     statusLabel: "Pending Review",
     tone: "warning",
     syncTimeLabel: "2h ago",
-    statement: "Master schedule baseline v2 with current critical path and milestone handover commitments.",
+    statement: "Master schedule baseline v2 is active, but fragnet resequencing and ownership alignment remain under review.",
     openChangeCount: 1,
     relatedModules: ["Milestones", "Approvals", "Progress"],
     specificFields: [
-      { label: "Critical Path", value: "Zone B foundation to Tower A structure" },
-      { label: "Handover Date", value: "15 Mar 2028" },
-      { label: "Float", value: "14 days overall programme float" }
+      { label: "Key Milestones", value: "Planning permit complete, foundation start active, topping-out Feb 2027, handover Mar 2028" },
+      { label: "Critical Path", value: "Zone B remediation -> foundation release -> Tower A structure" },
+      { label: "Resource Load", value: "Peak 850 workforce, 4 tower cranes, remediation crew uplift pending" },
+      { label: "Schedule Variance", value: "0 days approved baseline variance, +14 to 21 days under current site-risk scenario" }
+    ],
+    governance: [
+      { label: "Current Baseline", value: "P6 Baseline v2.0" },
+      { label: "Planning Lead", value: "Planning Manager" },
+      { label: "Daily Reconcile", value: "Field diary and site progress matched every 24h" },
+      { label: "Change Window", value: "Fragnet decision due before next executive report" }
+    ],
+    automationActions: [
+      {
+        id: "programme-auto-parser",
+        title: "P6 Plan Parser",
+        description: "Critical path, float, and milestone dates are extracted from the planning baseline into the SSOT graph.",
+        sourceLabel: "P6 baseline file",
+        cadenceLabel: "Daily",
+        statusLabel: "Parsed",
+        tone: "success",
+        lastRunLabel: "22 Mar 2026, 07:40"
+      },
+      {
+        id: "programme-auto-reconcile",
+        title: "Field Progress Reconciler",
+        description: "Daily reports are checked against the master schedule and trigger fragnet review when variance patterns emerge.",
+        sourceLabel: "Daily report ingestion",
+        cadenceLabel: "Daily",
+        statusLabel: "Review",
+        tone: "warning",
+        lastRunLabel: "22 Mar 2026, 08:05"
+      }
+    ],
+    validationChecks: [
+      {
+        id: "programme-check-site",
+        label: "Ground risk resequencing",
+        targetLabel: "Site Information",
+        statusLabel: "Review",
+        tone: "warning",
+        detail: "Foundation sequencing needs confirmation against the updated contamination and piling constraints."
+      },
+      {
+        id: "programme-check-approvals",
+        label: "Authority lead-time continuity",
+        targetLabel: "Gov Approvals",
+        statusLabel: "Aligned",
+        tone: "success",
+        detail: "Approval lead-time assumptions remain valid for the current baseline issue."
+      },
+      {
+        id: "programme-check-raci",
+        label: "Delayed interface ownership",
+        targetLabel: "Responsibility Matrix",
+        statusLabel: "Review",
+        tone: "warning",
+        detail: "Ownership for enabling-works permitting and remediation handoffs still needs final RACI confirmation."
+      }
     ],
     evidence: [
       { id: "programme-p6", label: "P6_Baseline_v2.xer", kind: "XER", sourceLabel: "Planning" },
-      { id: "programme-fragnet", label: "Delay_Fragnet_Zone_B.pdf", kind: "PDF", sourceLabel: "Planning Review" }
+      { id: "programme-fragnet", label: "Delay_Fragnet_Zone_B.pdf", kind: "PDF", sourceLabel: "Planning Review" },
+      { id: "programme-daily", label: "Daily_Report_Reconcile_22Mar.csv", kind: "CSV", sourceLabel: "Progress Agent" }
     ],
     linkages: [
       {
@@ -419,8 +762,16 @@ export const requirementRecords: RequirementRecord[] = [
         targetLabel: "Responsibility Matrix",
         targetType: "requirement",
         impactLabel: "Indirect",
-        tone: "default",
+        tone: "warning",
         note: "Ownership of delayed interfaces must be confirmed against the latest responsibility matrix revision."
+      },
+      {
+        id: "programme-progress",
+        targetLabel: "Progress",
+        targetType: "module",
+        impactLabel: "Direct",
+        tone: "info",
+        note: "Site progress observations directly calibrate critical path status and rolling forecasts."
       }
     ],
     history: [
@@ -447,23 +798,79 @@ export const requirementRecords: RequirementRecord[] = [
   {
     id: "procurement-strategy",
     title: "Procurement Strategy",
-    integrityScore: 90,
+    integrityScore: 92,
     owner: "Procurement Lead",
     version: "v1.5",
     statusLabel: "Synced",
     tone: "success",
     syncTimeLabel: "4h ago",
-    statement: "Target 80% of contract value through GMP and NEC4 target-cost packages with embedded ESG sourcing rules.",
+    statement: "Tender packaging and contract model baseline remain active, with one commercial watch item linked to remediation scope.",
     openChangeCount: 1,
     relatedModules: ["Procurement", "Finance", "Payment"],
     specificFields: [
-      { label: "Contract Model", value: "NEC4 Option C target contract for major works" },
-      { label: "Tender Packages", value: "14 main packages across enabling, structure, MEP, and fit-out" },
-      { label: "ESG Criteria", value: "20% local sourcing and embodied-carbon disclosure mandatory" }
+      { label: "Package Strategy", value: "14 main packages across enabling, structure, MEP, fit-out, and specialist systems" },
+      { label: "Tender Schedule", value: "Facade and MEP release in Q3 2026, remediation package decision pending site-risk gate" },
+      { label: "Contract Model", value: "NEC4 Option C target-cost for major works with risk-share clauses and ESG obligations" },
+      { label: "Supplier Shortlist", value: "5 prequalified Tier-1 contractors with rating, ESG disclosure, and claims history tracked" }
+    ],
+    governance: [
+      { label: "Active Strategy Memo", value: "Procurement Strategy v1.5" },
+      { label: "PMO Approval Gate", value: "Commercial + PMO release approval required" },
+      { label: "Release Horizon", value: "Next gate in 12 days" },
+      { label: "Strategy Owner", value: "Procurement Lead" }
+    ],
+    automationActions: [
+      {
+        id: "procurement-strategy-auto-milestones",
+        title: "Tender Milestone Monitor",
+        description: "Upcoming tender events are watched and routed into procurement worklists before release dates slip.",
+        sourceLabel: "Procurement calendar",
+        cadenceLabel: "Daily",
+        statusLabel: "Running",
+        tone: "success",
+        lastRunLabel: "22 Mar 2026, 05:15"
+      },
+      {
+        id: "procurement-strategy-auto-conformance",
+        title: "Award-vs-Strategy Conformance",
+        description: "Actual bid outcomes and packaging decisions are checked against the approved target-contract strategy.",
+        sourceLabel: "Tender evaluation stream",
+        cadenceLabel: "On package event",
+        statusLabel: "Monitoring",
+        tone: "info",
+        lastRunLabel: "22 Mar 2026, 05:20"
+      }
+    ],
+    validationChecks: [
+      {
+        id: "procurement-strategy-check-budget",
+        label: "Commercial envelope fit",
+        targetLabel: "Project Budget",
+        statusLabel: "Review",
+        tone: "warning",
+        detail: "Package caps remain broadly aligned, but remediation scope may require a revised standalone release envelope."
+      },
+      {
+        id: "procurement-strategy-check-programme",
+        label: "Release sequencing",
+        targetLabel: "Project Programme",
+        statusLabel: "Aligned",
+        tone: "success",
+        detail: "Current tender calendar still supports the approved major programme gates."
+      },
+      {
+        id: "procurement-strategy-check-payment",
+        label: "Contract-family compatibility",
+        targetLabel: "Jarvis PAY",
+        statusLabel: "Aligned",
+        tone: "success",
+        detail: "Payment engine rules already support the NEC4 target-cost pathways selected for major packages."
+      }
     ],
     evidence: [
       { id: "proc-strategy-core", label: "Procurement_Strategy_Update.pdf", kind: "PDF", sourceLabel: "Procurement" },
-      { id: "proc-strategy-risk", label: "Packaging_Risk_Workshop.docx", kind: "DOCX", sourceLabel: "Commercial Risk" }
+      { id: "proc-strategy-risk", label: "Packaging_Risk_Workshop.docx", kind: "DOCX", sourceLabel: "Commercial Risk" },
+      { id: "proc-strategy-shortlist", label: "Vendor_Shortlist_Ratings.xlsx", kind: "XLSX", sourceLabel: "Procurement Controls" }
     ],
     linkages: [
       {
@@ -479,7 +886,7 @@ export const requirementRecords: RequirementRecord[] = [
         targetLabel: "Project Budget",
         targetType: "requirement",
         impactLabel: "Direct",
-        tone: "info",
+        tone: "warning",
         note: "Package sizing and target-cost assumptions must stay within the approved budget envelope."
       },
       {
@@ -488,7 +895,7 @@ export const requirementRecords: RequirementRecord[] = [
         targetType: "module",
         impactLabel: "Indirect",
         tone: "default",
-        note: "Payment engine contract rules depend on the chosen contract family and compensation-event pathways."
+        note: "Payment engine contract logic depends on the chosen contract family and compensation-event pathways."
       }
     ],
     history: [
@@ -521,17 +928,73 @@ export const requirementRecords: RequirementRecord[] = [
     statusLabel: "Pending Review",
     tone: "warning",
     syncTimeLabel: "1d ago",
-    statement: "Cross-functional RACI baseline for stage gates, authority interfaces, procurement releases, and handover deliverables.",
+    statement: "RACI baseline for authority, procurement, and handover deliverables is active, with enabling-works interfaces still under review.",
     openChangeCount: 1,
     relatedModules: ["Approvals", "Milestones", "Quality"],
     specificFields: [
-      { label: "RACI Coverage", value: "92 key deliverables mapped across sponsor, PMO, consultants, and contractor" },
-      { label: "Escalation Window", value: "48h for unresolved authority and design interface issues" },
-      { label: "Current Gap", value: "Temporary responsibility overlap on enabling-works permitting" }
+      { label: "WBS Granularity", value: "92 key deliverables mapped to Level 4 package and interface granularity" },
+      { label: "Role Definitions", value: "R/A/C/I assignments set across sponsor, PMO, consultants, contractor, and specialist vendors" },
+      { label: "Deliverable Register", value: "Drawings, reports, submissions, mock-ups, and closeout packages linked to accountable owners" },
+      { label: "Fulfilment Status", value: "1 live overlap on enabling-works permitting, no critical overdue approvals" }
+    ],
+    governance: [
+      { label: "RACI Baseline", value: "Matrix v1.6" },
+      { label: "Approvers", value: "PMO Controls + Discipline Leads" },
+      { label: "Escalation SLA", value: "48h for unresolved interface ownership" },
+      { label: "Last Board Sync", value: "21 Mar 2026, 17:55" }
+    ],
+    automationActions: [
+      {
+        id: "responsibility-auto-match",
+        title: "Task-to-RACI Match",
+        description: "New deliverables inherit accountable and consulted parties when tasks are issued from the module workflow.",
+        sourceLabel: "WBS and workflow engine",
+        cadenceLabel: "On task creation",
+        statusLabel: "Running",
+        tone: "success",
+        lastRunLabel: "21 Mar 2026, 17:20"
+      },
+      {
+        id: "responsibility-auto-escalate",
+        title: "Overdue Escalation Bot",
+        description: "Ownership gaps and overdue handoffs are escalated to the next approver when no response is recorded inside the SLA.",
+        sourceLabel: "Approval and task logs",
+        cadenceLabel: "Hourly",
+        statusLabel: "Review",
+        tone: "warning",
+        lastRunLabel: "21 Mar 2026, 17:55"
+      }
+    ],
+    validationChecks: [
+      {
+        id: "responsibility-check-approvals",
+        label: "Authority handoff clarity",
+        targetLabel: "Gov Approvals",
+        statusLabel: "Review",
+        tone: "warning",
+        detail: "Ownership for enabling-works permitting and supporting evidence submission still overlaps across teams."
+      },
+      {
+        id: "responsibility-check-programme",
+        label: "Delayed interface accountability",
+        targetLabel: "Project Programme",
+        statusLabel: "Review",
+        tone: "warning",
+        detail: "Schedule recovery actions cannot be locked until remediation handoff ownership is finalized."
+      },
+      {
+        id: "responsibility-check-info",
+        label: "Review-owner coverage",
+        targetLabel: "Information Requirements",
+        statusLabel: "Aligned",
+        tone: "success",
+        detail: "Digital-delivery and model-review approvers are already mapped to the active information baseline."
+      }
     ],
     evidence: [
       { id: "responsibility-raci", label: "RACI_Master_v1.6.xlsx", kind: "XLSX", sourceLabel: "PMO Controls" },
-      { id: "responsibility-workshop", label: "Interface_Workshop_Minutes.pdf", kind: "PDF", sourceLabel: "Coordination Workshop" }
+      { id: "responsibility-workshop", label: "Interface_Workshop_Minutes.pdf", kind: "PDF", sourceLabel: "Coordination Workshop" },
+      { id: "responsibility-overdue", label: "Escalation_Log_21Mar.csv", kind: "CSV", sourceLabel: "Workflow Engine" }
     ],
     linkages: [
       {
@@ -549,6 +1012,14 @@ export const requirementRecords: RequirementRecord[] = [
         impactLabel: "Indirect",
         tone: "default",
         note: "Site quality supervision loops reference the same accountable and consulted parties."
+      },
+      {
+        id: "responsibility-milestones",
+        targetLabel: "Milestones",
+        targetType: "module",
+        impactLabel: "Indirect",
+        tone: "warning",
+        note: "Programme recovery tasks cannot close cleanly while interface ownership remains unresolved."
       }
     ],
     history: [
@@ -575,23 +1046,79 @@ export const requirementRecords: RequirementRecord[] = [
   {
     id: "information-requirements",
     title: "Information Requirements",
-    integrityScore: 100,
+    integrityScore: 96,
     owner: "BIM Manager",
     version: "v2.2",
-    statusLabel: "Synced",
-    tone: "success",
+    statusLabel: "Compliance Review",
+    tone: "warning",
     syncTimeLabel: "2d ago",
-    statement: "Digital delivery standard for BIM, field evidence, and digital-twin data exchange across construction and handover.",
-    openChangeCount: 0,
+    statement: "Digital delivery baseline is active, but FM-closeout attributes and experience-proof fields still need one compliance pass.",
+    openChangeCount: 1,
     relatedModules: ["Design", "Progress", "Handover"],
     specificFields: [
-      { label: "LOD Standard", value: "LOD 400 during construction, LOD 500 at FM handover" },
-      { label: "Classification", value: "OmniClass v2024" },
-      { label: "Delivery Formats", value: "IFC 4x3, RVT 2024, COBie, structured QA evidence" }
+      { label: "LOD Standard", value: "LOD 400 during construction, LOD 500 for final FM handover" },
+      { label: "Data Dictionary", value: "OmniClass 2024 classifications, naming rules, mandatory attribute sets, ESG proof fields" },
+      { label: "Delivery Formats", value: "IFC 4x3, RVT 2024, COBie, PDF, structured field and commissioning evidence" },
+      { label: "Audit Status", value: "Current model checks pass core geometry rules; FM dataset completeness review remains open" }
+    ],
+    governance: [
+      { label: "Active EIR", value: "EIR v2.2" },
+      { label: "Approving Authority", value: "BIM Manager + PMO Digital Delivery" },
+      { label: "Coordination Platform", value: "CDE with schema and naming enforcement" },
+      { label: "Last Compliance Run", value: "20 Mar 2026, 12:05" }
+    ],
+    automationActions: [
+      {
+        id: "info-auto-model-check",
+        title: "Model Rule Checker",
+        description: "Geometry, LOD, and naming rules are checked automatically before design drops are accepted into the baseline.",
+        sourceLabel: "Model check scripts",
+        cadenceLabel: "On file upload",
+        statusLabel: "Passed",
+        tone: "success",
+        lastRunLabel: "20 Mar 2026, 12:05"
+      },
+      {
+        id: "info-auto-schema",
+        title: "Delivery Schema Validator",
+        description: "Digital closeout and proof-of-performance files are checked against the required exchange schema and FM fields.",
+        sourceLabel: "CDE validation gateway",
+        cadenceLabel: "On package issue",
+        statusLabel: "Review",
+        tone: "warning",
+        lastRunLabel: "20 Mar 2026, 12:03"
+      }
+    ],
+    validationChecks: [
+      {
+        id: "info-check-design",
+        label: "Model classification compliance",
+        targetLabel: "Design",
+        statusLabel: "Aligned",
+        tone: "success",
+        detail: "Current design model packages comply with the active classification and naming baseline."
+      },
+      {
+        id: "info-check-handover",
+        label: "FM attribute completeness",
+        targetLabel: "Handover",
+        statusLabel: "Review",
+        tone: "warning",
+        detail: "Digital twin closeout requires additional maintainable-asset attributes before the FM package can be locked."
+      },
+      {
+        id: "info-check-client",
+        label: "Experience KPI evidence mapping",
+        targetLabel: "Client Requirements",
+        statusLabel: "Review",
+        tone: "warning",
+        detail: "A small set of hospitality and ESG proof fields still needs explicit mapping into the closeout evidence schema."
+      }
     ],
     evidence: [
       { id: "info-req-eir", label: "EIR_Document_v2.pdf", kind: "PDF", sourceLabel: "Digital Delivery" },
-      { id: "info-req-bep", label: "BIM_Execution_Plan.pdf", kind: "PDF", sourceLabel: "BIM Manager" }
+      { id: "info-req-bep", label: "BIM_Execution_Plan.pdf", kind: "PDF", sourceLabel: "BIM Manager" },
+      { id: "info-req-check", label: "Model_Compliance_Report_20Mar.csv", kind: "CSV", sourceLabel: "Validation Gateway" }
     ],
     linkages: [
       {
@@ -607,16 +1134,16 @@ export const requirementRecords: RequirementRecord[] = [
         targetLabel: "Handover",
         targetType: "module",
         impactLabel: "Direct",
-        tone: "info",
-        note: "Digital twin acceptance and closeout asset information require this data-delivery baseline."
+        tone: "warning",
+        note: "Digital twin acceptance and closeout asset information require the remaining FM fields to be completed."
       },
       {
         id: "info-req-client",
         targetLabel: "Client Requirements",
         targetType: "requirement",
         impactLabel: "Direct",
-        tone: "info",
-        note: "Client operational and experience KPIs define the evidence fields required for final digital handover."
+        tone: "warning",
+        note: "Client experience KPIs define the proof fields required for final digital handover."
       }
     ],
     history: [
@@ -626,17 +1153,17 @@ export const requirementRecords: RequirementRecord[] = [
         dateLabel: "20 Mar 2026, 12:05",
         author: "BIM Manager",
         action: "Aligned the EIR with digital-twin FM deliverables and updated exchange format requirements.",
-        tone: "success",
-        type: "baseline"
+        tone: "warning",
+        type: "review"
       },
       {
         id: "info-req-h2",
         version: "v2.1",
         dateLabel: "16 Mar 2026, 08:40",
         author: "Recording Agent",
-        action: "Closed review comment on model-classification consistency after consultant confirmation.",
+        action: "Closed classification consistency review after consultant confirmation and issued the updated compliance report.",
         tone: "info",
-        type: "review"
+        type: "baseline"
       }
     ]
   }

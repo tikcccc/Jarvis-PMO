@@ -213,11 +213,11 @@ function DesignViewerSurface({
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-slate-950/16 via-transparent to-slate-950/22" />
       <div className="jarvis-viewer-scan pointer-events-none absolute inset-x-[8%] top-[-24%] h-24 bg-gradient-to-b from-transparent via-sky-400/16 to-transparent opacity-60 mix-blend-screen" />
 
-      <div className="absolute right-5 top-5 z-20 flex items-center gap-1 rounded-xl border border-white/14 bg-slate-950/76 p-1 shadow-[0_18px_36px_rgba(15,23,42,0.28)] backdrop-blur-md">
+      <div className="absolute right-4 top-4 z-20 flex items-center gap-0.5 rounded-lg border border-white/14 bg-slate-950/76 p-0.5 shadow-[0_16px_32px_rgba(15,23,42,0.24)] backdrop-blur-md">
         <button
           type="button"
           onClick={toggleViewerMode}
-          className="inline-flex h-7 items-center rounded-lg border border-white/10 bg-white/6 px-2.5 text-[9px] font-semibold uppercase tracking-[0.18em] text-white/84 transition-colors hover:bg-white/10 hover:text-white"
+          className="inline-flex h-6 items-center rounded-md border border-white/10 bg-white/6 px-2 text-[8px] font-semibold uppercase tracking-[0.14em] text-white/84 transition-colors hover:bg-white/10 hover:text-white"
         >
           {viewerMode === "2d" ? "View 3D" : "View 2D"}
         </button>
@@ -225,9 +225,9 @@ function DesignViewerSurface({
           variant="surface"
           size="sm"
           onClick={toggleExpanded}
-          className="h-7 w-7 border-white/10 bg-white/6 text-white/84 shadow-none hover:border-white/18 hover:bg-white/12 hover:text-white"
+          className="h-6 w-6 rounded-md border-white/10 bg-white/6 text-white/84 shadow-none hover:border-white/18 hover:bg-white/12 hover:text-white"
         >
-          {isExpanded ? <Minimize2 className="h-3.5 w-3.5" /> : <Maximize2 className="h-3.5 w-3.5" />}
+          {isExpanded ? <Minimize2 className="h-3 w-3" /> : <Maximize2 className="h-3 w-3" />}
         </IconButton>
       </div>
 
@@ -376,8 +376,8 @@ export function DesignPage() {
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
         <div className="xl:col-span-2">
           <PrototypeCard className="flex h-full flex-col overflow-hidden border-slate-200/80 shadow-md">
-            <div className="flex flex-col justify-between gap-4 border-b border-slate-100 bg-slate-50/50 px-5 py-4 sm:flex-row sm:items-center">
-              <div>
+            <div className="flex flex-col gap-3 border-b border-slate-100 bg-slate-50/50 px-5 py-4 sm:flex-row sm:items-center">
+              <div className="shrink-0 sm:max-w-[182px]">
                 <div className="flex items-center space-x-2">
                   <div className="rounded border border-slate-100 bg-white p-1 shadow-sm">
                     <Layers className="h-3.5 w-3.5 text-slate-600" />
@@ -386,7 +386,7 @@ export function DesignPage() {
                 </div>
               </div>
 
-              <div className="no-scrollbar flex overflow-x-auto rounded-lg border border-slate-200/50 bg-slate-200/60 p-1">
+              <div className="no-scrollbar flex w-full min-w-0 overflow-x-auto rounded-lg border border-slate-200/50 bg-slate-200/60 p-1 sm:flex-1">
                 {designPackages.map((pkg) => {
                   const isActive = pkg.id === activePackageId;
 
@@ -397,15 +397,15 @@ export function DesignPage() {
                       variant={isActive ? "secondary" : "ghost"}
                       size="xs"
                       className={cn(
-                        "shrink-0 rounded-md px-3",
+                        "min-w-0 flex-1 rounded-md px-2 text-[10px] tracking-[0.08em]",
                         isActive
                           ? "border-slate-200 bg-white text-blue-700 shadow-sm"
                           : "border-transparent bg-transparent text-slate-500 hover:bg-slate-200/50 hover:text-slate-800"
                       )}
                     >
-                      {pkg.name}
+                      <span className="truncate">{pkg.name}</span>
                       {pkg.tone === "danger" ? (
-                        <span className="ml-1.5 inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-rose-500 shadow-[0_0_6px_rgba(244,63,94,0.6)]" />
+                        <span className="ml-1 inline-block h-1.5 w-1.5 shrink-0 animate-pulse rounded-full bg-rose-500 shadow-[0_0_6px_rgba(244,63,94,0.6)]" />
                       ) : null}
                     </Button>
                   );

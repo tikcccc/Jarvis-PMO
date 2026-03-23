@@ -47,6 +47,14 @@ const toneSurfaceClassMap: Record<Tone, string> = {
   danger: "border-rose-100 bg-rose-50 text-rose-600"
 };
 
+const tonePanelClassMap: Record<Tone, string> = {
+  default: "border-gray-200 bg-gray-50",
+  info: "border-blue-100 bg-blue-50/70",
+  success: "border-emerald-100 bg-emerald-50/70",
+  warning: "border-amber-100 bg-amber-50/70",
+  danger: "border-rose-100 bg-rose-50/70"
+};
+
 const toneBorderClassMap: Record<Tone, string> = {
   default: "border-gray-200 hover:border-blue-300 hover:shadow-blue-50/50",
   info: "border-blue-100 hover:border-blue-300 hover:shadow-blue-50/50",
@@ -92,6 +100,44 @@ function getBaselineIntegrityLabel() {
   return `${averageIntegrity.toFixed(1)}%`;
 }
 
+function getFlaggedValidationCount(record: RequirementRecord) {
+  return record.validationChecks.filter((check) => check.tone === "warning" || check.tone === "danger").length;
+}
+
+function getValidationTone(record: RequirementRecord): Tone {
+  if (record.validationChecks.some((check) => check.tone === "danger")) {
+    return "danger";
+  }
+
+  if (record.validationChecks.some((check) => check.tone === "warning")) {
+    return "warning";
+  }
+
+  return "success";
+}
+
+function getRequirementRadarScore(record: RequirementRecord) {
+  let score = getFlaggedValidationCount(record) + record.openChangeCount;
+
+  if (record.tone === "warning") {
+    score += 2;
+  }
+
+  if (record.tone === "danger") {
+    score += 4;
+  }
+
+  if (record.riskAlert) {
+    score += 6;
+  }
+
+  if (getValidationTone(record) === "danger") {
+    score += 3;
+  }
+
+  return score;
+}
+
 function getRequirementStateLabel(record: RequirementRecord) {
   if (record.riskAlert || record.tone === "danger") {
     return "Drift";
@@ -117,14 +163,17 @@ function getRequirementStateTone(record: RequirementRecord): Tone {
 }
 
 function buildRadarRecords() {
-  const criticalRecords = requirementRecords.filter((record) => record.riskAlert || record.tone === "danger");
-  const secondaryRecords = requirementRecords.filter(
-    (record) =>
-      !criticalRecords.some((criticalRecord) => criticalRecord.id === record.id) &&
-      (record.tone === "warning" || record.openChangeCount > 0)
-  );
-
-  return [...criticalRecords, ...secondaryRecords].slice(0, 2);
+  return requirementRecords
+    .filter(
+      (record) =>
+        record.riskAlert ||
+        record.tone === "warning" ||
+        record.tone === "danger" ||
+        record.openChangeCount > 0 ||
+        getFlaggedValidationCount(record) > 0
+    )
+    .sort((left, right) => getRequirementRadarScore(right) - getRequirementRadarScore(left))
+    .slice(0, 2);
 }
 
 function RequirementsOverview({
@@ -137,6 +186,8 @@ function RequirementsOverview({
   const baselineIntegrityLabel = getBaselineIntegrityLabel();
   const driftCount = requirementRecords.filter((record) => record.riskAlert || record.tone === "danger").length;
   const pendingReviewCount = requirementRecords.filter((record) => record.tone === "warning").length;
+  const validationDomainCount = requirementRecords.filter((record) => getFlaggedValidationCount(record) > 0).length;
+  const automationRoutineCount = requirementRecords.reduce((total, record) => total + record.automationActions.length, 0);
   const radarRecords = buildRadarRecords();
 
   return (
@@ -176,6 +227,14 @@ function RequirementsOverview({
             <div>
               <p className="jarvis-text-10 font-bold uppercase tracking-widest text-slate-400">Pending Review</p>
               <p className="mt-0.5 text-sm font-bold text-amber-400">{pendingReviewCount} Records</p>
+            </div>
+            <div>
+              <p className="jarvis-text-10 font-bold uppercase tracking-widest text-slate-400">Cross-Check Domains</p>
+              <p className="mt-0.5 text-sm font-bold text-blue-400">{validationDomainCount} Domains</p>
+            </div>
+            <div>
+              <p className="jarvis-text-10 font-bold uppercase tracking-widest text-slate-400">Agent Routines</p>
+              <p className="mt-0.5 text-sm font-bold text-emerald-400">{automationRoutineCount} Live</p>
             </div>
           </div>
         </div>
@@ -313,6 +372,8 @@ function RequirementsOverview({
           <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
             {requirementRecords.map((record) => {
               const stateTone = getRequirementStateTone(record);
+              const flaggedValidationCount = getFlaggedValidationCount(record);
+              const validationTone = getValidationTone(record);
 
               return (
                 <Card
@@ -353,6 +414,13 @@ function RequirementsOverview({
                       {record.title}
                     </h4>
                     <p className="mt-2 min-h-[2.75rem] text-[11px] leading-relaxed text-gray-500">{record.statement}</p>
+
+                    <div className="mt-3 flex items-center justify-between text-[10px] font-bold uppercase tracking-widest">
+                      <span className="text-gray-400">{record.automationActions.length} Agent Routines</span>
+                      <span className={flaggedValidationCount ? toneTextClassMap[validationTone] : "text-emerald-600"}>
+                        {flaggedValidationCount ? `${flaggedValidationCount} Flagged Checks` : "Checks Clear"}
+                      </span>
+                    </div>
 
                     <div className="mt-auto pt-4">
                       <div className="jarvis-text-10 mb-1.5 flex justify-between font-bold uppercase tracking-widest">
@@ -396,6 +464,8 @@ function RequirementsOverview({
               <tbody className="divide-y divide-gray-100">
                 {requirementRecords.map((record) => {
                   const stateTone = getRequirementStateTone(record);
+                  const flaggedValidationCount = getFlaggedValidationCount(record);
+                  const validationTone = getValidationTone(record);
 
                   return (
                     <tr
@@ -435,6 +505,18 @@ function RequirementsOverview({
                               +{record.relatedModules.length - 3}
                             </span>
                           ) : null}
+                          {flaggedValidationCount ? (
+                            <span
+                              className={cn(
+                                "rounded px-1.5 py-0.5 text-[9px] font-bold",
+                                validationTone === "danger"
+                                  ? "bg-rose-50 text-rose-600"
+                                  : "bg-amber-50 text-amber-600"
+                              )}
+                            >
+                              {flaggedValidationCount} Checks
+                            </span>
+                          ) : null}
                         </div>
                       </td>
                       <td className="px-4 py-3 text-right">
@@ -460,6 +542,8 @@ function RequirementDetailView({
   onBack: () => void;
 }) {
   const stateTone = getRequirementStateTone(requirement);
+  const flaggedValidationCount = getFlaggedValidationCount(requirement);
+  const validationTone = getValidationTone(requirement);
 
   return (
     <div className="space-y-6 animate-in slide-in-from-right-4 duration-500 pb-10">
@@ -525,7 +609,7 @@ function RequirementDetailView({
           <div>
             <div className="mb-4 flex items-center justify-between border-b border-gray-100 pb-2">
               <h3 className="jarvis-control-label text-gray-400">Captured Domain Data</h3>
-              <Badge tone="info">SSOT Synchronized</Badge>
+              <Badge tone="info">{requirement.specificFields.length} Fields</Badge>
             </div>
 
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -533,6 +617,62 @@ function RequirementDetailView({
                 <div key={field.label} className="rounded-xl border border-gray-100/70 bg-gray-50 p-3">
                   <p className="jarvis-text-10 font-bold uppercase tracking-wider text-gray-400">{field.label}</p>
                   <p className="mt-1 text-sm font-bold text-gray-900">{field.value}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <div className="mb-4 flex items-center justify-between border-b border-gray-100 pb-2">
+              <h3 className="jarvis-control-label text-gray-400">Agent Automation</h3>
+              <Badge tone="info">{requirement.automationActions.length} Routines</Badge>
+            </div>
+
+            <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+              {requirement.automationActions.map((action) => (
+                <div key={action.id} className={cn("rounded-xl border p-4", tonePanelClassMap[action.tone])}>
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <p className="text-xs font-bold text-gray-900">{action.title}</p>
+                      <p className="mt-1 text-[11px] leading-relaxed text-gray-600">{action.description}</p>
+                    </div>
+                    <Badge tone={action.tone}>{action.statusLabel}</Badge>
+                  </div>
+
+                  <div className="mt-4 flex items-center justify-between gap-3 text-[10px] font-bold uppercase tracking-widest">
+                    <span className="text-gray-400">{action.sourceLabel}</span>
+                    <span className={toneTextClassMap[action.tone]}>{action.cadenceLabel}</span>
+                  </div>
+                  <p className="jarvis-text-10 mt-2 text-gray-400">Last Run {action.lastRunLabel}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <div className="mb-4 flex items-center justify-between border-b border-gray-100 pb-2">
+              <h3 className="jarvis-control-label text-gray-400">Consistency &amp; Validation</h3>
+              <Badge tone={flaggedValidationCount ? validationTone : "success"}>
+                {flaggedValidationCount ? `${flaggedValidationCount} Open Checks` : "All Checks Clear"}
+              </Badge>
+            </div>
+
+            <div className="space-y-3">
+              {requirement.validationChecks.map((check) => (
+                <div key={check.id} className={cn("rounded-xl border p-4", tonePanelClassMap[check.tone])}>
+                  <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+                    <div>
+                      <p className="text-xs font-bold text-gray-900">{check.label}</p>
+                      <p className="mt-1 text-[11px] leading-relaxed text-gray-600">{check.detail}</p>
+                    </div>
+
+                    <div className="flex flex-col items-start gap-2 md:items-end">
+                      <Badge tone={check.tone}>{check.statusLabel}</Badge>
+                      <span className={cn("jarvis-text-10 font-bold uppercase tracking-widest", toneTextClassMap[check.tone])}>
+                        {check.targetLabel}
+                      </span>
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>
@@ -604,68 +744,137 @@ function RequirementDetailView({
           </div>
         </Card>
 
-        <Card className="border-gray-100 bg-slate-50 p-6">
-          <h3 className="jarvis-control-label mb-6 flex items-center text-gray-400">
-            <History className="mr-2 h-4 w-4" />
-            Agent Activity &amp; Audit
-          </h3>
+        <div className="space-y-6">
+          <Card className="border-gray-100 p-6">
+            <div className="mb-6 flex items-center justify-between gap-3">
+              <h3 className="jarvis-control-label text-gray-400">Baseline Governance</h3>
+              <Badge tone={stateTone}>{requirement.statusLabel}</Badge>
+            </div>
 
-          <div className="relative space-y-4 before:absolute before:top-0 before:bottom-0 before:left-2.5 before:w-px before:bg-gradient-to-b before:from-transparent before:via-gray-200 before:to-transparent">
-            {requirement.history.map((entry) => (
-              <div key={entry.id} className="relative pl-8">
-                <div
-                  className={cn(
-                    "absolute top-1 left-0 flex h-5 w-5 items-center justify-center rounded-full border border-white text-white shadow",
-                    timelineDotClassMap[entry.type]
-                  )}
-                >
-                  {entry.type === "drift" ? (
-                    <AlertTriangle className="h-2.5 w-2.5" />
-                  ) : entry.type === "review" ? (
-                    <History className="h-2.5 w-2.5" />
-                  ) : (
-                    <Activity className="h-2.5 w-2.5" />
-                  )}
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+              {requirement.governance.map((item) => (
+                <div key={item.label} className="rounded-xl border border-gray-100/70 bg-gray-50 p-3">
+                  <p className="jarvis-text-10 font-bold uppercase tracking-wider text-gray-400">{item.label}</p>
+                  <p className="mt-1 text-sm font-bold text-gray-900">{item.value}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-6 grid grid-cols-3 gap-3">
+              <div className="rounded-xl border border-gray-100 bg-white p-3">
+                <p className="jarvis-text-10 font-bold uppercase tracking-widest text-gray-400">Open Changes</p>
+                <p className="mt-1 text-lg font-black text-gray-900">{requirement.openChangeCount}</p>
+              </div>
+              <div className="rounded-xl border border-gray-100 bg-white p-3">
+                <p className="jarvis-text-10 font-bold uppercase tracking-widest text-gray-400">Flagged Checks</p>
+                <p className={cn("mt-1 text-lg font-black", flaggedValidationCount ? toneTextClassMap[validationTone] : "text-emerald-600")}>
+                  {flaggedValidationCount}
+                </p>
+              </div>
+              <div className="rounded-xl border border-gray-100 bg-white p-3">
+                <p className="jarvis-text-10 font-bold uppercase tracking-widest text-gray-400">Linked Nodes</p>
+                <p className="mt-1 text-lg font-black text-gray-900">{requirement.relatedModules.length}</p>
+              </div>
+            </div>
+
+            {requirement.riskAlert ? (
+              <div className="mt-6 rounded-xl border border-rose-200 bg-rose-50 p-4">
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <p className="jarvis-text-10 font-bold uppercase tracking-widest text-rose-500">Budget Impact</p>
+                    <p className="mt-1 text-sm font-bold text-rose-700">{requirement.riskAlert.budgetImpactLabel}</p>
+                  </div>
+                  <div>
+                    <p className="jarvis-text-10 font-bold uppercase tracking-widest text-rose-500">Timeline Impact</p>
+                    <p className="mt-1 text-sm font-bold text-rose-700">{requirement.riskAlert.timelineImpactLabel}</p>
+                  </div>
                 </div>
 
-                <div
-                  className={cn(
-                    "rounded-lg border p-3 shadow-sm",
-                    entry.type === "drift"
-                      ? "border-rose-100 bg-rose-50"
-                      : entry.type === "review"
-                        ? "border-amber-100 bg-white"
-                        : "border-gray-100 bg-white"
-                  )}
-                >
-                  <div className="mb-1 flex items-center justify-between gap-3">
-                    <span
-                      className={cn(
-                        "jarvis-control-label-compact",
-                        entry.type === "drift"
-                          ? "text-rose-600"
-                          : entry.type === "review"
-                            ? "text-amber-600"
-                            : "text-blue-600"
-                      )}
-                    >
-                      {entry.author}
-                    </span>
-                    <span className="jarvis-text-10 text-gray-400">{entry.dateLabel}</span>
-                  </div>
-                  <p className="text-[10px] leading-relaxed text-gray-700">{entry.action}</p>
-                  <span className="jarvis-text-10 mt-2 inline-flex font-bold uppercase tracking-widest text-gray-400">
-                    {entry.version}
-                  </span>
+                <div className="mt-4 border-t border-rose-200 pt-3">
+                  <p className="jarvis-text-10 font-bold uppercase tracking-widest text-rose-500">Recommended Action</p>
+                  <p className="mt-1 text-sm font-bold text-rose-700">{requirement.riskAlert.recommendedAction}</p>
                 </div>
               </div>
-            ))}
-          </div>
+            ) : flaggedValidationCount ? (
+              <div className="mt-6 rounded-xl border border-amber-200 bg-amber-50 p-4">
+                <p className="jarvis-control-label text-amber-700">Review Queue Active</p>
+                <p className="mt-1 text-xs leading-relaxed text-amber-700">
+                  {flaggedValidationCount} cross-check{flaggedValidationCount > 1 ? "s" : ""} remain open for this baseline record.
+                </p>
+              </div>
+            ) : (
+              <div className="mt-6 rounded-xl border border-emerald-100 bg-emerald-50 p-4">
+                <p className="jarvis-control-label text-emerald-700">Baseline Stable</p>
+                <p className="mt-1 text-xs leading-relaxed text-emerald-700">
+                  No active consistency exceptions or governance escalations are open for this requirement record.
+                </p>
+              </div>
+            )}
+          </Card>
 
-          <Button variant="secondary" size="sm" className="mt-6 w-full justify-center">
-            View Full Audit Log
-          </Button>
-        </Card>
+          <Card className="border-gray-100 bg-slate-50 p-6">
+            <h3 className="jarvis-control-label mb-6 flex items-center text-gray-400">
+              <History className="mr-2 h-4 w-4" />
+              Agent Activity &amp; Audit
+            </h3>
+
+            <div className="relative space-y-4 before:absolute before:top-0 before:bottom-0 before:left-2.5 before:w-px before:bg-gradient-to-b before:from-transparent before:via-gray-200 before:to-transparent">
+              {requirement.history.map((entry) => (
+                <div key={entry.id} className="relative pl-8">
+                  <div
+                    className={cn(
+                      "absolute top-1 left-0 flex h-5 w-5 items-center justify-center rounded-full border border-white text-white shadow",
+                      timelineDotClassMap[entry.type]
+                    )}
+                  >
+                    {entry.type === "drift" ? (
+                      <AlertTriangle className="h-2.5 w-2.5" />
+                    ) : entry.type === "review" ? (
+                      <History className="h-2.5 w-2.5" />
+                    ) : (
+                      <Activity className="h-2.5 w-2.5" />
+                    )}
+                  </div>
+
+                  <div
+                    className={cn(
+                      "rounded-lg border p-3 shadow-sm",
+                      entry.type === "drift"
+                        ? "border-rose-100 bg-rose-50"
+                        : entry.type === "review"
+                          ? "border-amber-100 bg-white"
+                          : "border-gray-100 bg-white"
+                    )}
+                  >
+                    <div className="mb-1 flex items-center justify-between gap-3">
+                      <span
+                        className={cn(
+                          "jarvis-control-label-compact",
+                          entry.type === "drift"
+                            ? "text-rose-600"
+                            : entry.type === "review"
+                              ? "text-amber-600"
+                              : "text-blue-600"
+                        )}
+                      >
+                        {entry.author}
+                      </span>
+                      <span className="jarvis-text-10 text-gray-400">{entry.dateLabel}</span>
+                    </div>
+                    <p className="text-[10px] leading-relaxed text-gray-700">{entry.action}</p>
+                    <span className="jarvis-text-10 mt-2 inline-flex font-bold uppercase tracking-widest text-gray-400">
+                      {entry.version}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <Button variant="secondary" size="sm" className="mt-6 w-full justify-center">
+              View Full Audit Log
+            </Button>
+          </Card>
+        </div>
       </div>
     </div>
   );

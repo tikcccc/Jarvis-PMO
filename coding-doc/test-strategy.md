@@ -46,6 +46,8 @@ The highest-risk failures are visual consistency failures, not data logic bugs. 
 - On `/procurement`, verify bidder selection updates the `Service Provider Profiling` and `Contractual Risk AI` panels without breaking table selection styling.
 - On `/procurement`, verify clicking the `Procurement` sidebar entry opens the main procurement page directly.
 - On `/procurement`, verify the bidder comparison table scrolls horizontally on smaller widths while KPI cards and side panels stack cleanly.
+- On `/requirements`, verify the overview still shows exactly nine requirement elements plus the `Global Drift Radar` and that clicking a card, list row, or radar item opens the correct dossier in-place.
+- On `/requirements`, verify the selected dossier includes captured fields, governance metadata, automation routines, validation checks, evidence cards, linkage chips, and audit history without layout breakage.
 - On animated module surfaces, verify motion clarifies the primary focal zone and does not block selection, scrolling, or reading.
 - On routes with analytical charts, verify legends, thresholds, empty states, and semantic colors remain readable inside the shared Jarvis card shell.
 - On routes with analytical charts, verify the chart supports the module's primary operator question and does not displace an approved map-first or workbench-first composition.
