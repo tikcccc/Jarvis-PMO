@@ -1,10 +1,9 @@
 "use client";
 
 import type { Dispatch, SetStateAction } from "react";
-import { Suspense, useState } from "react";
+import { useState } from "react";
 
 import { ChevronRight } from "lucide-react";
-import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 
 import { getIcon } from "@/lib/icons";
@@ -17,7 +16,6 @@ interface SidebarProps {
 }
 
 interface SidebarContentProps extends SidebarProps {
-  currentHref: string;
   expandedGroups: Record<string, boolean>;
   setExpandedGroups: Dispatch<SetStateAction<Record<string, boolean>>>;
 }
@@ -25,34 +23,10 @@ interface SidebarContentProps extends SidebarProps {
 export function Sidebar(props: SidebarProps) {
   const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({});
 
-  return (
-    <Suspense fallback={<SidebarContent {...props} currentHref={props.pathname} expandedGroups={expandedGroups} setExpandedGroups={setExpandedGroups} />}>
-      <SidebarSearchAware {...props} expandedGroups={expandedGroups} setExpandedGroups={setExpandedGroups} />
-    </Suspense>
-  );
+  return <SidebarContent {...props} expandedGroups={expandedGroups} setExpandedGroups={setExpandedGroups} />;
 }
 
-function SidebarSearchAware({
-  pathname,
-  isOpen,
-  expandedGroups,
-  setExpandedGroups
-}: SidebarProps & Pick<SidebarContentProps, "expandedGroups" | "setExpandedGroups">) {
-  const searchParams = useSearchParams();
-  const currentHref = pathname === "/procurement" && searchParams.get("view") === "logs" ? "/procurement?view=logs" : pathname;
-
-  return (
-    <SidebarContent
-      pathname={pathname}
-      isOpen={isOpen}
-      currentHref={currentHref}
-      expandedGroups={expandedGroups}
-      setExpandedGroups={setExpandedGroups}
-    />
-  );
-}
-
-function SidebarContent({ pathname, isOpen, currentHref, expandedGroups, setExpandedGroups }: SidebarContentProps) {
+function SidebarContent({ pathname, isOpen, expandedGroups, setExpandedGroups }: SidebarContentProps) {
   return (
     <aside
       className={cn(
@@ -128,7 +102,7 @@ function SidebarContent({ pathname, isOpen, currentHref, expandedGroups, setExpa
                   {hasChildren && isOpen && isExpanded ? (
                     <div className="ml-7 space-y-1 border-l border-gray-100 pl-3">
                       {item.children?.map((child) => {
-                        const isChildActive = currentHref === child.href;
+                        const isChildActive = pathname === child.href;
 
                         return (
                           <Link

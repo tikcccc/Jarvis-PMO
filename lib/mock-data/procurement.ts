@@ -3,7 +3,8 @@ import type {
   ProcurementIssueLog,
   ProcurementMetric,
   ProcurementPackage,
-  ProcurementSupplierProfile
+  ProcurementSupplierProfile,
+  Tone
 } from "@/lib/types";
 
 export const procurementSummaryCards: ProcurementMetric[] = [
@@ -752,3 +753,212 @@ export const procurementIssueLog: ProcurementIssueLog[] = [
     timeLabel: "29 min ago"
   }
 ];
+
+export const procurementSupplierRadarById = {
+  "supplier-aurex-build-systems": {
+    liveLabel: "MiC IoT Live",
+    avgDwssScore: "4.8 / 5.0",
+    indicators: [
+      { name: "Schedule (95%)", max: 100 },
+      { name: "Quality (88%)", max: 100 },
+      { name: "Safety (92%)", max: 100 },
+      { name: "Commercial (96%)", max: 100 },
+      { name: "MiC / ESG (85%)", max: 100 }
+    ],
+    values: [95, 88, 92, 96, 85]
+  },
+  "supplier-novacore-contracting": {
+    liveLabel: "Profile Live",
+    avgDwssScore: "3.6 / 5.0",
+    indicators: [
+      { name: "Schedule (72%)", max: 100 },
+      { name: "Quality (76%)", max: 100 },
+      { name: "Safety (81%)", max: 100 },
+      { name: "Commercial (62%)", max: 100 },
+      { name: "MiC / ESG (58%)", max: 100 }
+    ],
+    values: [72, 76, 81, 62, 58]
+  },
+  "supplier-cascade-envelope-jv": {
+    liveLabel: "Profile Live",
+    avgDwssScore: "4.2 / 5.0",
+    indicators: [
+      { name: "Schedule (86%)", max: 100 },
+      { name: "Quality (84%)", max: 100 },
+      { name: "Safety (88%)", max: 100 },
+      { name: "Commercial (79%)", max: 100 },
+      { name: "MiC / ESG (76%)", max: 100 }
+    ],
+    values: [86, 84, 88, 79, 76]
+  },
+  "supplier-buildaxis-facades": {
+    liveLabel: "Profile Live",
+    avgDwssScore: "4.1 / 5.0",
+    indicators: [
+      { name: "Schedule (82%)", max: 100 },
+      { name: "Quality (85%)", max: 100 },
+      { name: "Safety (84%)", max: 100 },
+      { name: "Commercial (74%)", max: 100 },
+      { name: "MiC / ESG (71%)", max: 100 }
+    ],
+    values: [82, 85, 84, 74, 71]
+  },
+  "supplier-vector-mep-solutions": {
+    liveLabel: "Systems Live",
+    avgDwssScore: "4.7 / 5.0",
+    indicators: [
+      { name: "Schedule (93%)", max: 100 },
+      { name: "Quality (91%)", max: 100 },
+      { name: "Safety (90%)", max: 100 },
+      { name: "Commercial (94%)", max: 100 },
+      { name: "MiC / ESG (82%)", max: 100 }
+    ],
+    values: [93, 91, 90, 94, 82]
+  },
+  "supplier-helios-engineering": {
+    liveLabel: "Systems Live",
+    avgDwssScore: "4.0 / 5.0",
+    indicators: [
+      { name: "Schedule (80%)", max: 100 },
+      { name: "Quality (83%)", max: 100 },
+      { name: "Safety (85%)", max: 100 },
+      { name: "Commercial (77%)", max: 100 },
+      { name: "MiC / ESG (70%)", max: 100 }
+    ],
+    values: [80, 83, 85, 77, 70]
+  },
+  "supplier-orchid-systems": {
+    liveLabel: "Systems Live",
+    avgDwssScore: "3.4 / 5.0",
+    indicators: [
+      { name: "Schedule (66%)", max: 100 },
+      { name: "Quality (71%)", max: 100 },
+      { name: "Safety (74%)", max: 100 },
+      { name: "Commercial (60%)", max: 100 },
+      { name: "MiC / ESG (54%)", max: 100 }
+    ],
+    values: [66, 71, 74, 60, 54]
+  },
+  "supplier-allied-building-services": {
+    liveLabel: "Systems Live",
+    avgDwssScore: "4.2 / 5.0",
+    indicators: [
+      { name: "Schedule (84%)", max: 100 },
+      { name: "Quality (86%)", max: 100 },
+      { name: "Safety (87%)", max: 100 },
+      { name: "Commercial (78%)", max: 100 },
+      { name: "MiC / ESG (73%)", max: 100 }
+    ],
+    values: [84, 86, 87, 78, 73]
+  },
+  "supplier-elevon-mobility": {
+    liveLabel: "Lift Ops Live",
+    avgDwssScore: "4.6 / 5.0",
+    indicators: [
+      { name: "Schedule (94%)", max: 100 },
+      { name: "Quality (90%)", max: 100 },
+      { name: "Safety (91%)", max: 100 },
+      { name: "Commercial (92%)", max: 100 },
+      { name: "MiC / ESG (80%)", max: 100 }
+    ],
+    values: [94, 90, 91, 92, 80]
+  },
+  "supplier-summit-lifts": {
+    liveLabel: "Lift Ops Live",
+    avgDwssScore: "3.9 / 5.0",
+    indicators: [
+      { name: "Schedule (78%)", max: 100 },
+      { name: "Quality (82%)", max: 100 },
+      { name: "Safety (84%)", max: 100 },
+      { name: "Commercial (75%)", max: 100 },
+      { name: "MiC / ESG (69%)", max: 100 }
+    ],
+    values: [78, 82, 84, 75, 69]
+  },
+  "supplier-prime-vertical-group": {
+    liveLabel: "Lift Ops Live",
+    avgDwssScore: "4.3 / 5.0",
+    indicators: [
+      { name: "Schedule (87%)", max: 100 },
+      { name: "Quality (88%)", max: 100 },
+      { name: "Safety (89%)", max: 100 },
+      { name: "Commercial (81%)", max: 100 },
+      { name: "MiC / ESG (76%)", max: 100 }
+    ],
+    values: [87, 88, 89, 81, 76]
+  }
+} satisfies Record<
+  string,
+  {
+    liveLabel: string;
+    avgDwssScore: string;
+    indicators: Array<{ name: string; max: number }>;
+    values: number[];
+  }
+>;
+
+export const procurementClaimsTrendBySupplierId = {
+  "supplier-aurex-build-systems": { years: ["2021", "2022", "2023", "2024", "2025"], values: [1.2, 0.8, 2.1, 0.5, 0.6] },
+  "supplier-novacore-contracting": { years: ["2021", "2022", "2023", "2024", "2025"], values: [4.1, 5.2, 6.4, 7.8, 7.2] },
+  "supplier-cascade-envelope-jv": { years: ["2021", "2022", "2023", "2024", "2025"], values: [2.8, 2.3, 1.9, 2.4, 2.1] },
+  "supplier-buildaxis-facades": { years: ["2021", "2022", "2023", "2024", "2025"], values: [3.1, 3.7, 2.9, 3.6, 3.4] },
+  "supplier-vector-mep-solutions": { years: ["2021", "2022", "2023", "2024", "2025"], values: [1.5, 1.4, 1.2, 1.0, 1.1] },
+  "supplier-helios-engineering": { years: ["2021", "2022", "2023", "2024", "2025"], values: [3.6, 4.0, 4.3, 4.2, 4.1] },
+  "supplier-orchid-systems": { years: ["2021", "2022", "2023", "2024", "2025"], values: [5.2, 6.5, 7.1, 8.4, 8.0] },
+  "supplier-allied-building-services": { years: ["2021", "2022", "2023", "2024", "2025"], values: [2.5, 3.0, 2.6, 2.9, 2.8] },
+  "supplier-elevon-mobility": { years: ["2021", "2022", "2023", "2024", "2025"], values: [1.2, 1.1, 0.9, 0.8, 0.9] },
+  "supplier-summit-lifts": { years: ["2021", "2022", "2023", "2024", "2025"], values: [3.9, 4.1, 3.5, 3.8, 3.7] },
+  "supplier-prime-vertical-group": { years: ["2021", "2022", "2023", "2024", "2025"], values: [2.0, 1.7, 1.9, 1.6, 1.8] }
+} satisfies Record<string, { years: string[]; values: number[] }>;
+
+export const procurementCommercialAnalysisByPackageId = {
+  "facade-envelope": {
+    signalTone: "danger",
+    signalLabel: "Pattern Detected",
+    highlightText:
+      "Notice NovaCore's inflated pricing in early stages masking steep discounts in finishes.",
+    categories: ["Preliminaries", "Substructure", "Superstructure", "MEP", "Finishes"],
+    engineerEstimate: [4.5, 8.0, 18.5, 12.0, 6.2],
+    leadSeriesLabel: "Aurex Build (Lead)",
+    leadValues: [4.6, 7.8, 18.2, 11.8, 6.2],
+    comparisonSeriesLabel: "NovaCore (Flagged)",
+    comparisonValues: [7.8, 10.5, 15.0, 9.5, 3.0]
+  },
+  "mep-integrated": {
+    signalTone: "warning",
+    signalLabel: "Spread Watch",
+    highlightText:
+      "Orchid compresses core plant-room pricing while controls and interface-sensitive lines rise above the peer median.",
+    categories: ["Plant Rooms", "Ductwork", "Electrical", "Controls", "Commissioning"],
+    engineerEstimate: [12.1, 14.8, 16.2, 11.7, 8.6],
+    leadSeriesLabel: "Vector MEP (Lead)",
+    leadValues: [11.9, 14.3, 15.8, 11.5, 8.6],
+    comparisonSeriesLabel: "Orchid (Flagged)",
+    comparisonValues: [10.2, 13.6, 14.9, 13.8, 6.4]
+  },
+  "vertical-transport": {
+    signalTone: "info",
+    signalLabel: "Benchmark Stable",
+    highlightText:
+      "Summit stays commercially competitive, but maintenance exclusions still distort true lifecycle comparability.",
+    categories: ["Supply", "Install", "Testing", "Maintenance", "Handover"],
+    engineerEstimate: [5.8, 4.9, 2.8, 3.4, 1.9],
+    leadSeriesLabel: "Elevon (Lead)",
+    leadValues: [5.7, 4.8, 2.7, 3.3, 2.0],
+    comparisonSeriesLabel: "Summit (Watchlist)",
+    comparisonValues: [5.4, 4.7, 2.4, 2.6, 2.8]
+  }
+} satisfies Record<
+  string,
+  {
+    signalTone: Tone;
+    signalLabel: string;
+    highlightText: string;
+    categories: string[];
+    engineerEstimate: number[];
+    leadSeriesLabel: string;
+    leadValues: number[];
+    comparisonSeriesLabel: string;
+    comparisonValues: number[];
+  }
+>;

@@ -33,13 +33,12 @@
 ## 5. Behavioral Consistency
 
 - Sidebar navigation switches modules without breaking shell layout.
-- Sidebar items with approved child views can expand and collapse without breaking shell layout or navigation clarity.
 - Hover, focus, and active states follow the same interaction tone as the prototype.
 - Motion remains supportive and does not turn route changes or shell chrome into theatrical full-page transitions.
 - Scroll regions behave predictably for sidebar, page body, and detail panels.
 - Module pages keep existing local interactions such as selected approval detail and selected portfolio project.
 - The procurement route keeps tender package and bidder selection in-page, updating supplier and risk detail panels without route navigation.
-- The procurement module supports `Workbench` and `Logs` views under the same route family, and the `Logs` view remains reachable from the expanded sidebar entry.
+- The procurement sidebar entry opens the main procurement page directly without an intermediate child-view chooser.
 - The dashboard `Portfolio Strategic Map (GIS)` renders the same geographic project dataset as the portfolio route instead of a placeholder panel.
 - The portfolio route supports `MAP` and `SATELLITE` mode switching without breaking project selection behavior.
 - If `NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN` is missing, the portfolio route falls back to a safe preview state instead of a runtime failure.

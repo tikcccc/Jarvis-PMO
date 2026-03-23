@@ -47,12 +47,10 @@
 
 - Current state:
   - the route now renders a dedicated `ProcurementPage` through a thin App Router file
-  - the page includes a procurement-specific tender pulse ribbon, KPI signals, tender package selector, bidder comparison table, selected-bidder summary strip, supplier profile panel, dark contract-risk panel, and intelligence log
-  - the module now supports two same-route views:
-    - `Workbench` at `/procurement`
-    - `Logs` at `/procurement?view=logs`
-  - the sidebar can expand the `Procurement` item to expose the `Workbench` and `Logs` entry points without creating a separate top-level module
-  - procurement detail updates stay in-page: changing the active package resets the bidder comparison set and refreshes the related supplier/risk panels without navigating away
+  - the procurement main page has been refactored to map the approved procurement prototype composition instead of the earlier custom demo layout
+  - the page now includes a procurement-specific header, four KPI cards, a tender validation matrix with compact package switching, a service-provider profiling panel, a commercial spread / front-loading ECharts comparison, a light contractual-risk ECharts panel, and a card-based procurement intelligence log
+  - clicking the `Procurement` navigation item now opens the main procurement page directly, without sub-route view switching
+  - procurement detail updates stay in-page: changing the active package resets the bidder comparison set and refreshes the related supplier, chart, and log panels without navigating away
 - Gap to target:
   - the current implementation is still demo-grade and backed by local mock data only
   - filter/search controls are visual placeholders and do not yet persist or query external procurement systems
@@ -63,7 +61,7 @@
 - Header or summary row:
   - title: `Project Procurement Management`
   - subtitle: `Zero-Dispute Supply Chain & Tender Validation`
-  - actions should stay consistent with current app language, for example `Audit Logs` and `Initiate Agent`
+  - actions should stay consistent with current app language, for example `Initiate Agent`
 - KPI or overview grid:
   - recommended metrics:
     - tender packages under review
@@ -71,18 +69,15 @@
     - flagged contractual risks
     - pending clarifications
 - Primary working panel:
-  - `Tender Validation Workbench`
-  - a comparison table or score panel for bidders, packages, commercial spread, compliance score, and recommended action
-  - this panel should embody the reference module sections:
-    - `Digital BQ Validation`
-    - `Compliance Auditing`
-    - `Contractual Risk Prediction`
-    - `Intelligent Tender Evaluation`
+  - `Tender Validation Matrix`
+  - a comparison table for bidders, packages, commercial spread, compliance score, deviation, and risk
+  - this panel is the dominant focal zone and should stay visually aligned with the approved procurement prototype
 - Secondary insight, log, or action panel:
-  - `Service Provider Profiling` panel listing supplier history, qualification status, and red flags
+  - `Service Provider Profiling` panel with radar-chart style supplier context and integrity score
+  - `Commercial Spread & Front-Loading Analysis` chart using ECharts
+  - `Contractual Risk AI` light analysis panel using ECharts for historic claim propensity
   - audit log or issue feed showing detected mismatches, missing submissions, or clause anomalies
-  - a log-focused same-route view is allowed when the issue feed needs to become the dominant focal zone
-  - a dark emphasis panel is allowed for contract risk scoring because dark panels are already approved for special analytical views
+  - a dark emphasis panel is optional, but the current procurement mapping follows the light-surface prototype version
 
 ## 6. Data and Code Ownership
 
@@ -107,11 +102,9 @@
   - switch or select tender package
   - compare bidders
   - inspect flagged clauses or BQ mismatches
-  - open supplier profile or audit log
-  - switch between `Workbench` and `Logs` without leaving the procurement module route family
+  - inspect supplier profile and procurement intelligence signals in-page
 - Selection or drill-down behavior:
   - a selected tender package or bidder should update the detail panel instead of navigating away immediately
-  - `Logs` may use the same package and bidder selection state while making the intelligence feed the primary surface
 - Empty or fallback behavior:
   - if procurement data is incomplete, show a safe placeholder state inside the module rather than a broken panel
 - Responsive notes:
@@ -131,20 +124,21 @@
 ## 9. Implementation Tasks
 
 - [x] Create `components/modules/procurement/procurement-page.tsx` with a procurement-specific summary row, KPI grid, and tender comparison workbench.
-- [x] Create `lib/mock-data/procurement.ts` for tender packages, bidder comparisons, supplier profiles, and procurement issue logs.
+- [x] Create `lib/mock-data/procurement.ts` for tender packages, bidder comparisons, supplier profiles, procurement issue logs, and prototype-mapped ECharts series.
 - [x] Rewire `app/(platform)/procurement/page.tsx` to the dedicated procurement page component instead of `GenericModulePage`.
 - [x] Update `lib/types.ts` and `coding-doc/data-contract.md` if procurement-specific records require shared typing.
 - [x] Run a visual consistency pass against the shared shell and the approved prototype language.
+- [x] Refactor the procurement main page to visually map the approved procurement prototype while removing the previous multi-view navigation.
 
 ## 10. Acceptance Checks
 
 - [x] `/procurement` renders a procurement-specific page, not only the generic module template.
-- [x] `/procurement?view=logs` renders a log-focused procurement view while keeping the same module route.
-- [x] The page includes a summary/header, KPI grid, primary tender-validation panel, and secondary risk/log panel.
+- [x] The page includes a summary/header, KPI grid, primary tender-validation matrix, supplier profiling panel, ECharts analytical surfaces, and procurement intelligence log.
 - [x] Procurement labels and section language remain aligned with approved source wording.
 - [x] Data is stored in typed mock-data files outside the route file.
-- [x] The procurement sidebar entry can expand to expose `Workbench` and `Logs` child links without breaking shell consistency.
+- [x] Clicking the `Procurement` sidebar entry opens the main procurement page directly without additional child navigation.
 - [x] The page remains visually consistent with the existing Jarvis shell on desktop and mobile.
+- [x] The procurement main page visually maps the approved procurement prototype composition instead of the earlier custom demo layout.
 
 ## 11. Documentation Sync
 

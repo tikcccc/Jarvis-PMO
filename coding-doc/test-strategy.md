@@ -18,7 +18,6 @@ Catch visual drift and structural regressions while migrating the prototype into
 - all twelve module routes render
 - shared shell loads on every route
 - sidebar toggle works
-- expanded sidebar items with child views still navigate correctly
 
 ### 2.3 Visual Regression Focus
 
@@ -45,8 +44,7 @@ The highest-risk failures are visual consistency failures, not data logic bugs. 
   - Progress or Payment
 - On `/procurement`, verify switching the active tender package refreshes the bidder table and resets the supplier/risk detail panels in place.
 - On `/procurement`, verify bidder selection updates the `Service Provider Profiling` and `Contractual Risk AI` panels without breaking table selection styling.
-- On `/procurement`, verify the `Workbench | Logs` view switch preserves procurement context and updates the dominant panel hierarchy without leaving the module route family.
-- On `/procurement`, verify the expanded sidebar `Procurement` entry can reach both `Workbench` and `Logs` states.
+- On `/procurement`, verify clicking the `Procurement` sidebar entry opens the main procurement page directly.
 - On `/procurement`, verify the bidder comparison table scrolls horizontally on smaller widths while KPI cards and side panels stack cleanly.
 - On animated module surfaces, verify motion clarifies the primary focal zone and does not block selection, scrolling, or reading.
 - On routes with analytical charts, verify legends, thresholds, empty states, and semantic colors remain readable inside the shared Jarvis card shell.
