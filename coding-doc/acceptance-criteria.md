@@ -25,7 +25,7 @@
 
 - Expanded and collapsed sidebar states both render correctly.
 - Main header stays stable across all module routes.
-- Main content area preserves the same padding and information density as the source prototype.
+- Main content area preserves the same padding and information density as the source prototype, except for approved full-bleed embedded-workbench routes such as `/payment`.
 - Tables, KPI grids, and dark emphasis panels use the same spacing and card language.
 - Analytical charts do not displace approved map-first or workbench-first compositions when those are the module's primary task surface.
 - Module-level compositions remain task-led: unrelated modules do not all collapse into the same `top KPI + main workbench + right side panel` formula, while similar task types may still share an archetype when justified.
@@ -44,6 +44,9 @@
 - The dashboard `Portfolio Strategic Map (GIS)` renders the same geographic project dataset as the portfolio route instead of a placeholder panel.
 - The portfolio route supports `MAP` and `SATELLITE` mode switching without breaking project selection behavior.
 - If `NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN` is missing, the portfolio route falls back to a safe preview state instead of a runtime failure.
+- The payment route replaces the generic placeholder with a dedicated Jarvis PAY workbench, keeps queue, overview, ledger, valuation, and CE / VO views on the same route, and may render full-bleed inside the shared shell for embedded-system use.
+- The payment valuation view uses the approved Mapbox GIS stack with a safe fallback preview when `NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN` is missing.
+- The payment valuation view supports in-place zone inspection and back navigation to the overview without leaving `/payment`, and the inspection detail uses the approved Eagle Eye panorama asset.
 - The progress route keeps GIS-led zone overview and in-place zone drill-down on the same route instead of reverting to a generic placeholder module page.
 - The progress detail view uses timestamped discrete Eagle Eye capture events with stage context, not a continuous video-player scrubber, and reserves the only dark emphasis panel on the route for delay impact analysis.
 - Reduced-motion settings disable non-essential ambient motion and replace large travel with lighter or instant transitions.

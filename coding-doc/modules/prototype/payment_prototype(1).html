@@ -1,0 +1,1257 @@
+import React, { useState, useEffect, useRef } from 'react';
+import * as echarts from 'echarts';
+import { 
+  LayoutDashboard, Layers, Target, Milestone, FileCheck, ShoppingCart, 
+  PenTool, Wallet, CreditCard, Eye, ShieldCheck, HardHat, Key, Search, 
+  Bell, MoreVertical, ChevronRight, Filter, ExternalLink, Activity, 
+  CheckCircle2, AlertTriangle, FileText, Cpu, Link as LinkIcon, Lock,
+  Inbox, Send, CheckSquare, FileEdit, Folder, FileBarChart, PieChart,
+  BarChart3, ChevronDown, RefreshCw, Hexagon, Maximize, AlignJustify, Plus,
+  FileDigit, FileWarning, Clock, ArrowRight, Scan, Camera, ArrowLeft, Map as MapIcon, MapPin
+} from 'lucide-react';
+
+// --- Utility Components ---
+const Card = ({ children, className = "" }) => (
+  <div className={`bg-white rounded-xl border border-gray-200 shadow-sm ${className}`}>
+    {children}
+  </div>
+);
+
+const Badge = ({ children, variant = "default" }) => {
+  const styles = {
+    default: "bg-gray-100 text-gray-700 border-gray-200",
+    success: "bg-emerald-50 text-emerald-700 border border-emerald-200",
+    warning: "bg-amber-50 text-amber-700 border border-amber-200",
+    danger: "bg-rose-50 text-rose-700 border border-rose-200",
+    info: "bg-blue-50 text-blue-700 border border-blue-200",
+    dark: "bg-slate-800 text-slate-100 border border-slate-700",
+    purple: "bg-purple-50 text-purple-700 border border-purple-200",
+  };
+  return (
+    <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider ${styles[variant]}`}>
+      {children}
+    </span>
+  );
+};
+
+// --- Optimized ECharts Bar Chart ---
+const ProgressComparisonChart = () => {
+  const chartRef = useRef(null);
+
+  useEffect(() => {
+    if (chartRef.current) {
+      const chart = echarts.init(chartRef.current);
+      const option = {
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: { type: 'shadow' },
+          backgroundColor: 'rgba(255, 255, 255, 0.95)',
+          borderColor: '#E5E7EB',
+          textStyle: { color: '#374151' },
+          extraCssText: 'box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); border-radius: 8px;',
+          formatter: function (params) {
+            let res = `<div style="font-weight:bold;margin-bottom:8px;font-size:12px;border-bottom:1px solid #E5E7EB;padding-bottom:4px;">${params[0].name}</div>`;
+            params.forEach(p => {
+              res += `<div style="display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:4px;">
+                        <span style="font-size:11px;color:#6B7280;display:flex;align-items:center;">
+                          <span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:${p.color};margin-right:6px;"></span>
+                          ${p.seriesName}
+                        </span>
+                        <span style="font-weight:bold;font-size:11px;">${p.value}%</span>
+                      </div>`;
+            });
+            // AI vs Claim Deviation Logic
+            const ai = params.find(p => p.seriesName === 'Eagle Eye AI Progress')?.value || 0;
+            const claim = params.find(p => p.seriesName === 'Contractor Claim')?.value || 0;
+            if (claim - ai >= 5) {
+               res += `<div style="margin-top:8px;padding:4px 6px;background:#FFF1F2;color:#E11D48;border-radius:4px;font-size:10px;font-weight:bold;display:flex;align-items:center;">
+                         ⚠️ Deviation > 5% (Audit Triggered)
+                       </div>`
+            }
+            return res;
+          }
+        },
+        legend: {
+          data: ['Eagle Eye AI Progress', 'Contractor Claim'],
+          bottom: 0,
+          icon: 'roundRect',
+          itemWidth: 12,
+          itemHeight: 12,
+          textStyle: { fontSize: 10, color: '#6B7280', fontWeight: 'bold' }
+        },
+        grid: { left: '2%', right: '8%', bottom: '15%', top: '5%', containLabel: true },
+        xAxis: {
+          type: 'value',
+          max: 100,
+          axisLabel: { formatter: '{value}%', fontSize: 10, color: '#9CA3AF' },
+          splitLine: { lineStyle: { type: 'dashed', color: '#F3F4F6' } }
+        },
+        yAxis: {
+          type: 'category',
+          data: ['MEP Installation', 'Concrete Works', 'Rebar Fixing', 'Site Clearance'],
+          axisLabel: { fontSize: 11, color: '#4B5563', fontWeight: 'bold' },
+          axisLine: { show: false },
+          axisTick: { show: false }
+        },
+        series: [
+          {
+            name: 'Eagle Eye AI Progress',
+            type: 'bar',
+            data: [42, 85, 95, 100],
+            itemStyle: { color: '#10B981', borderRadius: [0, 4, 4, 0] },
+            barWidth: 14,
+            barGap: '20%'
+          },
+          {
+            name: 'Contractor Claim',
+            type: 'bar',
+            data: [
+              { value: 65, itemStyle: { color: '#F43F5E' } }, // Alert Red
+              { value: 85, itemStyle: { color: '#FBBF24' } },
+              { value: 95, itemStyle: { color: '#FBBF24' } },
+              { value: 100, itemStyle: { color: '#FBBF24' } }
+            ],
+            itemStyle: { borderRadius: [0, 4, 4, 0] },
+            barWidth: 14
+          }
+        ]
+      };
+      chart.setOption(option);
+      const handleResize = () => chart.resize();
+      window.addEventListener('resize', handleResize);
+      return () => {
+        window.removeEventListener('resize', handleResize);
+        chart.dispose();
+      };
+    }
+  }, []);
+
+  return <div className="flex-1 w-full min-h-[250px] mt-4" ref={chartRef}></div>;
+};
+
+// --- View 1: Process Center (Pending Tasks) ---
+const PendingTasksView = () => {
+  const tasksData = [
+    { 
+      id: "TSK-2026-092", 
+      type: "AI Audit Review", 
+      title: "Review AI Mismatch: MEP Installation (Shaft)", 
+      context: "Payment Valuation VAL-2026-008",
+      contractor: "BuildRight Geo", 
+      received: "2 hours ago", 
+      deadline: "Today, 18:00", 
+      priority: "High",
+      statusColor: "rose"
+    },
+    { 
+      id: "TSK-2026-093", 
+      type: "PM Assessment", 
+      title: "Assess Compensation Event (CE-014)", 
+      context: "Unforeseen underground utilities (Zone B)",
+      contractor: "BuildRight Geo", 
+      received: "1 day ago", 
+      deadline: "Tomorrow, 12:00", 
+      priority: "High",
+      statusColor: "amber"
+    },
+    { 
+      id: "TSK-2026-094", 
+      type: "Approval Required", 
+      title: "Approve Payment Certificate PC-EPC-002", 
+      context: "Central MEP Plant - Milestone 2 Reached",
+      contractor: "VoltTech Engineering", 
+      received: "2 days ago", 
+      deadline: "2026-03-25", 
+      priority: "Medium",
+      statusColor: "blue"
+    },
+  ];
+
+  return (
+    <div className="space-y-6 animate-in fade-in duration-500 font-sans">
+      <div className="bg-white border border-gray-200 rounded-xl shadow-sm flex items-center justify-between px-6 py-4">
+        <div className="flex items-center space-x-3">
+          <div className="p-2.5 bg-rose-50 text-rose-600 rounded-lg border border-rose-100"><Inbox className="w-5 h-5" /></div>
+          <div>
+            <h2 className="text-sm font-bold text-gray-900 uppercase tracking-wide">My Pending Tasks</h2>
+            <p className="text-[10px] font-medium text-gray-500">Process Center tasks requiring your immediate action</p>
+          </div>
+        </div>
+      </div>
+
+      <Card className="overflow-hidden">
+        <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
+          <div className="flex items-center space-x-4">
+             <span className="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Priority Filter</span>
+             <div className="flex space-x-2">
+               <Badge variant="danger">High (2)</Badge>
+               <Badge variant="info">Medium (1)</Badge>
+             </div>
+          </div>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="w-full text-left whitespace-nowrap">
+            <thead className="bg-white text-[10px] font-bold text-gray-400 uppercase tracking-widest border-b border-gray-100">
+              <tr>
+                <th className="px-6 py-4">Task Priority</th>
+                <th className="px-6 py-4">Task Description & Context</th>
+                <th className="px-6 py-4">Contractor</th>
+                <th className="px-6 py-4">Received</th>
+                <th className="px-6 py-4">Deadline (SLA)</th>
+                <th className="px-6 py-4 text-center">Action</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-50 bg-white">
+              {tasksData.map((row, idx) => (
+                <tr key={idx} className="hover:bg-blue-50/30 transition-colors text-xs text-gray-700 group cursor-pointer">
+                  <td className="px-6 py-5">
+                     <span className={`flex items-center text-[10px] font-bold tracking-wider ${row.priority === 'High' ? 'text-rose-600' : 'text-blue-600'}`}>
+                       <div className={`w-2 h-2 rounded-full mr-2 ${row.priority === 'High' ? 'bg-rose-500 animate-pulse' : 'bg-blue-500'}`}></div>
+                       {row.priority}
+                     </span>
+                  </td>
+                  <td className="px-6 py-5">
+                    <p className="font-bold text-gray-900 text-[13px]">{row.title}</p>
+                    <p className="text-[11px] text-gray-500 mt-1">{row.context}</p>
+                  </td>
+                  <td className="px-6 py-5 font-medium">{row.contractor}</td>
+                  <td className="px-6 py-5 text-gray-500">{row.received}</td>
+                  <td className="px-6 py-5">
+                    <span className={`flex items-center font-bold ${row.priority === 'High' ? 'text-rose-600' : 'text-gray-700'}`}>
+                      <Clock className="w-3.5 h-3.5 mr-1.5" /> {row.deadline}
+                    </span>
+                  </td>
+                  <td className="px-6 py-5 text-center">
+                    <button className="px-4 py-1.5 bg-gray-900 text-white rounded text-[10px] font-bold uppercase tracking-widest hover:bg-gray-800 transition-colors opacity-0 group-hover:opacity-100">
+                      Process
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </Card>
+    </div>
+  );
+};
+
+// --- View 2: Payment General Dashboard (Overview) ---
+const PaymentDashboardView = () => (
+  <div className="space-y-6 animate-in fade-in duration-500">
+    <div className="flex items-center justify-between">
+      <div>
+        <h2 className="text-xl font-bold text-gray-900">Financial Overview Dashboard</h2>
+        <p className="text-xs text-gray-500 mt-1">Multi-Contract Rule Engine & AI Payment Certification</p>
+      </div>
+      <div className="flex space-x-3">
+        <button className="px-4 py-2 bg-white border border-gray-200 rounded-lg text-xs font-bold hover:bg-gray-50 text-gray-600 shadow-sm flex items-center">
+          <RefreshCw className="w-3.5 h-3.5 mr-2" /> Sync ERP
+        </button>
+        <button className="px-4 py-2 bg-[#208A9B] text-white rounded-lg text-xs font-bold hover:bg-[#1a7584] shadow-sm flex items-center">
+          <Cpu className="w-3.5 h-3.5 mr-2" /> Run AI Audit
+        </button>
+      </div>
+    </div>
+
+    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <Card className="p-5 border-l-4 border-l-[#208A9B]">
+        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Total Certified Value</p>
+        <div className="flex items-baseline space-x-2">
+          <p className="text-2xl font-light tracking-tight text-gray-900">$45.2M</p>
+          <span className="text-[10px] font-bold text-emerald-500">+12% vs Last Mo</span>
+        </div>
+      </Card>
+      <Card className="p-5 border-l-4 border-l-emerald-500">
+        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Blockchain Tx Cleared</p>
+        <p className="text-2xl font-light tracking-tight text-gray-900">142<span className="text-sm text-gray-400 ml-1">Transactions</span></p>
+      </Card>
+      <Card className="p-5 border-l-4 border-l-rose-500 bg-rose-50/30">
+        <div className="flex justify-between items-start">
+          <p className="text-[10px] font-bold text-rose-500 uppercase tracking-widest mb-1">AI Over-claim Intercepted</p>
+          <AlertTriangle className="w-4 h-4 text-rose-500" />
+        </div>
+        <p className="text-2xl font-bold tracking-tight text-rose-600">$1.24M</p>
+        <p className="text-[9px] text-rose-500/80 mt-1 font-bold">3 Claims Blocked this cycle</p>
+      </Card>
+      <Card className="p-5 border-l-4 border-l-amber-500">
+        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Pending CE (NEC Clause 61)</p>
+        <p className="text-2xl font-light tracking-tight text-gray-900">4<span className="text-sm text-gray-400 ml-1">Events</span></p>
+        <p className="text-[9px] text-amber-600 mt-1 font-bold">Est. Exposure: $850k</p>
+      </Card>
+    </div>
+
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <Card className="lg:col-span-2 p-6 flex flex-col min-h-[400px]">
+        <div className="flex justify-between items-start border-b border-gray-100 pb-4 mb-2">
+          <div className="flex items-center space-x-3">
+            <div className="p-2.5 bg-blue-50/80 rounded-xl border border-blue-100"><Eye className="w-5 h-5 text-blue-600" /></div>
+            <div>
+              <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wide">AI Progress Agent Verification</h3>
+              <p className="text-[10px] font-medium text-gray-500">Physical Progress &gt; Invoice Progress Enforcement</p>
+            </div>
+          </div>
+          <Badge variant="success">Eagle Eye Live Sync</Badge>
+        </div>
+        <ProgressComparisonChart />
+      </Card>
+
+      <div className="space-y-6">
+        <Card className="p-6 flex flex-col justify-center min-h-[188px]">
+          <div className="flex items-center justify-between mb-5">
+            <div className="flex items-center space-x-3">
+              <div className="p-2 bg-purple-50 rounded-lg"><Hexagon className="w-4 h-4 text-purple-600" /></div>
+              <h3 className="text-xs font-bold text-gray-900 uppercase tracking-wide">Contract Logic Engine</h3>
+            </div>
+          </div>
+          <div className="space-y-3.5 flex-1">
+            <div className="flex items-center justify-between text-xs pb-1 border-b border-gray-50">
+              <span className="text-gray-600 font-medium">NEC4 ECC Option C</span>
+              <Badge variant="warning">Early Warning Active</Badge>
+            </div>
+            <div className="flex items-center justify-between text-xs pb-1 border-b border-gray-50">
+              <span className="text-gray-600 font-medium">HKIS GCC 2018</span>
+              <Badge variant="success">Retention Deducted</Badge>
+            </div>
+            <div className="flex items-center justify-between text-xs pb-1">
+              <span className="text-gray-600 font-medium">FIDIC Silver (EPC)</span>
+              <Badge variant="info">Milestone 2 Reached</Badge>
+            </div>
+          </div>
+        </Card>
+        
+        <Card
+          className="p-6 flex flex-col text-white relative overflow-hidden shadow-xl min-h-[188px] border-slate-900"
+          style={{ background: 'radial-gradient(circle at top right, rgba(59,130,246,0.16), transparent 34%), linear-gradient(145deg, #0f172a 0%, #111827 58%, #020617 100%)' }}
+        >
+          <div className="absolute -right-6 -bottom-6 opacity-10"><Activity className="w-40 h-40" /></div>
+          <div className="flex items-center space-x-3 mb-5 z-10">
+            <div className="p-2 bg-white/10 rounded-lg"><Activity className="w-4 h-4 text-blue-400" /></div>
+            <h3 className="text-xs font-bold uppercase tracking-wide">CE / VO Live Impact</h3>
+          </div>
+          <div className="z-10 mb-4">
+            <p className="text-[10px] text-slate-300 uppercase font-bold mb-1 tracking-widest">Unassessed Compensation</p>
+            <p className="text-3xl font-light tracking-tight text-white">$850,200</p>
+          </div>
+          <div className="mt-auto z-10 text-[10px] text-amber-100 bg-amber-400/[0.18] p-2.5 rounded-lg border border-amber-400/30 flex items-start backdrop-blur-md">
+            <AlertTriangle className="w-3.5 h-3.5 mr-2 shrink-0 mt-0.5" />
+            <span className="leading-relaxed font-medium">CE-014 awaiting PM Assessment. 3 days remaining before deemed accepted (NEC Clause 61.4).</span>
+          </div>
+        </Card>
+      </div>
+    </div>
+  </div>
+);
+
+// --- View 3: Specific List View (Payment for MC/NSC List) ---
+const PaymentMCListView = () => {
+  const paymentList = [
+    { status: "CERTIFIED", pcNo: "PC-GCC-004", contractTitle: "Superstructure Main Contract", contractor: "Apex Construction Group", amount: "1,242,383.40", rule: "HKIS GCC 2018", voStatus: "Retention 5%", aiProgress: "Matched (95%)", txHash: "0x8f3b...3a21" },
+    { status: "AI FLAGGED", pcNo: "PC-NEC-012", contractTitle: "Foundation & Piling Phase 2", contractor: "BuildRight Geo", amount: "890,500.00", rule: "NEC4 ECC OPT C", voStatus: "CE-014 Pending", aiProgress: "Dev: AI 42% | Claim 65%", txHash: "Pending Review" },
+    { status: "PROCESSING", pcNo: "PC-EPC-002", contractTitle: "Central MEP Plant", contractor: "VoltTech Engineering", amount: "4,150,000.00", rule: "FIDIC (EPC)", voStatus: "No VO", aiProgress: "Milestone Verified", txHash: "0x2a1c...1f4c" },
+    { status: "PAID", pcNo: "PC-GCC-003", contractTitle: "Superstructure Main Contract", contractor: "Apex Construction Group", amount: "2,100,000.00", rule: "HKIS GCC 2018", voStatus: "Retention 5%", aiProgress: "Matched (80%)", txHash: "0x9d4a...2b11" }
+  ];
+
+  return (
+    <div className="space-y-6 animate-in fade-in duration-500 font-sans">
+      <Card className="p-6 flex items-start justify-between bg-white border border-gray-200">
+        <div className="w-1/3 border-r border-gray-100 pr-8">
+           <h3 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-5">Certificate Status</h3>
+           <div className="space-y-4">
+             <div className="flex justify-between items-center text-sm">
+               <div className="flex items-center text-gray-700"><div className="w-2.5 h-2.5 rounded-full bg-[#10B981] mr-3"></div>Certified / Paid</div>
+               <span className="font-bold text-gray-900">2</span>
+             </div>
+             <div className="flex justify-between items-center text-sm">
+               <div className="flex items-center text-gray-700"><div className="w-2.5 h-2.5 rounded-full bg-[#3B82F6] mr-3"></div>Processing</div>
+               <span className="font-bold text-gray-900">1</span>
+             </div>
+             <div className="flex justify-between items-center text-sm text-rose-600 font-bold">
+               <div className="flex items-center"><div className="w-2.5 h-2.5 rounded-full bg-[#F43F5E] mr-3 animate-pulse"></div>AI Flagged</div>
+               <span>1</span>
+             </div>
+           </div>
+        </div>
+        <div className="w-2/3 pl-8">
+           <h3 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-5">Contract Rule Distribution</h3>
+           <div className="space-y-5">
+             <div>
+               <div className="flex justify-between text-xs font-bold text-gray-700 mb-2">
+                 <span>HKIS GCC 2018 (Standard)</span>
+                 <span>$3.34M</span>
+               </div>
+               <div className="h-2 w-full bg-gray-100 rounded-full"><div className="h-2 bg-[#208A9B] rounded-full" style={{width: '65%'}}></div></div>
+             </div>
+             <div>
+               <div className="flex justify-between text-xs font-bold text-gray-700 mb-2">
+                 <span>FIDIC Silver (EPC Milestones)</span>
+                 <span>$4.15M</span>
+               </div>
+               <div className="h-2 w-full bg-gray-100 rounded-full"><div className="h-2 bg-[#208A9B] rounded-full" style={{width: '35%'}}></div></div>
+             </div>
+           </div>
+        </div>
+      </Card>
+
+      <div className="bg-white rounded-md shadow-sm border border-gray-200 overflow-hidden">
+        <div className="px-6 py-3 flex justify-between items-center border-b border-gray-200 bg-white">
+          <div className="flex items-center space-x-2 text-sm font-bold text-gray-800">
+            <AlignJustify className="w-4 h-4 text-gray-600" />
+            <span>Payment for MC List</span>
+          </div>
+          <div className="flex space-x-4 items-center">
+            <button className="flex items-center text-xs text-gray-600 hover:text-gray-900 transition-colors">
+              <Maximize className="w-3.5 h-3.5 mr-1.5" /> Full Screen
+            </button>
+            <button className="px-4 py-1.5 text-xs font-bold text-[#1890FF] bg-[#E6F7FF] border border-[#91D5FF] rounded hover:bg-[#BAE7FF] transition-colors">
+              Edit Report
+            </button>
+          </div>
+        </div>
+
+        <div className="bg-[#208A9B] p-8 relative">
+          <div className="absolute top-4 left-6 text-white text-sm font-medium">Total payment</div>
+          <div className="text-center text-white text-[56px] font-normal tracking-tight my-2">232,383.40</div>
+          <div className="absolute bottom-4 right-6 flex items-center space-x-2 bg-black/15 px-3 py-1.5 rounded-md backdrop-blur-sm border border-white/10">
+            <Lock className="w-3 h-3 text-emerald-400" />
+            <span className="text-white text-[9px] uppercase tracking-widest font-bold">100% Tx Secured</span>
+          </div>
+        </div>
+
+        <div className="p-6 border-b border-gray-200 bg-white">
+          <div className="flex items-center space-x-4 mb-3">
+             <span className="text-sm font-bold text-gray-700">Payment Certificate No.</span>
+             <span className="text-[#1890FF] text-sm flex items-center cursor-pointer hover:text-blue-700">Equals <ChevronDown className="w-4 h-4 ml-1" /></span>
+          </div>
+          <input type="text" className="w-full border border-gray-300 rounded p-2 text-sm outline-none focus:border-[#208A9B] transition-colors" />
+        </div>
+
+        <div className="bg-white">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left whitespace-nowrap">
+              <thead className="bg-white text-xs font-bold text-gray-500 uppercase tracking-wider border-b border-gray-200">
+                <tr>
+                  <th className="px-6 py-4">Status</th>
+                  <th className="px-6 py-4">Certificate ID</th>
+                  <th className="px-6 py-4">Contractor & Title</th>
+                  <th className="px-6 py-4">Rule Engine & VO</th>
+                  <th className="px-6 py-4">Jarvis AI Progress</th>
+                  <th className="px-6 py-4 text-right">Amount ($)</th>
+                  <th className="px-6 py-4 text-center">Audit</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-100 bg-white">
+                {paymentList.map((row, idx) => (
+                  <tr key={idx} className="hover:bg-blue-50/30 transition-colors text-xs text-gray-700">
+                    <td className="px-6 py-5">
+                      <span className={`px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider ${
+                        row.status === 'CERTIFIED' || row.status === 'PAID' ? 'text-emerald-700 bg-emerald-50 border border-emerald-100' : 
+                        row.status === 'PROCESSING' ? 'text-blue-700 bg-blue-50 border border-blue-100' : 'text-rose-700 bg-rose-50 border border-rose-200'
+                      }`}>
+                        {row.status}
+                      </span>
+                    </td>
+                    <td className="px-6 py-5 font-medium text-[#208A9B]">{row.pcNo}</td>
+                    <td className="px-6 py-5">
+                      <p className="font-bold text-gray-900">{row.contractor}</p>
+                      <p className="text-[10px] text-gray-500 mt-0.5">{row.contractTitle}</p>
+                    </td>
+                    <td className="px-6 py-5">
+                      <div className="flex flex-col items-start space-y-1">
+                        <span className={`px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-widest ${
+                          row.rule.includes('NEC') ? 'bg-purple-50 text-purple-700 border border-purple-200' : 
+                          row.rule.includes('GCC') ? 'bg-blue-50 text-blue-700 border border-blue-200' : 'bg-gray-100 text-gray-700 border border-gray-200'
+                        }`}>{row.rule}</span>
+                        <span className="text-[10px] text-gray-500 font-medium">{row.voStatus}</span>
+                      </div>
+                    </td>
+                    <td className="px-6 py-5">
+                      {row.status === 'AI FLAGGED' ? (
+                         <span className="flex items-center text-[11px] text-rose-600 font-bold bg-rose-50 px-2 py-1 rounded-md border border-rose-100 w-fit">
+                           <AlertTriangle className="w-3.5 h-3.5 mr-1.5" /> {row.aiProgress}
+                         </span>
+                      ) : (
+                         <span className="flex items-center text-[11px] text-emerald-600 font-bold">
+                           <CheckCircle2 className="w-4 h-4 mr-1.5" /> {row.aiProgress}
+                         </span>
+                      )}
+                    </td>
+                    <td className="px-6 py-5 text-right font-bold text-gray-900 text-[13px]">{row.amount}</td>
+                    <td className="px-6 py-5 text-center">
+                      {row.txHash !== 'Pending Review' ? (
+                        <div className="inline-flex items-center justify-center p-1.5 text-emerald-500 hover:bg-emerald-50 rounded-md transition-colors cursor-pointer border border-transparent hover:border-emerald-200">
+                          <Lock className="w-4 h-4" />
+                        </div>
+                      ) : (
+                        <div className="inline-flex items-center justify-center p-1.5 text-amber-500">
+                           <Activity className="w-4 h-4 animate-pulse" />
+                        </div>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// --- View: Specific List View (Payment for NSC List) ---
+const PaymentNSCListView = () => {
+  const nscPaymentList = [
+    { status: "CERTIFIED", pcNo: "NSC-LIFT-004", contractTitle: "Lift & Escalator Installation", contractor: "Otis Elevators", amount: "450,200.00", rule: "NSC Standard Cond.", voStatus: "Retention 10%", aiProgress: "Matched (100%)", txHash: "0x3a21...8f3b" },
+    { status: "AI FLAGGED", pcNo: "NSC-FAC-011", contractTitle: "Curtain Wall & Facade", contractor: "FarEast Facade", amount: "1,120,000.00", rule: "NSC (NEC B2B)", voStatus: "CE-002 Pending", aiProgress: "Dev: AI 60% | Claim 80%", txHash: "Pending Review" },
+    { status: "PROCESSING", pcNo: "NSC-BMS-002", contractTitle: "Building Management System", contractor: "Honeywell Systems", amount: "280,500.00", rule: "NSC Standard Cond.", voStatus: "No VO", aiProgress: "Installation Verified", txHash: "0x1f4c...2a1c" },
+    { status: "PAID", pcNo: "NSC-LIFT-003", contractTitle: "Lift & Escalator Installation", contractor: "Otis Elevators", amount: "650,000.00", rule: "NSC Standard Cond.", voStatus: "Retention 10%", aiProgress: "Matched (85%)", txHash: "0x2b11...9d4a" }
+  ];
+
+  return (
+    <div className="space-y-6 animate-in fade-in duration-500 font-sans">
+      <Card className="p-6 flex items-start justify-between bg-white border border-gray-200">
+        <div className="w-1/3 border-r border-gray-100 pr-8">
+           <h3 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-5">NSC Certificate Status</h3>
+           <div className="space-y-4">
+             <div className="flex justify-between items-center text-sm">
+               <div className="flex items-center text-gray-700"><div className="w-2.5 h-2.5 rounded-full bg-[#10B981] mr-3"></div>Certified / Paid</div>
+               <span className="font-bold text-gray-900">2</span>
+             </div>
+             <div className="flex justify-between items-center text-sm">
+               <div className="flex items-center text-gray-700"><div className="w-2.5 h-2.5 rounded-full bg-[#3B82F6] mr-3"></div>Processing</div>
+               <span className="font-bold text-gray-900">1</span>
+             </div>
+             <div className="flex justify-between items-center text-sm text-rose-600 font-bold">
+               <div className="flex items-center"><div className="w-2.5 h-2.5 rounded-full bg-[#F43F5E] mr-3 animate-pulse"></div>AI Flagged</div>
+               <span>1</span>
+             </div>
+           </div>
+        </div>
+        <div className="w-2/3 pl-8">
+           <h3 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-5">NSC Contract Rule Distribution</h3>
+           <div className="space-y-5">
+             <div>
+               <div className="flex justify-between text-xs font-bold text-gray-700 mb-2">
+                 <span>NSC Standard Conditions</span>
+                 <span>$1.38M</span>
+               </div>
+               <div className="h-2 w-full bg-gray-100 rounded-full"><div className="h-2 bg-[#5C6BC0] rounded-full" style={{width: '55%'}}></div></div>
+             </div>
+             <div>
+               <div className="flex justify-between text-xs font-bold text-gray-700 mb-2">
+                 <span>NSC (NEC Back-to-Back)</span>
+                 <span>$1.12M</span>
+               </div>
+               <div className="h-2 w-full bg-gray-100 rounded-full"><div className="h-2 bg-[#5C6BC0] rounded-full" style={{width: '45%'}}></div></div>
+             </div>
+           </div>
+        </div>
+      </Card>
+
+      <div className="bg-white rounded-md shadow-sm border border-gray-200 overflow-hidden">
+        <div className="px-6 py-3 flex justify-between items-center border-b border-gray-200 bg-white">
+          <div className="flex items-center space-x-2 text-sm font-bold text-gray-800">
+            <AlignJustify className="w-4 h-4 text-gray-600" />
+            <span>Payment for NSC List</span>
+          </div>
+          <div className="flex space-x-4 items-center">
+            <button className="flex items-center text-xs text-gray-600 hover:text-gray-900 transition-colors">
+              <Maximize className="w-3.5 h-3.5 mr-1.5" /> Full Screen
+            </button>
+            <button className="px-4 py-1.5 text-xs font-bold text-[#5C6BC0] bg-[#EEF2FF] border border-[#C7D2FE] rounded hover:bg-[#E0E7FF] transition-colors">
+              Edit Report
+            </button>
+          </div>
+        </div>
+
+        <div className="bg-[#5C6BC0] p-8 relative">
+          <div className="absolute top-4 left-6 text-white text-sm font-medium">Total NSC payment</div>
+          <div className="text-center text-white text-[56px] font-normal tracking-tight my-2">2,500,700.00</div>
+          <div className="absolute bottom-4 right-6 flex items-center space-x-2 bg-black/15 px-3 py-1.5 rounded-md backdrop-blur-sm border border-white/10">
+            <Lock className="w-3 h-3 text-emerald-400" />
+            <span className="text-white text-[9px] uppercase tracking-widest font-bold">100% Tx Secured</span>
+          </div>
+        </div>
+
+        <div className="p-6 border-b border-gray-200 bg-white">
+          <div className="flex items-center space-x-4 mb-3">
+             <span className="text-sm font-bold text-gray-700">NSC Certificate No.</span>
+             <span className="text-[#5C6BC0] text-sm flex items-center cursor-pointer hover:text-indigo-700">Equals <ChevronDown className="w-4 h-4 ml-1" /></span>
+          </div>
+          <input type="text" className="w-full border border-gray-300 rounded p-2 text-sm outline-none focus:border-[#5C6BC0] transition-colors" />
+        </div>
+
+        <div className="bg-white">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left whitespace-nowrap">
+              <thead className="bg-white text-xs font-bold text-gray-500 uppercase tracking-wider border-b border-gray-200">
+                <tr>
+                  <th className="px-6 py-4">Status</th>
+                  <th className="px-6 py-4">Certificate ID</th>
+                  <th className="px-6 py-4">NSC & Title</th>
+                  <th className="px-6 py-4">Rule Engine & VO</th>
+                  <th className="px-6 py-4">Jarvis AI Progress</th>
+                  <th className="px-6 py-4 text-right">Amount ($)</th>
+                  <th className="px-6 py-4 text-center">Audit</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-100 bg-white">
+                {nscPaymentList.map((row, idx) => (
+                  <tr key={idx} className="hover:bg-indigo-50/30 transition-colors text-xs text-gray-700">
+                    <td className="px-6 py-5">
+                      <span className={`px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider ${
+                        row.status === 'CERTIFIED' || row.status === 'PAID' ? 'text-emerald-700 bg-emerald-50 border border-emerald-100' : 
+                        row.status === 'PROCESSING' ? 'text-blue-700 bg-blue-50 border border-blue-100' : 'text-rose-700 bg-rose-50 border border-rose-200'
+                      }`}>
+                        {row.status}
+                      </span>
+                    </td>
+                    <td className="px-6 py-5 font-medium text-[#5C6BC0]">{row.pcNo}</td>
+                    <td className="px-6 py-5">
+                      <p className="font-bold text-gray-900">{row.contractor}</p>
+                      <p className="text-[10px] text-gray-500 mt-0.5">{row.contractTitle}</p>
+                    </td>
+                    <td className="px-6 py-5">
+                      <div className="flex flex-col items-start space-y-1">
+                        <span className={`px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-widest ${
+                          row.rule.includes('NEC') ? 'bg-purple-50 text-purple-700 border border-purple-200' : 'bg-indigo-50 text-indigo-700 border border-indigo-200'
+                        }`}>{row.rule}</span>
+                        <span className="text-[10px] text-gray-500 font-medium">{row.voStatus}</span>
+                      </div>
+                    </td>
+                    <td className="px-6 py-5">
+                      {row.status === 'AI FLAGGED' ? (
+                         <span className="flex items-center text-[11px] text-rose-600 font-bold bg-rose-50 px-2 py-1 rounded-md border border-rose-100 w-fit">
+                           <AlertTriangle className="w-3.5 h-3.5 mr-1.5" /> {row.aiProgress}
+                         </span>
+                      ) : (
+                         <span className="flex items-center text-[11px] text-emerald-600 font-bold">
+                           <CheckCircle2 className="w-4 h-4 mr-1.5" /> {row.aiProgress}
+                         </span>
+                      )}
+                    </td>
+                    <td className="px-6 py-5 text-right font-bold text-gray-900 text-[13px]">{row.amount}</td>
+                    <td className="px-6 py-5 text-center">
+                      {row.txHash !== 'Pending Review' ? (
+                        <div className="inline-flex items-center justify-center p-1.5 text-emerald-500 hover:bg-emerald-50 rounded-md transition-colors cursor-pointer border border-transparent hover:border-emerald-200">
+                          <Lock className="w-4 h-4" />
+                        </div>
+                      ) : (
+                        <div className="inline-flex items-center justify-center p-1.5 text-amber-500">
+                           <Activity className="w-4 h-4 animate-pulse" />
+                        </div>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// --- View 4: Payment Valuation (AI Progress Agent Mismatch Resolution with GIS Split View) ---
+const PaymentValuationView = () => {
+  const valuationData = [
+    { 
+      id: "VAL-2026-009", 
+      zone: "Zone A (Podium)",
+      contractor: "VoltTech Engineering", 
+      contract: "Central MEP Plant", 
+      claim: 100, 
+      aiAssess: 100, 
+      claimAmt: "$4,150,000",
+      aiAmt: "$4,150,000",
+      status: "COMPLETED",
+      deviationText: "0 DAY VARIANCE",
+      camera: "CAM_PLANT_01_360",
+      issue: "None",
+      mapX: "65%",
+      mapY: "35%"
+    },
+    { 
+      id: "VAL-2026-010", 
+      zone: "Zone B (Tower 1)",
+      contractor: "Apex Construction", 
+      contract: "Superstructure Main Contract", 
+      claim: 85, 
+      aiAssess: 78, 
+      claimAmt: "$850,000",
+      aiAmt: "$780,000",
+      status: "AI FLAGGED",
+      deviationText: "> 5% BEHIND CLAIM",
+      camera: "CAM_TOWER_B_L08_360",
+      issue: "Concrete Pouring Incomplete",
+      mapX: "48%",
+      mapY: "58%"
+    },
+    { 
+      id: "VAL-2026-008", 
+      zone: "Zone C (Block A)",
+      contractor: "BuildRight Geo", 
+      contract: "Foundation & Piling Phase 2", 
+      claim: 65, 
+      aiAssess: 42, 
+      claimAmt: "$1,200,000",
+      aiAmt: "$890,500",
+      status: "LAGGING",
+      deviationText: "> 20% BEHIND CLAIM",
+      camera: "CAM_TOWER_A_L12_360",
+      issue: "MEP Trays Missing in Zone B",
+      mapX: "28%",
+      mapY: "42%"
+    }
+  ];
+
+  const [reviewingValuation, setReviewingValuation] = useState(null);
+  const [hoveredZone, setHoveredZone] = useState(null);
+
+  // LIST VIEW: GIS Split View
+  if (!reviewingValuation) {
+    return (
+      <div className="space-y-6 animate-in fade-in duration-500 font-sans h-full flex flex-col">
+        {/* Header */}
+        <div className="bg-white border border-gray-200 rounded-xl shadow-sm flex items-center justify-between px-6 py-4 shrink-0">
+          <div className="flex items-center space-x-3">
+            <div className="p-2.5 bg-purple-50 text-purple-600 rounded-lg border border-purple-100"><MapIcon className="w-5 h-5" /></div>
+            <div>
+              <h2 className="text-sm font-bold text-gray-900 uppercase tracking-wide">GIS / BIM Site Map</h2>
+              <p className="text-[10px] font-medium text-gray-500">Eagle Eye camera deployment network & AI Progress Valuation</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex-1 grid grid-cols-1 lg:grid-cols-3 gap-6 min-h-[600px]">
+          {/* LEFT: GIS Map Area */}
+          <Card className="lg:col-span-2 overflow-hidden flex flex-col relative border-gray-200">
+            {/* Map Controls */}
+            <div className="absolute top-4 left-4 z-20 bg-white rounded-lg shadow-sm p-1 flex space-x-1">
+              <button className="px-4 py-1.5 bg-gray-900 text-white rounded-md text-[10px] font-bold tracking-widest">MAP</button>
+              <button className="px-4 py-1.5 text-gray-500 hover:bg-gray-100 rounded-md text-[10px] font-bold tracking-widest transition-colors">SATELLITE</button>
+            </div>
+            <div className="absolute top-4 right-4 z-20 flex space-x-4 items-center bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full shadow-sm border border-gray-100">
+              <div className="flex items-center space-x-2 text-[10px] font-bold text-gray-600"><div className="w-2.5 h-2.5 rounded-full bg-[#10B981]"></div><span>Normal</span></div>
+              <div className="flex items-center space-x-2 text-[10px] font-bold text-gray-600"><div className="w-2.5 h-2.5 rounded-full bg-[#F43F5E]"></div><span>Lagging / Flagged</span></div>
+            </div>
+
+            {/* Map Image Placeholder */}
+            <div className="flex-1 bg-[#E2E8F0] relative overflow-hidden group">
+              <img 
+                src="https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80&w=1200" 
+                alt="Map Background Placeholder" 
+                className="w-full h-full object-cover opacity-[0.65] grayscale contrast-[1.2]"
+              />
+              <div className="absolute inset-0 bg-[#3B82F6]/5 mix-blend-multiply"></div>
+
+              {/* Dynamic Map Pins */}
+              {valuationData.map((item, idx) => {
+                const isNormal = item.status === 'COMPLETED';
+                const isHovered = hoveredZone === item.id;
+                
+                return (
+                  <div 
+                    key={idx} 
+                    className="absolute z-10 flex flex-col items-center"
+                    style={{ top: item.mapY, left: item.mapX, transform: 'translate(-50%, -50%)' }}
+                    onMouseEnter={() => setHoveredZone(item.id)}
+                    onMouseLeave={() => setHoveredZone(null)}
+                    onClick={() => setReviewingValuation(item)}
+                  >
+                    {/* Pin Label */}
+                    <div className={`mb-1 px-2.5 py-1 rounded bg-white shadow-sm border text-[10px] font-bold cursor-pointer transition-all ${isNormal ? 'border-[#10B981] text-[#10B981]' : 'border-[#F43F5E] text-[#F43F5E]'} ${isHovered ? 'scale-110' : ''}`}>
+                      {item.zone.split(' ')[0]} ({item.aiAssess}%)
+                    </div>
+                    {/* Pin Icon */}
+                    <div className={`w-8 h-8 rounded-full border-[3px] border-white shadow-lg flex items-center justify-center cursor-pointer transition-transform ${isHovered ? 'scale-110' : ''} ${isNormal ? 'bg-[#10B981]' : 'bg-[#F43F5E]'}`}>
+                      <Camera className="w-3.5 h-3.5 text-white" />
+                    </div>
+
+                    {/* Hover Info Card (Mimicking the image) */}
+                    {isHovered && (
+                      <div className="absolute top-12 left-1/2 transform -translate-x-1/2 w-64 bg-white rounded-xl shadow-xl border border-gray-100 p-4 z-50 animate-in zoom-in-95 duration-200">
+                        <div className="flex justify-between items-start mb-2">
+                          <span className={`text-[9px] font-bold px-2 py-0.5 rounded-md uppercase tracking-widest ${isNormal ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'}`}>
+                            {item.status}
+                          </span>
+                          <div className="w-6 h-6 rounded-full bg-blue-50 flex items-center justify-center text-blue-500">
+                            <MapPin className="w-3 h-3" />
+                          </div>
+                        </div>
+                        <h4 className="font-bold text-gray-900 text-sm">{item.zone}</h4>
+                        <p className="text-[10px] text-gray-500 mb-4">{item.contractor} - {item.contract}</p>
+                        
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <p className="text-[9px] font-bold text-gray-400 uppercase">AI Progress</p>
+                            <p className="text-sm font-bold text-gray-900">{item.aiAssess}%</p>
+                          </div>
+                          <div>
+                            <p className="text-[9px] font-bold text-gray-400 uppercase">Camera Feed</p>
+                            <p className="text-[11px] font-bold text-gray-900 truncate">Active</p>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </Card>
+
+          {/* RIGHT: Valuation Queue List */}
+          <Card className="lg:col-span-1 p-5 flex flex-col border-gray-200 shadow-sm bg-white">
+            <div className="flex justify-between items-center mb-5 pb-3 border-b border-gray-100">
+              <h3 className="font-bold text-gray-900 text-sm uppercase tracking-widest">Monitored Zones</h3>
+              <Badge variant="info" className="bg-[#E6F7FF] text-[#1890FF] border-[#91D5FF]">3 ACTIVE</Badge>
+            </div>
+
+            <div className="space-y-4 overflow-y-auto no-scrollbar flex-1 pb-4">
+              {valuationData.map((row, idx) => {
+                const isNormal = row.status === 'COMPLETED';
+                const isMatched = row.status === 'COMPLETED';
+
+                return (
+                  <div 
+                    key={idx} 
+                    className={`border rounded-xl p-4 cursor-pointer transition-all group ${hoveredZone === row.id ? 'border-[#1890FF] shadow-md bg-blue-50/10' : 'border-gray-200 hover:border-[#1890FF] hover:shadow-sm'}`}
+                    onMouseEnter={() => setHoveredZone(row.id)}
+                    onMouseLeave={() => setHoveredZone(null)}
+                    onClick={() => setReviewingValuation(row)}
+                  >
+                    <div className="flex justify-between items-start mb-1.5">
+                      <h4 className="font-bold text-gray-900 text-sm">{row.zone}</h4>
+                      <span className={`text-[9px] font-bold px-2 py-0.5 rounded-md uppercase tracking-widest ${isNormal ? 'bg-emerald-50 text-[#10B981]' : 'bg-rose-50 text-[#F43F5E]'}`}>
+                        {row.status}
+                      </span>
+                    </div>
+                    <p className="text-[10px] text-gray-500 mb-5">Eagle Eye + Progress Agent active</p>
+
+                    <div className="space-y-3.5">
+                      {/* Main AI Progress Bar */}
+                      <div>
+                        <div className="flex justify-between text-[10px] font-bold mb-1.5">
+                          <span className={`${isMatched ? 'text-[#10B981]' : 'text-[#F43F5E]'}`}>AI Verified Progress</span>
+                          <span className="text-gray-900">{row.aiAssess}%</span>
+                        </div>
+                        <div className="h-2 w-full bg-gray-100 rounded-full">
+                          <div className={`h-full rounded-full ${isMatched ? 'bg-[#10B981]' : 'bg-[#F43F5E]'}`} style={{ width: `${row.aiAssess}%` }}></div>
+                        </div>
+                      </div>
+
+                      {/* Secondary Claim Progress Bar */}
+                      {!isMatched && (
+                        <div>
+                          <div className="flex justify-between text-[10px] font-bold mb-1.5 text-gray-500">
+                            <span>Contractor Claim</span>
+                            <span>{row.claim}%</span>
+                          </div>
+                          <div className="h-1.5 w-full bg-gray-100 rounded-full">
+                            <div className="h-full bg-gray-400 rounded-full" style={{ width: `${row.claim}%` }}></div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="mt-4 pt-3 border-t border-gray-50 flex justify-between items-center">
+                      <span className={`text-[9px] uppercase font-bold tracking-widest ${isNormal ? 'text-gray-400' : 'text-[#F43F5E]'}`}>
+                        {row.deviationText}
+                      </span>
+                      <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-[#1890FF] transition-colors" />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </Card>
+        </div>
+      </div>
+    );
+  }
+
+  // DETAIL VIEW: Eagle Eye 360 Inspector (Kept clean without overlays)
+  return (
+    <div className="space-y-4 animate-in slide-in-from-right-4 duration-300 font-sans h-full flex flex-col">
+      {/* Header with Back Button */}
+      <div className="bg-white border border-gray-200 rounded-xl shadow-sm flex items-center justify-between px-4 py-3 shrink-0">
+        <div className="flex items-center space-x-4">
+          <button 
+            onClick={() => setReviewingValuation(null)}
+            className="p-1.5 hover:bg-gray-100 rounded-md text-gray-500 flex items-center transition-colors font-bold text-xs"
+          >
+            <ArrowLeft className="w-4 h-4 mr-1.5" /> Back to GIS Map
+          </button>
+          <div className="h-4 w-px bg-gray-200"></div>
+          <div>
+            <h2 className="text-sm font-bold text-gray-900 uppercase tracking-wide">Zone Inspection: {reviewingValuation.zone}</h2>
+            <p className="text-[10px] font-medium text-gray-500">{reviewingValuation.contractor} - {reviewingValuation.contract}</p>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex-1 grid grid-cols-1 lg:grid-cols-3 gap-4 min-h-[500px]">
+        {/* Left Area: Clean 360 Image Placeholder */}
+        <Card className="lg:col-span-2 flex flex-col overflow-hidden border-gray-200 shadow-sm relative bg-gray-100">
+          {/* Label outside the image */}
+          <div className="absolute top-4 left-4 z-10 bg-white/90 backdrop-blur shadow-sm px-3 py-1.5 rounded-md flex items-center space-x-2 text-[10px] font-bold text-gray-800">
+            <Camera className="w-3.5 h-3.5 text-[#208A9B]" />
+            <span>Eagle Eye 360° Source: {reviewingValuation.camera}</span>
+          </div>
+          
+          {/* Clean 360 Image - NO OVERLAYS as requested */}
+          <div className="flex-1 w-full h-full flex items-center justify-center relative bg-[#0F172A]">
+             {/* Placeholder image for 360 viewer. 
+                No bounding boxes or overlays applied here.
+             */}
+             <img 
+                src="https://images.unsplash.com/photo-1541888086425-d81bb19240f5?auto=format&fit=crop&q=80&w=1200" 
+                alt="Construction Site 360 Placeholder" 
+                className="w-full h-full object-contain object-center opacity-95 p-4"
+              />
+          </div>
+        </Card>
+
+        {/* Right Area: Action & Progress Panel */}
+        <Card className="lg:col-span-1 p-6 flex flex-col shadow-sm border-gray-200">
+          <h3 className="text-sm font-bold text-gray-900 uppercase tracking-widest mb-6 border-b border-gray-100 pb-3">
+             Progress Agent Assessment
+          </h3>
+          
+          <div className="space-y-6 flex-1">
+             {/* Progress Bars showing the comparison */}
+             <div className="space-y-5">
+                <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">% Completion Discrepancy</p>
+                
+                <div className="relative">
+                  <div className="flex justify-between text-[11px] font-bold text-gray-700 mb-1.5">
+                    <span>Contractor Claim</span>
+                    <span className="text-amber-600">{reviewingValuation.claim}%</span>
+                  </div>
+                  <div className="w-full bg-gray-100 h-3 rounded-r-full shadow-inner">
+                    <div className="bg-amber-400 h-3 rounded-r-full" style={{ width: `${reviewingValuation.claim}%` }}></div>
+                  </div>
+                </div>
+
+                <div className="relative">
+                  <div className="flex justify-between text-[11px] font-bold text-gray-700 mb-1.5">
+                    <span>Jarvis AI Detected</span>
+                    <span className="text-emerald-600">{reviewingValuation.aiAssess}%</span>
+                  </div>
+                  <div className="w-full bg-gray-100 h-3 rounded-r-full shadow-inner">
+                    <div className="bg-emerald-500 h-3 rounded-r-full" style={{ width: `${reviewingValuation.aiAssess}%` }}></div>
+                  </div>
+                </div>
+             </div>
+
+             {/* Issue Description if Flagged */}
+             {reviewingValuation.status !== 'COMPLETED' && (
+               <div className="bg-rose-50 border border-rose-100 rounded-xl p-5 shadow-sm">
+                 <p className="text-[10px] font-bold text-rose-500 uppercase mb-2 flex items-center tracking-widest">
+                   <AlertTriangle className="w-3.5 h-3.5 mr-1.5" /> AI Discrepancy Notes
+                 </p>
+                 <p className="text-xs font-bold text-rose-900 leading-relaxed">{reviewingValuation.issue}</p>
+                 <div className="mt-4 pt-4 border-t border-rose-200/50 flex justify-between items-center text-[11px]">
+                   <span className="text-rose-700 font-medium">Financial Exposure Risk:</span>
+                   <span className="font-bold text-rose-600 text-sm">${(parseInt(reviewingValuation.claimAmt.replace(/[^0-9]/g, '')) - parseInt(reviewingValuation.aiAmt.replace(/[^0-9]/g, ''))).toLocaleString()}</span>
+                 </div>
+               </div>
+             )}
+          </div>
+
+          {/* Action Buttons */}
+          <div className="pt-6 mt-6 border-t border-gray-100">
+             {reviewingValuation.status !== 'COMPLETED' ? (
+               <div className="space-y-3">
+                 <button className="w-full py-3 bg-[#208A9B] text-white rounded-lg text-[11px] font-bold uppercase tracking-widest hover:bg-[#1a7584] transition-colors shadow-sm">
+                   Adjust to AI Progress ({reviewingValuation.aiAssess}%)
+                 </button>
+                 <button className="w-full py-3 bg-white border border-rose-200 text-rose-600 rounded-lg text-[11px] font-bold uppercase tracking-widest hover:bg-rose-50 transition-colors shadow-sm">
+                   Reject Valuation Claim
+                 </button>
+               </div>
+             ) : (
+               <button className="w-full py-3 bg-[#10B981] text-white rounded-lg text-[11px] font-bold uppercase tracking-widest hover:bg-[#059669] transition-colors shadow-sm">
+                 Certify & Proceed to Payment
+               </button>
+             )}
+          </div>
+        </Card>
+      </div>
+    </div>
+  );
+};
+
+// --- View 5: Variation Order (Mock Data for NEC CE Logic) ---
+const VariationOrderView = () => {
+  const voData = [
+    { id: "CE-014", desc: "Unforeseen underground utilities (Zone B)", contractor: "BuildRight Geo", estAmt: "$420,500.00", rule: "NEC Clause 61", status: "Pending PM Assessment", daysLeft: "3 Days" },
+    { id: "VO-GCC-08", desc: "Facade material upgrade to Type A", contractor: "Apex Construction Group", estAmt: "$150,000.00", rule: "HKIS GCC", status: "Architect Approved", daysLeft: "-" }
+  ];
+
+  return (
+    <div className="space-y-6 animate-in fade-in duration-500 font-sans">
+      <div className="bg-white border border-gray-200 rounded-xl shadow-sm flex items-center justify-between px-6 py-4">
+        <div className="flex items-center space-x-3">
+          <div className="p-2.5 bg-amber-50 text-amber-600 rounded-lg border border-amber-100"><FileWarning className="w-5 h-5" /></div>
+          <div>
+            <h2 className="text-sm font-bold text-gray-900 uppercase tracking-wide">Variation Order / CE Management</h2>
+            <p className="text-[10px] font-medium text-gray-500">Real-Time integration of NEC Compensation Events and GCC VOs</p>
+          </div>
+        </div>
+      </div>
+
+      <Card className="overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left whitespace-nowrap">
+            <thead className="bg-gray-50/80 text-[10px] font-bold text-gray-500 uppercase tracking-widest border-b border-gray-200">
+              <tr>
+                <th className="px-6 py-4">VO / CE ID</th>
+                <th className="px-6 py-4">Description & Contractor</th>
+                <th className="px-6 py-4 text-right">Est. Amount ($)</th>
+                <th className="px-6 py-4">Contract Rule</th>
+                <th className="px-6 py-4">Status & SLA</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-100 bg-white">
+              {voData.map((row, idx) => (
+                <tr key={idx} className="hover:bg-blue-50/30 transition-colors text-xs text-gray-700">
+                  <td className="px-6 py-4 font-mono font-bold text-amber-600">{row.id}</td>
+                  <td className="px-6 py-4">
+                    <p className="font-bold text-gray-900">{row.desc}</p>
+                    <p className="text-[10px] text-gray-500">{row.contractor}</p>
+                  </td>
+                  <td className="px-6 py-4 text-right font-bold text-gray-900">{row.estAmt}</td>
+                  <td className="px-6 py-4">
+                    <Badge variant={row.rule.includes('NEC') ? 'purple' : 'info'}>{row.rule}</Badge>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="flex flex-col items-start space-y-1">
+                      <span className="font-bold text-gray-700">{row.status}</span>
+                      {row.daysLeft !== '-' && <span className="text-[10px] text-rose-500 font-bold flex items-center"><Clock className="w-3 h-3 mr-1"/> {row.daysLeft} left</span>}
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </Card>
+    </div>
+  );
+};
+
+
+// --- App Shell (Layout & Navigation) ---
+export default function App() {
+  const [activeMainModule, setActiveMainModule] = useState("Payment");
+  const [activeSubModule, setActiveSubModule] = useState("Valuation");
+  const [isSidebarOpen, setSidebarOpen] = useState(true);
+
+  // Main Sidebar Configuration
+  const mainSidebarItems = [
+    { type: "divider", label: "Strategy" },
+    { id: "Dashboard", label: "Executive Dashboard", icon: LayoutDashboard },
+    { id: "Portfolio", label: "Portfolio (SSOT)", icon: Layers },
+    { type: "divider", label: "Execution Modules" },
+    { id: "Approvals", label: "Gov Approvals", icon: FileCheck },
+    { id: "Procurement", label: "Procurement", icon: ShoppingCart },
+    { id: "Design", label: "Design Health", icon: PenTool },
+    { id: "Finance", label: "Finance", icon: Wallet },
+    { id: "Payment", label: "Jarvis PAY", icon: CreditCard },
+    { id: "Progress", label: "Eagle Eye", icon: Eye },
+    { id: "Quality", label: "Jarvis DWSS", icon: ShieldCheck },
+  ];
+
+  // Secondary Sidebar
+  const paymentSubMenuItems = [
+    { type: "search", placeholder: "Search forms/reports" },
+    { type: "title", label: "Process Center" },
+    { id: "Tasks", label: "Pending Tasks", icon: Inbox, badge: "3" },
+    { id: "CC", label: "Copied to Me", icon: Send, badge: "1" },
+    { id: "Processed", label: "Processed", icon: CheckSquare },
+    { id: "Initiated", label: "Initiated by Me", icon: FileEdit },
+    { type: "spacer" },
+    { type: "title", label: "Jarvis PAY Core" },
+    { id: "Overview", label: "Payment Overview", icon: PieChart },
+    { id: "Valuation", label: "AI Valuation (Eagle Eye)", icon: Cpu, badge: "1" },
+    { id: "VO", label: "Variation Order (CE)", icon: FileWarning, badge: "2" },
+    { type: "group", label: "Payment Ledgers" },
+    { id: "MC_List", label: "Payment for MC List", icon: FileBarChart, isChild: true },
+    { id: "NSC_List", label: "Payment for NSC List", icon: FileBarChart, isChild: true },
+  ];
+
+  return (
+    <div className="min-h-screen bg-[#F0F2F5] flex font-sans text-gray-900 antialiased overflow-hidden">
+      
+      {/* 1. Main Sidebar */}
+      <aside className={`bg-white border-r border-gray-200 transition-all duration-300 flex flex-col shrink-0 ${isSidebarOpen ? 'w-56' : 'w-16'} relative z-20`}>
+        <div className="p-4 flex items-center justify-center h-16 shrink-0 border-b border-gray-100">
+          {isSidebarOpen ? (
+            <span className="font-bold text-xl tracking-tight text-gray-800 uppercase">Jarvis<span className="text-[#208A9B]">PMO</span></span>
+          ) : (
+            <div className="w-8 h-8 bg-[#208A9B] rounded flex items-center justify-center shadow-sm shrink-0">
+               <span className="text-white font-black text-sm italic">J</span>
+            </div>
+          )}
+        </div>
+
+        <nav className="flex-1 px-2 py-4 space-y-1 overflow-y-auto no-scrollbar">
+          {mainSidebarItems.map((item, idx) => {
+            if (item.type === 'divider') {
+              return isSidebarOpen ? (
+                <div key={idx} className="px-4 pt-5 pb-2 text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+                  {item.label}
+                </div>
+              ) : <div key={idx} className="h-4" />;
+            }
+            const isActive = activeMainModule === item.id;
+            return (
+              <button
+                key={item.id}
+                onClick={() => { setActiveMainModule(item.id); setActiveSubModule("Tasks"); }}
+                className={`w-full flex items-center space-x-3 px-4 py-2.5 rounded-md transition-all group ${isActive ? 'bg-[#E6F7FF] text-[#1890FF] font-medium' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'}`}
+              >
+                <item.icon className={`w-4 h-4 shrink-0 transition-colors ${isActive ? 'text-[#1890FF]' : 'text-gray-400 group-hover:text-gray-500'}`} />
+                {isSidebarOpen && <span className="text-[13px]">{item.label}</span>}
+              </button>
+            );
+          })}
+        </nav>
+      </aside>
+
+      {/* 2. Secondary Sidebar (Payment Module) */}
+      {activeMainModule === "Payment" && isSidebarOpen && (
+        <aside className="w-64 bg-white border-r border-gray-200 flex flex-col shrink-0 z-10">
+          <nav className="flex-1 py-4 overflow-y-auto no-scrollbar">
+            {paymentSubMenuItems.map((item, idx) => {
+              
+              if (item.type === 'search') {
+                return (
+                  <div key={idx} className="px-4 mb-4 mt-2">
+                    <div className="relative flex items-center">
+                      <input type="text" placeholder={item.placeholder} className="w-full pl-3 pr-8 py-1.5 text-xs border border-gray-300 rounded-full focus:outline-none focus:border-[#1890FF]" />
+                      <Search className="w-3.5 h-3.5 text-gray-400 absolute right-3" />
+                      <button className="ml-2 w-5 h-5 rounded-full bg-[#E6F7FF] text-[#1890FF] flex items-center justify-center shrink-0">
+                        <Plus className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  </div>
+                );
+              }
+
+              if (item.type === 'title') {
+                return (
+                  <div key={idx} className="px-4 pb-2 pt-2 flex items-center justify-between text-xs font-semibold text-gray-800 cursor-pointer hover:bg-gray-50 py-2 rounded-xl mx-2">
+                     <div className="flex items-center space-x-2">
+                       <Layers className="w-4 h-4 text-[#5C6BC0]" />
+                       <span>{item.label}</span>
+                     </div>
+                     <ChevronDown className="w-4 h-4 text-gray-400" />
+                  </div>
+                );
+              }
+
+              if (item.type === 'group') {
+                return (
+                  <div key={idx} className="px-4 pt-4 pb-2 flex items-center space-x-3 text-xs font-semibold text-gray-800 cursor-pointer hover:bg-gray-50 mx-2 rounded-xl">
+                     <Folder className="w-4 h-4 text-[#5C6BC0] fill-[#5C6BC0]/20" />
+                     <span>{item.label}</span>
+                  </div>
+                );
+              }
+
+              if (item.type === 'spacer') {
+                return <div key={idx} className="my-2 border-t border-gray-100 mx-5" />;
+              }
+              
+              const isActive = activeSubModule === item.id;
+              
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => setActiveSubModule(item.id)}
+                  className={`mx-2 w-[calc(100%-1rem)] flex items-center justify-between px-4 py-2 rounded-xl transition-all ${
+                    isActive ? 'bg-[#F0F7FF] text-[#1890FF] shadow-[inset_0_0_0_1px_rgba(24,144,255,0.14)]' : 'text-gray-600 hover:bg-gray-50'
+                  } ${item.isChild ? 'pl-11' : 'pl-8'}`}
+                >
+                  <div className="flex items-center space-x-2.5 min-w-0">
+                     {item.icon && <item.icon className={`w-3.5 h-3.5 shrink-0 ${isActive ? 'text-[#1890FF]' : 'text-gray-400'}`} />}
+                     <span className="text-xs font-medium truncate leading-5">{item.label}</span>
+                  </div>
+                  {item.badge && (
+                    <span className="bg-[#FF4D4F] text-white text-[9px] font-bold px-1.5 py-[1px] rounded-full leading-none">{item.badge}</span>
+                  )}
+                </button>
+              );
+            })}
+          </nav>
+        </aside>
+      )}
+
+      {/* 3. Main Content Area */}
+      <main className="flex-1 flex flex-col h-screen overflow-hidden">
+        {/* Top Header */}
+        <header className="bg-white border-b border-gray-200 h-16 flex items-center justify-between px-8 shrink-0 z-30">
+          <div className="flex items-center space-x-4">
+             <button onClick={() => setSidebarOpen(!isSidebarOpen)} className="p-1.5 hover:bg-gray-100 rounded-lg text-gray-500 transition-colors">
+               <ChevronRight className={`w-4 h-4 transition-transform ${isSidebarOpen ? 'rotate-180' : ''}`} />
+             </button>
+             <div className="h-4 w-px bg-gray-200 mx-1" />
+             <div className="flex items-center text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+                Portfolios <ChevronRight className="w-3 h-3 mx-1.5" /> 
+                <span className="text-gray-800">Horizon Estates</span> <ChevronRight className="w-3 h-3 mx-1.5" />
+                <span className="text-[#208A9B]">{activeMainModule}</span>
+             </div>
+          </div>
+          <div className="flex items-center space-x-5">
+            <button 
+              onClick={() => setActiveSubModule("Overview")}
+              className="px-3 py-1.5 bg-[#208A9B] text-white text-xs font-bold rounded shadow-sm hover:bg-[#1a7584] transition-colors"
+            >
+              Overview Dashboard
+            </button>
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" />
+              <input type="text" placeholder="Search SSOT data..." className="pl-9 pr-4 py-1.5 bg-gray-50 border border-gray-200 rounded-lg text-xs focus:ring-2 focus:ring-[#208A9B] focus:bg-white outline-none w-64 transition-all" />
+            </div>
+            <button className="p-2 text-gray-400 hover:bg-gray-100 rounded-full relative transition-colors">
+               <Bell className="w-4 h-4" />
+               <span className="absolute top-1 right-1 w-2 h-2 bg-rose-500 rounded-full border-2 border-white shadow-sm" />
+            </button>
+            <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-[#208A9B] to-blue-500 text-white flex items-center justify-center text-xs font-bold shadow-md cursor-pointer hover:shadow-lg transition-shadow border border-white">
+              JD
+            </div>
+          </div>
+        </header>
+
+        {/* Scrollable Workspace */}
+        <div className="flex-1 overflow-y-auto p-6 no-scrollbar relative">
+          <div className="max-w-full mx-auto pb-12 h-full">
+             {activeMainModule === "Payment" ? (
+                activeSubModule === "Tasks" ? <PendingTasksView /> :
+                activeSubModule === "Overview" ? <PaymentDashboardView /> : 
+                activeSubModule === "MC_List" ? <PaymentMCListView /> :
+                activeSubModule === "NSC_List" ? <PaymentNSCListView /> :
+                activeSubModule === "Valuation" ? <PaymentValuationView /> :
+                activeSubModule === "VO" ? <VariationOrderView /> :
+                (
+                  <div className="flex flex-col items-center justify-center h-[50vh] text-gray-400 bg-white rounded-xl border border-gray-200 shadow-sm">
+                    <FileDigit className="w-12 h-12 mb-4 opacity-20 text-[#208A9B]" />
+                    <p className="text-sm">View for <strong className="text-gray-600">{paymentSubMenuItems.find(i => i.id === activeSubModule)?.label}</strong> is under development.</p>
+                  </div>
+                )
+             ) : (
+                <div className="flex flex-col items-center justify-center h-[60vh] text-gray-400 bg-white rounded-xl border border-gray-200 shadow-sm">
+                  <LayoutDashboard className="w-16 h-16 mb-4 opacity-10" />
+                  <p className="text-sm font-medium">Select <strong className="text-gray-700">Jarvis PAY</strong> from the left menu to view the interactive payment module.</p>
+                </div>
+             )}
+          </div>
+        </div>
+      </main>
+    </div>
+  );
+}

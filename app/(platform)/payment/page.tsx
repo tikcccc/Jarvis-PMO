@@ -1,5 +1,5 @@
-import { GenericModulePage } from "@/components/modules/generic/generic-module-page";
+import { PaymentPage } from "@/components/modules/payment/payment-page";
 
 export default function PaymentRoute() {
-  return <GenericModulePage moduleId="payment" />;
+  return <PaymentPage />;
 }

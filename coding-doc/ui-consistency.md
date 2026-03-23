@@ -71,8 +71,9 @@ The shell should keep these proportions and behaviors:
   - search box and compact icon actions on the right
 - content area:
   - scrollable
-  - generous page padding
-  - centered max-width container
+  - generous page padding for standard routes
+  - centered max-width container for standard routes
+  - approved embedded-workbench routes such as `/payment` may render full-bleed inside the shared shell when the module needs to host an external system surface
 
 ### 4.2 Token Direction
 

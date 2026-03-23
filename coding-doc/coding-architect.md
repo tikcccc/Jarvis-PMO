@@ -78,7 +78,7 @@ The following elements are shared application chrome and should not drift betwee
 
 - left sidebar
 - top header
-- page container width and padding
+- page container width and padding, except for approved full-bleed embedded-workbench routes such as `/payment`
 - floating Jarvis intelligence action button
 - card/badge/progress-bar language
 

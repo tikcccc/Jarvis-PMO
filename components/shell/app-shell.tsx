@@ -7,11 +7,13 @@ import { FloatingAgentButton } from "@/components/shell/floating-agent-button";
 import { Sidebar } from "@/components/shell/sidebar";
 import { Topbar } from "@/components/shell/topbar";
 import { getNavItemByPath } from "@/lib/navigation";
+import { cn } from "@/lib/utils";
 
 export function AppShell({ children }: Readonly<{ children: React.ReactNode }>) {
   const pathname = usePathname();
   const [isSidebarOpen, setSidebarOpen] = useState(true);
   const activeItem = getNavItemByPath(pathname);
+  const isFullBleedRoute = pathname === "/payment";
 
   return (
     <div className="jarvis-shell min-h-screen bg-[#FDFDFE] flex font-sans text-gray-900 antialiased overflow-hidden">
@@ -22,8 +24,13 @@ export function AppShell({ children }: Readonly<{ children: React.ReactNode }>) 
           isSidebarOpen={isSidebarOpen}
           onToggleSidebar={() => setSidebarOpen((current) => !current)}
         />
-        <div className="jarvis-content flex-1 overflow-y-auto p-8 no-scrollbar bg-[#FDFDFE] relative">
-          <div className="max-w-6xl mx-auto pb-20">{children}</div>
+        <div
+          className={cn(
+            "jarvis-content flex-1 overflow-y-auto no-scrollbar bg-[#FDFDFE] relative",
+            isFullBleedRoute ? "p-0" : "p-8"
+          )}
+        >
+          <div className={cn(isFullBleedRoute ? "min-h-full" : "max-w-6xl mx-auto pb-20")}>{children}</div>
         </div>
       </main>
       <FloatingAgentButton />

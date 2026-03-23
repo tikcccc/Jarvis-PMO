@@ -20,17 +20,17 @@
     {
       "severity": "warn",
       "code": "MISSING_MODULE_DOC",
+      "message": "Missing module doc: /home/tikhong/Jarvis PMO/coding-doc/modules/procurement.md"
+    },
+    {
+      "severity": "warn",
+      "code": "MISSING_MODULE_DOC",
+      "message": "Missing module doc: /home/tikhong/Jarvis PMO/coding-doc/modules/design.md"
+    },
+    {
+      "severity": "warn",
+      "code": "MISSING_MODULE_DOC",
       "message": "Missing module doc: /home/tikhong/Jarvis PMO/coding-doc/modules/finance.md"
-    },
-    {
-      "severity": "warn",
-      "code": "MISSING_MODULE_DOC",
-      "message": "Missing module doc: /home/tikhong/Jarvis PMO/coding-doc/modules/payment.md"
-    },
-    {
-      "severity": "warn",
-      "code": "MISSING_MODULE_DOC",
-      "message": "Missing module doc: /home/tikhong/Jarvis PMO/coding-doc/modules/progress.md"
     },
     {
       "severity": "warn",

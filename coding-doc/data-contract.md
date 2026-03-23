@@ -419,6 +419,112 @@ export interface ProgressZone {
   tradeQuantities: ProgressTradeQuantity[];
   impactAnalysis: ProgressImpactAnalysis;
 }
+
+export interface PaymentTask {
+  id: string;
+  typeLabel: string;
+  title: string;
+  context: string;
+  contractor: string;
+  receivedLabel: string;
+  deadlineLabel: string;
+  priorityLabel: "High" | "Medium";
+  priorityTone: Tone;
+}
+
+export interface PaymentOverviewMetric {
+  id: string;
+  label: string;
+  valueLabel: string;
+  detailLabel?: string;
+  changeLabel?: string;
+  tone: Tone;
+  icon?: IconName;
+}
+
+export interface PaymentProgressComparisonItem {
+  id: string;
+  label: string;
+  aiPercent: number;
+  contractorPercent: number;
+  aiSeriesLabel: string;
+  contractorSeriesLabel: string;
+  alertThresholdPercent: number;
+}
+
+export interface PaymentContractRuleItem {
+  id: string;
+  label: string;
+  statusLabel: string;
+  tone: Tone;
+}
+
+export interface PaymentLiveImpactCard {
+  label: string;
+  valueLabel: string;
+  noteLabel: string;
+  tone: Tone;
+}
+
+export interface PaymentRuleBucket {
+  id: string;
+  label: string;
+  tone: Tone;
+  accentHex: string;
+}
+
+export type PaymentCertificateSummaryBucket = "settled" | "processing" | "flagged";
+
+export interface PaymentCertificateRecord {
+  id: string;
+  statusLabel: string;
+  statusTone: Tone;
+  summaryBucket: PaymentCertificateSummaryBucket;
+  certificateNo: string;
+  periodLabel?: string;
+  contractTitle: string;
+  contractor: string;
+  amountValue: number;
+  ruleLabel: string;
+  ruleTone: Tone;
+  ruleBucketId: string;
+  variationLabel: string;
+  aiProgressLabel: string;
+  aiProgressTone: Tone;
+  txHashLabel?: string;
+  auditState: "secured" | "pending";
+}
+
+export interface PaymentValuationRecord {
+  id: string;
+  zoneLabel: string;
+  contractor: string;
+  contractTitle: string;
+  claimPercent: number;
+  aiPercent: number;
+  claimAmountValue: number;
+  aiAmountValue: number;
+  statusLabel: string;
+  statusTone: Tone;
+  deviationLabel: string;
+  cameraLabel: string;
+  issueLabel: string;
+  latitude: number;
+  longitude: number;
+  mapLeftPercent: string;
+  mapTopPercent: string;
+}
+
+export interface PaymentVariationRecord {
+  id: string;
+  description: string;
+  contractor: string;
+  estimatedAmountValue: number;
+  ruleLabel: string;
+  ruleTone: Tone;
+  statusLabel: string;
+  daysLeftLabel?: string;
+}
 ```
 
 ## 4. Data File Ownership
@@ -463,6 +569,16 @@ Suggested file mapping:
 - `lib/mock-data/progress.ts`
   - `ProgressSummaryMetric[]`
   - `ProgressZone[]`
+- `lib/mock-data/payment.ts`
+  - `PaymentTask[]`
+  - `PaymentOverviewMetric[]`
+  - `PaymentProgressComparisonItem[]`
+  - `PaymentContractRuleItem[]`
+  - `PaymentLiveImpactCard`
+  - `PaymentRuleBucket[]`
+  - `PaymentCertificateRecord[]`
+  - `PaymentValuationRecord[]`
+  - `PaymentVariationRecord[]`
 
 ## 5. Contract Rules
 
