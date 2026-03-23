@@ -1,5 +1,5 @@
 {
-  "doc_dir": "/home/dministrator/Jarvis-PMO/coding-doc",
+  "doc_dir": "/home/tikhong/Jarvis PMO/coding-doc",
   "files_count": 13,
   "folders": [
     "modules"
@@ -27,22 +27,22 @@
           "text": "1. Source Governance"
         },
         {
-          "line": 9,
+          "line": 10,
           "level": 2,
           "text": "2. Product Structure"
         },
         {
-          "line": 15,
+          "line": 16,
           "level": 2,
           "text": "3. Visual Fidelity"
         },
         {
-          "line": 23,
+          "line": 24,
           "level": 2,
           "text": "4. Layout Consistency"
         },
         {
-          "line": 32,
+          "line": 33,
           "level": 2,
           "text": "5. Behavioral Consistency"
         },
@@ -52,7 +52,7 @@
           "text": "6. Technical Acceptance"
         },
         {
-          "line": 57,
+          "line": 58,
           "level": 2,
           "text": "7. Delivery Constraint"
         }
@@ -236,92 +236,92 @@
           "text": "2. Source Priority"
         },
         {
-          "line": 23,
+          "line": 27,
           "level": 2,
           "text": "3. Product Information Architecture"
         },
         {
-          "line": 45,
+          "line": 49,
           "level": 2,
           "text": "4. Technology Decisions"
         },
         {
-          "line": 63,
+          "line": 67,
           "level": 2,
           "text": "5. Architectural Principles"
         },
         {
-          "line": 65,
+          "line": 69,
           "level": 3,
           "text": "5.1 High-Fidelity Before Expansion"
         },
         {
-          "line": 71,
+          "line": 75,
           "level": 3,
           "text": "5.2 Shared Shell First"
         },
         {
-          "line": 81,
+          "line": 85,
           "level": 3,
           "text": "5.3 Mocked Data, Real Component Boundaries"
         },
         {
-          "line": 90,
+          "line": 94,
           "level": 2,
           "text": "6. Proposed Next.js File Structure"
         },
         {
-          "line": 164,
+          "line": 168,
           "level": 2,
           "text": "7. Rendering Model"
         },
         {
-          "line": 173,
+          "line": 177,
           "level": 2,
           "text": "8. Shared UI System"
         },
         {
-          "line": 177,
+          "line": 181,
           "level": 3,
           "text": "8.1 Global Shell"
         },
         {
-          "line": 184,
+          "line": 188,
           "level": 3,
           "text": "8.2 Primitive Components"
         },
         {
-          "line": 202,
+          "line": 206,
           "level": 3,
           "text": "8.3 Accent System"
         },
         {
-          "line": 210,
+          "line": 214,
           "level": 3,
           "text": "8.4 Information Density"
         },
         {
-          "line": 217,
+          "line": 221,
           "level": 3,
           "text": "8.5 Motion System"
         },
         {
-          "line": 226,
+          "line": 230,
           "level": 2,
           "text": "9. Module Composition Rules"
         },
         {
-          "line": 243,
+          "line": 247,
           "level": 2,
           "text": "10. Data Ownership"
         },
         {
-          "line": 257,
+          "line": 261,
           "level": 2,
           "text": "11. Migration Strategy From Existing Prototype"
         },
         {
-          "line": 265,
+          "line": 269,
           "level": 2,
           "text": "12. Non-Goals For This Phase"
         }
@@ -349,37 +349,37 @@
           "text": "Phase 1. Document and Freeze the Baseline"
         },
         {
-          "line": 14,
+          "line": 15,
           "level": 2,
           "text": "Phase 2. Scaffold the Next.js Frontend"
         },
         {
-          "line": 21,
+          "line": 22,
           "level": 2,
           "text": "Phase 3. Extract Shared UI"
         },
         {
-          "line": 31,
+          "line": 32,
           "level": 2,
           "text": "Phase 4. Migrate High-Fidelity Screens"
         },
         {
-          "line": 48,
+          "line": 50,
           "level": 2,
           "text": "Phase 5. Migrate Remaining Modules"
         },
         {
-          "line": 64,
+          "line": 67,
           "level": 2,
           "text": "Phase 6. QA and Consistency Pass"
         },
         {
-          "line": 75,
+          "line": 78,
           "level": 2,
           "text": "Deliverables"
         },
         {
-          "line": 83,
+          "line": 86,
           "level": 2,
           "text": "Implementation Constraints"
         }
@@ -407,27 +407,27 @@
           "text": "2. Source Governance"
         },
         {
-          "line": 14,
+          "line": 16,
           "level": 2,
           "text": "3. Stack and Tooling"
         },
         {
-          "line": 30,
+          "line": 32,
           "level": 2,
           "text": "4. UI and Component Rules"
         },
         {
-          "line": 50,
+          "line": 52,
           "level": 2,
           "text": "5. Data and Typing Rules"
         },
         {
-          "line": 58,
+          "line": 60,
           "level": 2,
           "text": "6. Environment and Integration Rules"
         },
         {
-          "line": 65,
+          "line": 67,
           "level": 2,
           "text": "7. Review Baseline"
         }
@@ -460,17 +460,17 @@
           "text": "3. Page-Specific Types"
         },
         {
-          "line": 255,
+          "line": 337,
           "level": 2,
           "text": "4. Data File Ownership"
         },
         {
-          "line": 285,
+          "line": 377,
           "level": 2,
           "text": "5. Contract Rules"
         },
         {
-          "line": 293,
+          "line": 385,
           "level": 2,
           "text": "6. Input Source Rule"
         }
@@ -498,47 +498,47 @@
           "text": "2. Approved Source Inputs"
         },
         {
-          "line": 17,
+          "line": 18,
           "level": 2,
           "text": "3. Business Intent"
         },
         {
-          "line": 23,
+          "line": 24,
           "level": 2,
           "text": "4. Current State and Gap"
         },
         {
-          "line": 28,
+          "line": 29,
           "level": 2,
           "text": "5. Required UI Composition"
         },
         {
-          "line": 38,
+          "line": 39,
           "level": 2,
           "text": "6. Data and Code Ownership"
         },
         {
-          "line": 46,
+          "line": 47,
           "level": 2,
           "text": "7. Interaction Notes"
         },
         {
-          "line": 54,
+          "line": 55,
           "level": 2,
           "text": "8. Do Not Drift"
         },
         {
-          "line": 59,
+          "line": 60,
           "level": 2,
           "text": "9. Implementation Tasks"
         },
         {
-          "line": 65,
+          "line": 66,
           "level": 2,
           "text": "10. Acceptance Checks"
         },
         {
-          "line": 71,
+          "line": 72,
           "level": 2,
           "text": "11. Documentation Sync"
         }
@@ -566,47 +566,47 @@
           "text": "2. Approved Source Inputs"
         },
         {
-          "line": 31,
+          "line": 37,
           "level": 2,
           "text": "3. Business Intent"
         },
         {
-          "line": 43,
+          "line": 49,
           "level": 2,
           "text": "4. Current State and Gap"
         },
         {
-          "line": 54,
+          "line": 61,
           "level": 2,
           "text": "5. Required UI Composition"
         },
         {
-          "line": 81,
+          "line": 91,
           "level": 2,
           "text": "6. Data and Code Ownership"
         },
         {
-          "line": 98,
+          "line": 108,
           "level": 2,
           "text": "7. Interaction Notes"
         },
         {
-          "line": 116,
+          "line": 126,
           "level": 2,
           "text": "8. Do Not Drift"
         },
         {
-          "line": 129,
+          "line": 139,
           "level": 2,
           "text": "9. Implementation Tasks"
         },
         {
-          "line": 137,
+          "line": 147,
           "level": 2,
           "text": "10. Acceptance Checks"
         },
         {
-          "line": 147,
+          "line": 157,
           "level": 2,
           "text": "11. Documentation Sync"
         }
@@ -634,47 +634,47 @@
           "text": "2. Approved Source Inputs"
         },
         {
-          "line": 30,
+          "line": 34,
           "level": 2,
           "text": "3. Business Intent"
         },
         {
-          "line": 42,
+          "line": 46,
           "level": 2,
           "text": "4. Current State and Gap"
         },
         {
-          "line": 57,
+          "line": 59,
           "level": 2,
           "text": "5. Required UI Composition"
         },
         {
-          "line": 83,
+          "line": 82,
           "level": 2,
           "text": "6. Data and Code Ownership"
         },
         {
-          "line": 100,
+          "line": 99,
           "level": 2,
           "text": "7. Interaction Notes"
         },
         {
-          "line": 116,
+          "line": 113,
           "level": 2,
           "text": "8. Do Not Drift"
         },
         {
-          "line": 127,
+          "line": 124,
           "level": 2,
           "text": "9. Implementation Tasks"
         },
         {
-          "line": 135,
+          "line": 133,
           "level": 2,
           "text": "10. Acceptance Checks"
         },
         {
-          "line": 145,
+          "line": 143,
           "level": 2,
           "text": "11. Documentation Sync"
         }
@@ -702,47 +702,47 @@
           "text": "2. Approved Source Inputs"
         },
         {
-          "line": 30,
+          "line": 34,
           "level": 2,
           "text": "3. Business Intent"
         },
         {
-          "line": 42,
+          "line": 46,
           "level": 2,
           "text": "4. Current State and Gap"
         },
         {
-          "line": 54,
+          "line": 58,
           "level": 2,
           "text": "5. Required UI Composition"
         },
         {
-          "line": 76,
+          "line": 80,
           "level": 2,
           "text": "6. Data and Code Ownership"
         },
         {
-          "line": 92,
+          "line": 96,
           "level": 2,
           "text": "7. Interaction Notes"
         },
         {
-          "line": 109,
+          "line": 113,
           "level": 2,
           "text": "8. Do Not Drift"
         },
         {
-          "line": 121,
+          "line": 125,
           "level": 2,
           "text": "9. Implementation Tasks"
         },
         {
-          "line": 129,
+          "line": 133,
           "level": 2,
           "text": "10. Acceptance Checks"
         },
         {
-          "line": 138,
+          "line": 142,
           "level": 2,
           "text": "11. Documentation Sync"
         }
@@ -780,27 +780,27 @@
           "text": "2.2 Component and Route Smoke Checks"
         },
         {
-          "line": 23,
+          "line": 22,
           "level": 3,
           "text": "2.3 Visual Regression Focus"
         },
         {
-          "line": 36,
+          "line": 35,
           "level": 2,
           "text": "3. Manual QA Checklist"
         },
         {
-          "line": 65,
+          "line": 64,
           "level": 2,
           "text": "4. Recommended Automated UI Coverage"
         },
         {
-          "line": 79,
+          "line": 78,
           "level": 2,
           "text": "5. Content Integrity Checks"
         },
         {
-          "line": 86,
+          "line": 85,
           "level": 2,
           "text": "6. Exit Criteria"
         }
@@ -828,177 +828,177 @@
           "text": "2. Reference Baseline"
         },
         {
-          "line": 19,
+          "line": 24,
           "level": 2,
           "text": "3. Governance Model"
         },
         {
-          "line": 23,
+          "line": 28,
           "level": 3,
           "text": "3.1 Layer One: Shell and System Invariants"
         },
         {
-          "line": 37,
+          "line": 42,
           "level": 3,
           "text": "3.2 Layer Two: Module-Level Composition"
         },
         {
-          "line": 51,
+          "line": 56,
           "level": 2,
           "text": "4. Layer One: Shell and System Invariants"
         },
         {
-          "line": 53,
+          "line": 58,
           "level": 3,
           "text": "4.1 Shell Formula"
         },
         {
-          "line": 72,
+          "line": 77,
           "level": 3,
           "text": "4.2 Token Direction"
         },
         {
-          "line": 74,
+          "line": 79,
           "level": 4,
           "text": "Colors"
         },
         {
-          "line": 85,
+          "line": 90,
           "level": 4,
           "text": "Radius and Elevation"
         },
         {
-          "line": 91,
+          "line": 96,
           "level": 4,
           "text": "Typography Baseline"
         },
         {
-          "line": 98,
+          "line": 103,
           "level": 3,
           "text": "4.3 Shared Component Semantics"
         },
         {
-          "line": 100,
+          "line": 105,
           "level": 4,
           "text": "Cards"
         },
         {
-          "line": 108,
+          "line": 113,
           "level": 4,
           "text": "Badges"
         },
         {
-          "line": 114,
+          "line": 119,
           "level": 4,
           "text": "Progress Indicators"
         },
         {
-          "line": 120,
+          "line": 125,
           "level": 4,
           "text": "Tables and Lists"
         },
         {
-          "line": 126,
+          "line": 131,
           "level": 4,
           "text": "Dark Panels"
         },
         {
-          "line": 138,
+          "line": 143,
           "level": 3,
           "text": "4.4 Icon Rules"
         },
         {
-          "line": 145,
+          "line": 150,
           "level": 3,
           "text": "4.5 Motion and Transition Rules"
         },
         {
-          "line": 154,
+          "line": 159,
           "level": 2,
           "text": "5. Layer Two: Module-Level Composition"
         },
         {
-          "line": 156,
+          "line": 161,
           "level": 3,
           "text": "5.1 Consistency Is Not Sameness"
         },
         {
-          "line": 180,
+          "line": 185,
           "level": 3,
           "text": "5.2 Attention Hierarchy and Heatmap Rules"
         },
         {
-          "line": 196,
+          "line": 201,
           "level": 3,
           "text": "5.3 Typography Hierarchy"
         },
         {
-          "line": 216,
+          "line": 221,
           "level": 3,
           "text": "5.4 Layout Rhythm"
         },
         {
-          "line": 235,
+          "line": 240,
           "level": 3,
           "text": "5.5 Emphasis Budget"
         },
         {
-          "line": 250,
+          "line": 255,
           "level": 3,
           "text": "5.6 Responsive Reprioritization"
         },
         {
-          "line": 261,
+          "line": 266,
           "level": 3,
           "text": "5.7 Motion Hierarchy"
         },
         {
-          "line": 268,
+          "line": 273,
           "level": 3,
           "text": "5.8 Analytical Visualization Rules"
         },
         {
-          "line": 279,
+          "line": 284,
           "level": 2,
           "text": "6. Module Archetype Guidance"
         },
         {
-          "line": 283,
+          "line": 288,
           "level": 3,
           "text": "Finance"
         },
         {
-          "line": 288,
+          "line": 293,
           "level": 3,
           "text": "Approvals"
         },
         {
-          "line": 293,
+          "line": 298,
           "level": 3,
           "text": "Procurement"
         },
         {
-          "line": 298,
+          "line": 303,
           "level": 3,
           "text": "Milestones"
         },
         {
-          "line": 303,
+          "line": 308,
           "level": 3,
           "text": "Portfolio"
         },
         {
-          "line": 308,
+          "line": 313,
           "level": 3,
           "text": "Progress, Quality, Safety"
         },
         {
-          "line": 313,
+          "line": 318,
           "level": 2,
           "text": "7. Skill Usage Guidance"
         },
         {
-          "line": 319,
+          "line": 324,
           "level": 2,
           "text": "8. Allowed Changes"
         }

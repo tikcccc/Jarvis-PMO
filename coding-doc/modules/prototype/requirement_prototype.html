@@ -1,21 +1,67 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
-  LayoutDashboard, Layers, Target, Milestone, FileCheck, ShoppingCart, 
-  PenTool, Wallet, CreditCard, Eye, ShieldCheck, HardHat, Key, Search, 
-  Bell, MoreVertical, ChevronRight, Activity, Clock, Scan, Database, 
-  FileText, ArrowRightLeft, ShieldAlert, History, Edit3, Link as LinkIcon,
-  AlertTriangle, CheckCircle2, GitCommit, GitBranch, RefreshCw
+  LayoutDashboard, 
+  Layers, 
+  Target, 
+  Milestone, 
+  FileCheck, 
+  ShoppingCart, 
+  PenTool, 
+  Wallet, 
+  CreditCard, 
+  Eye, 
+  ShieldCheck, 
+  HardHat, 
+  Key,
+  Search,
+  Bell,
+  MoreVertical,
+  ChevronRight,
+  ArrowUpRight,
+  TrendingUp,
+  MapPin,
+  Activity,
+  CheckCircle2,
+  AlertCircle,
+  Clock,
+  Scan,
+  Database,
+  Filter,
+  Maximize2,
+  ExternalLink,
+  Info,
+  Calendar,
+  FileText,
+  UploadCloud,
+  Split,
+  ShieldAlert,
+  ArrowRightLeft,
+  DollarSign,
+  BarChart3,
+  Percent,
+  AlertTriangle,
+  GitBranch,
+  GitCommit,
+  Radio,
+  History,
+  LayoutGrid,
+  List,
+  ArrowRight,
+  ArrowLeft
 } from 'lucide-react';
 
-// --- Shared UI Components ---
+// --- Utility Components ---
 
-const Card = ({ children, className = "" }) => (
-  <div className={`bg-white rounded-xl border border-gray-100 shadow-sm transition-all hover:shadow-md ${className}`}>
+const Card = ({ children, className = "", onClick = null }) => (
+  <div 
+    onClick={onClick}
+    className={`bg-white rounded-xl border border-gray-100 shadow-sm transition-all hover:shadow-md ${onClick ? 'cursor-pointer hover:border-blue-200' : ''} ${className}`}
+  >
     {children}
   </div>
 );
 
-const Badge = ({ children, variant = "default" }) => {
+const Badge = ({ children, variant = "default", className = "" }) => {
   const styles = {
     default: "bg-gray-100 text-gray-700",
     success: "bg-emerald-50 text-emerald-700 border border-emerald-100",
@@ -24,476 +70,686 @@ const Badge = ({ children, variant = "default" }) => {
     info: "bg-blue-50 text-blue-700 border border-blue-100",
   };
   return (
-    <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${styles[variant]}`}>
+    <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${styles[variant]} ${className}`}>
       {children}
     </span>
   );
 };
 
-const ProgressBar = ({ progress, variant = "blue" }) => {
-  const colors = {
-    blue: "bg-blue-500",
-    emerald: "bg-emerald-500",
-    amber: "bg-amber-500",
-    rose: "bg-rose-500",
-  };
-  return (
-    <div className="h-1.5 w-full bg-gray-100 rounded-full overflow-hidden">
-      <div className={`h-full ${colors[variant]} transition-all duration-500`} style={{ width: `${progress}%` }} />
-    </div>
-  );
-}
+// --- Data Configuration (Enriched with PDF 2.2 Key Data Fields) ---
 
-// --- Deep Mock Data (Aligned with JPM PDF Section 2.2 & 2.3) ---
-
-const REQUIREMENTS_DATA = [
+const REQUIREMENTS_ELEMENTS = [
   { 
-    id: 'client_req', 
-    title: "Client Requirements", 
-    integrity: 100, 
-    owner: "PMO Lead", 
-    version: "v2.1", 
-    status: "Synced", 
-    syncTime: "2h ago", 
-    statement: "Deliver a premium estate with strict ESG-S standards.", 
-    specificFields: [
-      { label: "Vision Tags", value: "Timeless Elegance, Net-Zero" },
-      { label: "Functional Specs", value: "120k sqm mixed-use, ADA Compliant" },
-      { label: "Experience KPIs", value: "Acoustics < 35dB, WELL Gold" }
-    ],
-    evidence: ["Vision_Statement_v2.pdf", "Board_Minutes_03.docx"], 
-    linkages: [{ target: "Project Brief", impact: "Direct" }, { target: "Information Requirements", impact: "Indirect" }]
+    id: 'req-1', title: 'Client Requirements', status: 'success', owner: 'J. Doe', version: 'v2.4', completeness: 100, links: ['Design', 'Quality'], drift: null,
+    domainData: {
+      "Vision & KPIs": "Timeless Elegance | Facade Joint ≤ 2mm",
+      "Functional Space": "50,000 sqm Comm. | ADA Class A",
+      "Experience Stds": "Acoustic < 40dB | Lux > 500",
+      "Change Agent Status": "Locked (No recent client changes)"
+    }
   },
   { 
-    id: 'feasibility', 
-    title: "Feasibility Studies", 
-    integrity: 100, 
-    owner: "Finance Dir", 
-    version: "v3.0", 
-    status: "Synced", 
-    syncTime: "5d ago", 
-    statement: "Financial and technical viability baseline.", 
-    specificFields: [
-      { label: "Target IRR", value: "15.2%" },
-      { label: "NPV", value: "$45M" },
-      { label: "Market Assumption", value: "Luxury Retail $120/sqm/mo" }
-    ],
-    evidence: ["Feasibility_Final.pdf", "Market_Analysis.xlsx"], 
-    linkages: [{ target: "Project Budget", impact: "Direct" }]
+    id: 'req-2', title: 'Project Brief', status: 'success', owner: 'S. Smith', version: 'v1.1', completeness: 100, links: ['Portfolio', 'Design'], drift: null,
+    domainData: {
+      "GFA & Capacity": "120,000 sqm | Plot Ratio 5.0",
+      "Target Positioning": "Premium Grade-A | LEED Platinum",
+      "Boundary Constraints": "15m Setback | View Corridor Protected",
+      "Baseline Ratified": "Board Resolution #882 (2025-10)"
+    }
   },
   { 
-    id: 'site_info', 
-    title: "Site Information", 
-    integrity: 82, 
-    owner: "Site Eng", 
-    version: "v1.2", 
-    status: "Drift Detected", 
-    syncTime: "1h ago", 
-    statement: "Geotechnical conditions require deep piling. Minor soil contamination detected.", 
-    specificFields: [
-      { label: "Geotechnical", value: "Deep bedrock at 45m" },
-      { label: "Contamination", value: "Zone B heavy metals detected" },
-      { label: "Constraints", value: "Max height 120m (Aviation constraint)" }
-    ],
-    evidence: ["Geotech_Report_Rev2.pdf", "GIS_Survey.zip"], 
-    linkages: [{ target: "Project Programme", impact: "High Risk" }, { target: "Project Budget", impact: "High Risk" }]
+    id: 'req-3', title: 'Feasibility Studies', status: 'success', owner: 'M. Lee', version: 'v1.0', completeness: 100, links: ['Finance'], drift: null,
+    domainData: {
+      "Market Assumptions": "ASP $25k/sqm | 18mo Absorption",
+      "Financial Metrics": "IRR 14.2% | NPV $85M",
+      "Tech Parameters": "Bored Pile Foundation | Deep Basement",
+      "Risk Mitigation": "Interest Rate Hedge Active"
+    }
   },
   { 
-    id: 'budget', 
-    title: "Project Budget", 
-    integrity: 100, 
-    owner: "Commercial Dir", 
-    version: "v4.1", 
-    status: "Synced", 
-    syncTime: "10m ago", 
-    statement: "Approved Baseline Budget with contingencies.", 
-    specificFields: [
-      { label: "Total EFC", value: "$428.4M" },
-      { label: "Contingency", value: "5% ($21.4M)" },
-      { label: "VO Threshold", value: "10% of Awarded" }
-    ],
-    evidence: ["Budget_Approval_Signed.pdf"], 
-    linkages: [{ target: "Procurement Strategy", impact: "Direct" }]
+    id: 'req-4', title: 'Site Information', status: 'warning', owner: 'R. Chen', version: 'v3.2', completeness: 85, links: ['Approvals', 'Safety'], 
+    drift: 'Boundary adjustment pending Lands Dept review',
+    domainData: {
+      "GIS Coordinates": "Lat 22.3, Lng 114.1 | WGS84",
+      "Underground Cond.": "High Water Table | Utility Clash Detected",
+      "Surroundings": "Residential 50m | Noise Constraint High",
+      "Site Reality Capture": "UAV Scan (2026-03-01) Available"
+    }
   },
   { 
-    id: 'programme', 
-    title: "Project Programme", 
-    integrity: 95, 
-    owner: "Planning Mgr", 
-    version: "v2.0", 
-    status: "Pending Review", 
-    syncTime: "2h ago", 
-    statement: "Master Schedule baseline-v2. Project Handover Mar 2028.", 
-    specificFields: [
-      { label: "Critical Path", value: "Zone B Foundation -> Tower A Struct" },
-      { label: "Handover Date", value: "15-Mar-2028" },
-      { label: "Float", value: "14 Days" }
-    ],
-    evidence: ["P6_Baseline_v2.xer"], 
-    linkages: [{ target: "Responsibility Matrix", impact: "Indirect" }]
+    id: 'req-5', title: 'Project Budget', status: 'danger', owner: 'T. Wong', version: 'v4.0', completeness: 90, links: ['Finance', 'Procurement', 'Design'], 
+    drift: 'Base cost exceeds target by 5% (VO Sum Escalation)',
+    domainData: {
+      "Target Limit (Approved)": "$400.0M USD",
+      "Committed Costs": "$185.2M USD (46.3%)",
+      "Est. Final Cost (EFC)": "$420.0M USD",
+      "Budget Variance": "+$20.0M (Drift Detected)"
+    }
   },
   { 
-    id: 'procurement', 
-    title: "Procurement Strategy", 
-    integrity: 90, 
-    owner: "Procurement Lead", 
-    version: "v1.5", 
-    status: "Synced", 
-    syncTime: "4h ago", 
-    statement: "Target 80% total value via GMP contracts (NEC4 Option C).", 
-    specificFields: [
-      { label: "Contract Model", value: "NEC4 Option C (Target Contract)" },
-      { label: "Tender Packages", value: "14 Main Packages" },
-      { label: "ESG Criteria", value: "Mandatory 20% local sourcing" }
-    ],
-    evidence: ["Procurement_Strategy_Update.pdf"], 
-    linkages: [{ target: "Project Budget", impact: "Direct" }]
+    id: 'req-6', title: 'Project Programme', status: 'success', owner: 'J. Doe', version: 'v2.0', completeness: 100, links: ['Milestones', 'Progress'], drift: null,
+    domainData: {
+      "Critical Milestones": "OP Target: 2027-11 | Handover: 2028-03",
+      "Critical Path Status": "Superstructure Main Frame (On-track)",
+      "Resource Load": "Peak 850 Workers | 4 Tower Cranes",
+      "Schedule Variance": "0 Days Deviation"
+    }
   },
   { 
-    id: 'info_req', 
-    title: "Information Requirements", 
-    integrity: 100, 
-    owner: "BIM Manager", 
-    version: "v2.2", 
-    status: "Synced", 
-    syncTime: "2d ago", 
-    statement: "BIM and digital twin data delivery standards.", 
-    specificFields: [
-      { label: "LOD Standard", value: "LOD 400 (Const), LOD 500 (FM)" },
-      { label: "Classification", value: "OmniClass v2024" },
-      { label: "Format", value: "IFC 4x3, RVT 2024" }
-    ],
-    evidence: ["EIR_Document_v2.pdf", "BIM_Execution_Plan.pdf"], 
-    linkages: [{ target: "Client Requirements", impact: "Direct" }]
+    id: 'req-7', title: 'Procurement Strategy', status: 'success', owner: 'A. Davis', version: 'v1.5', completeness: 100, links: ['Procurement', 'Finance'], drift: null,
+    domainData: {
+      "Subcontracting Model": "Management Contracting | 15 Packages",
+      "Tender Schedule": "MEP & Facade Q3 2026",
+      "Contract Type": "NEC4 Option C (Target Contract)",
+      "Vendor Shortlist": "Pre-qualified 5 Tier-1 Contractors"
+    }
+  },
+  { 
+    id: 'req-8', title: 'Responsibility Matrix', status: 'success', owner: 'PMO Lead', version: 'v2.1', completeness: 100, links: ['Quality', 'Approvals'], drift: null,
+    domainData: {
+      "WBS Structure": "Level 4 Granularity Active",
+      "RACI Assignment": "All Critical Deliverables Mapped",
+      "Deliverable Tracking": "42 Active | 185 Completed",
+      "Execution Status": "100% Compliance (No Overdue)"
+    }
+  },
+  { 
+    id: 'req-9', title: 'Information Requirements', status: 'success', owner: 'BIM Mgr', version: 'v1.0', completeness: 100, links: ['Design', 'Handover'], drift: null,
+    domainData: {
+      "LOD Standard": "Design LOD300 | As-Built LOD500",
+      "Data Dictionary": "OmniClass Classification Validated",
+      "Delivery Format": "Native RVT & OpenBIM (IFC4)",
+      "Audit Status": "Model Check Passed (Zero Clashes)"
+    }
   },
 ];
 
-const VERSION_HISTORY = [
-  { version: "v1.2", date: "Today, 08:30", author: "Recording Agent", action: "Updated Geotech constraints based on new GIS_Survey.zip.", type: "drift" },
-  { version: "v1.1", date: "12 Oct 2025", author: "Site Eng (J.Doe)", action: "Initial site boundary coordinates logged.", type: "baseline" },
-  { version: "v1.0", date: "05 Oct 2025", author: "System", action: "Element initialized from Feasibility output.", type: "baseline" }
-];
+// --- Views ---
 
-// --- Specialized Module View ---
-
-const RequirementsPageView = () => {
-  const [activeElementId, setActiveElementId] = useState('site_info'); // Default to the drifted one to show UI features
-  const activeElement = REQUIREMENTS_DATA.find(r => r.id === activeElementId);
-  const [activeTab, setActiveTab] = useState('attributes'); // Added tab state
+// 1. Overview Page (The "App Center" Command Dashboard)
+const DashboardView = ({ onNavigate }) => {
+  // Config for the 12 Module Summary Cards
+  const moduleSummaries = [
+    { id: 'Portfolio', title: 'Portfolio (SSOT)', icon: Layers, status: 'Healthy', health: 'success', value: '3 Active', label: 'Projects Mapped', desc: 'GIS synchronized. 99.8% Data Integrity.' },
+    { id: 'Requirements', title: 'Requirements', icon: Target, status: '1 Drift', health: 'danger', value: '9/9', label: 'Elements Locked', desc: 'Alert: Project Budget baseline exceeding EFC limit.' },
+    { id: 'Milestones', title: 'Milestones', icon: Milestone, status: 'Warning', health: 'warning', value: '-4 Days', label: 'Critical Path Delay', desc: 'Delay in superstructure package affecting Topping Out.' },
+    { id: 'Approvals', title: 'Gov Approvals', icon: FileCheck, status: 'Healthy', health: 'success', value: '1,242', label: 'Conditions Tracked', desc: 'All precedent conditions met for Phase I.' },
+    { id: 'Procurement', title: 'Procurement', icon: ShoppingCart, status: 'Healthy', health: 'success', value: '2 Active', label: 'Tender Validations', desc: 'Façade package undergoing AI BQ consistency check.' },
+    { id: 'Design', title: 'Design (BIM-Cost)', icon: PenTool, status: 'Healthy', health: 'success', value: 'LOD 400', label: 'Model Synced', desc: 'Zero clashes detected in MEP-Structural interface.' },
+    { id: 'Finance', title: 'Finance', icon: Wallet, status: 'Critical', health: 'danger', value: '$428M', label: 'Est. Final Cost', desc: 'VO Sum threshold exceeded. Requires PMO intervention.' },
+    { id: 'Payment', title: 'Jarvis PAY', icon: CreditCard, status: 'Healthy', health: 'success', value: 'Zero', label: 'Overpayment Risk', desc: 'Physical progress > Invoiced value across all contracts.' },
+    { id: 'Progress', title: 'Eagle Eye', icon: Eye, status: 'Healthy', health: 'success', value: '85%', label: 'AI Verified Progress', desc: 'Rebar & Concrete works progressing as scheduled.' },
+    { id: 'Quality', title: 'Quality (DWSS)', icon: ShieldCheck, status: 'Warning', health: 'warning', value: '12 Open', label: 'Defects / RFI', desc: 'Pending architect review on lobby material substitution.' },
+    { id: 'Safety', title: 'Smart Site', icon: HardHat, status: 'Healthy', health: 'success', value: 'Safe', label: '9 Modules Active', desc: 'No unauthorized access or high-risk incidents detected.' },
+    { id: 'Handover', title: 'Handover', icon: Key, status: 'Standby', health: 'default', value: 'Mar 28', label: 'Forecast DLV', desc: 'Digital Twin preparation at 45% completion.' },
+  ];
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-500 pb-20">
-      
-      {/* 1. Header & Summary Row */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-        <div>
-          <div className="flex items-center space-x-3 mb-1">
-            <h2 className="text-2xl font-bold text-gray-900">Project Requirements Management</h2>
-            <Badge variant="info">SSOT Master Record</Badge>
-          </div>
-          <p className="text-gray-400 text-sm">The Project's Digital Gene Bank (9 Key Elements)</p>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          <button className="px-4 py-2 bg-white border border-gray-200 text-gray-700 rounded-lg text-xs font-bold hover:bg-gray-50 flex items-center shadow-sm">
-            <Edit3 className="w-3.5 h-3.5 mr-1.5" /> Change Requests
-          </button>
-          <button className="px-4 py-2 bg-white border border-gray-200 text-gray-700 rounded-lg text-xs font-bold hover:bg-gray-50 flex items-center shadow-sm">
-            <History className="w-3.5 h-3.5 mr-1.5" /> Global Audit Logs
-          </button>
+    <div className="space-y-8 animate-in fade-in duration-500 pb-10">
+      {/* Top Executive KPIs */}
+      <div>
+        <h2 className="text-xl font-bold text-gray-900 mb-4">Strategic Portfolio Overview</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <Card className="p-5 bg-gray-900 text-white shadow-xl shadow-gray-200">
+            <div className="flex justify-between items-start">
+              <div className="p-2 bg-white/10 rounded-lg"><Layers className="w-5 h-5 text-white" /></div>
+              <Badge variant="success" className="bg-emerald-500/20 text-emerald-300 border-none">+12%</Badge>
+            </div>
+            <div className="mt-4">
+              <p className="text-xs text-gray-400 font-medium uppercase tracking-widest">SSOT Integrity</p>
+              <p className="text-2xl font-bold text-white mt-1">99.8%</p>
+            </div>
+          </Card>
+          <Card className="p-5">
+            <div className="flex justify-between items-start">
+              <div className="p-2 bg-amber-50 text-amber-600 rounded-lg"><AlertCircle className="w-5 h-5" /></div>
+              <Badge variant="warning">Action Required</Badge>
+            </div>
+            <div className="mt-4">
+              <p className="text-xs text-gray-500 font-medium uppercase tracking-widest">Active Alerts</p>
+              <p className="text-2xl font-bold text-gray-900 mt-1">3 <span className="text-xs font-normal text-gray-400">Cross-Module</span></p>
+            </div>
+          </Card>
+          <Card className="p-5 border-l-4 border-l-rose-500">
+            <div className="flex justify-between items-start">
+              <div className="p-2 bg-rose-50 text-rose-600 rounded-lg"><TrendingUp className="w-5 h-5" /></div>
+              <Badge variant="danger">Review</Badge>
+            </div>
+            <div className="mt-4">
+              <p className="text-xs text-gray-500 font-medium uppercase tracking-widest">Est. Final Cost (EFC)</p>
+              <p className="text-2xl font-bold text-gray-900 mt-1">$428M <span className="text-xs font-normal text-rose-500">+5% Drift</span></p>
+            </div>
+          </Card>
+          <Card className="p-5">
+            <div className="flex justify-between items-start">
+              <div className="p-2 bg-blue-50 text-blue-600 rounded-lg"><Clock className="w-5 h-5" /></div>
+              <Badge variant="info">Simulated</Badge>
+            </div>
+            <div className="mt-4">
+              <p className="text-xs text-gray-500 font-medium uppercase tracking-widest">Delay Impact</p>
+              <p className="text-2xl font-bold text-gray-900 mt-1">-4 Days</p>
+            </div>
+          </Card>
         </div>
       </div>
 
-      {/* 2. KPI Overview Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="p-4 border-l-4 border-l-emerald-500">
-          <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Elements in Baseline</p>
-          <div className="flex items-center justify-between mt-1">
-            <p className="text-xl font-bold text-gray-900">9 <span className="text-sm font-medium text-gray-400">/ 9</span></p>
-            <CheckCircle2 className="w-5 h-5 text-emerald-500" />
+      {/* Module Directory Grid (The "App Center") */}
+      <div>
+        <div className="flex justify-between items-end mb-4">
+          <div>
+            <h2 className="text-xl font-bold text-gray-900">PMO Command Modules</h2>
+            <p className="text-sm text-gray-400 mt-1">Select a module to dive into detailed SSOT workspaces.</p>
           </div>
-        </Card>
-        <Card className="p-4 border-l-4 border-l-rose-500">
-          <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Baseline Drift Alerts</p>
-          <div className="flex items-center justify-between mt-1">
-            <p className="text-xl font-bold text-rose-600">1</p>
-            <ShieldAlert className="w-5 h-5 text-rose-500 animate-pulse" />
-          </div>
-        </Card>
-        <Card className="p-4 border-l-4 border-l-amber-500">
-          <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Pending Reviews</p>
-          <div className="flex items-center justify-between mt-1">
-            <p className="text-xl font-bold text-amber-600">1</p>
-            <Clock className="w-5 h-5 text-amber-500" />
-          </div>
-        </Card>
-        <Card className="p-4">
-          <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Last Master Sync</p>
-          <div className="flex items-center justify-between mt-1">
-            <p className="text-xl font-bold text-blue-600">10m ago</p>
-            <Database className="w-5 h-5 text-blue-500" />
-          </div>
-        </Card>
-      </div>
+          <button className="text-xs font-bold text-blue-600 bg-blue-50 px-3 py-1.5 rounded-lg border border-blue-100 flex items-center hover:bg-blue-100 transition-colors">
+            Run Global Diagnostics <Activity className="w-3.5 h-3.5 ml-1.5" />
+          </button>
+        </div>
 
-      {/* 3. Main Working Surfaces */}
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-        
-        {/* Left Col: Primary Working Panel */}
-        <Card className="xl:col-span-2 overflow-hidden flex flex-col h-[750px]">
-          <div className="px-6 py-4 border-b border-gray-100 bg-gray-50/50 flex justify-between items-center shrink-0">
-            <div className="flex items-center space-x-2">
-              <Database className="w-4 h-4 text-blue-500" />
-              <h3 className="font-bold text-gray-900 text-sm uppercase tracking-tight">Requirements Baseline Workbench</h3>
-            </div>
-            <div className="flex space-x-2">
-               <button className="text-[10px] font-bold text-blue-600 bg-blue-50 px-3 py-1.5 rounded flex items-center">
-                 <RefreshCw className="w-3 h-3 mr-1" /> SYNC ALL AGENTS
-               </button>
-            </div>
-          </div>
-          
-          <div className="flex-1 overflow-y-auto no-scrollbar bg-white">
-            <table className="w-full text-left border-collapse">
-              <thead className="bg-white sticky top-0 z-10 shadow-sm">
-                <tr className="text-[10px] font-bold text-gray-400 uppercase tracking-wider border-b border-gray-100">
-                  <th className="px-6 py-4 font-bold">Element Name</th>
-                  <th className="px-4 py-4 font-bold">Version</th>
-                  <th className="px-4 py-4 font-bold">Owner</th>
-                  <th className="px-4 py-4 font-bold">Integrity</th>
-                  <th className="px-6 py-4 font-bold text-right">Status</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-50">
-                {REQUIREMENTS_DATA.map((req) => {
-                  const isActive = activeElementId === req.id;
-                  const isDrift = req.status === "Drift Detected";
-                  const isPending = req.status === "Pending Review";
-
-                  return (
-                    <tr 
-                      key={req.id} 
-                      onClick={() => setActiveElementId(req.id)}
-                      className={`group cursor-pointer transition-all ${
-                        isActive ? 'bg-blue-50/40' : 'hover:bg-gray-50'
-                      }`}
-                    >
-                      <td className="px-6 py-4 relative">
-                        {isActive && <div className={`absolute left-0 top-0 bottom-0 w-1 ${isDrift ? 'bg-rose-500' : 'bg-blue-500'}`} />}
-                        <div className="flex items-center space-x-3">
-                          <div className={`p-1.5 rounded-md ${
-                            isActive 
-                              ? (isDrift ? 'bg-rose-100 text-rose-600' : 'bg-blue-100 text-blue-600') 
-                              : 'bg-gray-100 text-gray-500 group-hover:bg-white group-hover:text-blue-500'
-                          }`}>
-                            <Target className="w-4 h-4" />
-                          </div>
-                          <div>
-                            <span className={`text-xs font-bold block ${isActive ? 'text-gray-900' : 'text-gray-700'}`}>
-                              {req.title}
-                            </span>
-                            <span className="text-[9px] text-gray-400 mt-0.5">{req.syncTime}</span>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="px-4 py-4">
-                        <span className={`text-[10px] font-mono font-bold px-2 py-1 rounded ${isActive ? 'bg-white text-gray-700 border border-gray-200' : 'text-gray-500 bg-gray-100'}`}>
-                          {req.version}
-                        </span>
-                      </td>
-                      <td className="px-4 py-4">
-                        <span className="text-[11px] font-medium text-gray-600">{req.owner}</span>
-                      </td>
-                      <td className="px-4 py-4">
-                        <div className="flex items-center space-x-2 w-24">
-                          <span className="text-[10px] font-bold text-gray-600 w-6">{req.integrity}%</span>
-                          <ProgressBar 
-                            progress={req.integrity} 
-                            variant={req.integrity === 100 ? 'emerald' : isDrift ? 'rose' : 'blue'} 
-                          />
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 text-right">
-                        <Badge variant={isDrift ? 'danger' : isPending ? 'warning' : 'success'}>
-                          {req.status}
-                        </Badge>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        </Card>
-
-        {/* Right Col: Deep Insight & Linkage Panel */}
-        <div className="space-y-6 flex flex-col h-[750px]">
-          
-          {/* Baseline Drift Radar (Intelligent Consistency Alert) - Pinned at top */}
-          {activeElement?.status === "Drift Detected" && (
-            <Card className="p-0 bg-gray-900 text-white shadow-xl shrink-0 border border-rose-500/50 overflow-hidden relative">
-              {/* Subtle background glow for urgency */}
-              <div className="absolute top-0 right-0 w-32 h-32 bg-rose-500/10 rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none" />
-
-              <div className="px-5 py-4 border-b border-white/10 flex justify-between items-center relative z-10">
-                <div className="flex items-center space-x-2">
-                  <div className="p-1.5 bg-rose-500/20 rounded-md">
-                    <AlertTriangle className="w-4 h-4 text-rose-500" />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          {moduleSummaries.map((mod) => (
+            <Card 
+              key={mod.id} 
+              onClick={() => onNavigate(mod.id)}
+              className="group flex flex-col h-full hover:-translate-y-1 hover:shadow-lg transition-all duration-300"
+            >
+              <div className="p-4 border-b border-gray-50 flex justify-between items-start">
+                <div className="flex items-center space-x-2.5">
+                  <div className={`p-2 rounded-lg bg-gray-50 text-gray-500 group-hover:bg-blue-50 group-hover:text-blue-600 transition-colors`}>
+                    <mod.icon className="w-4 h-4" />
                   </div>
-                  <h3 className="text-xs font-black uppercase tracking-widest text-rose-400">Consistency Alert</h3>
+                  <h3 className="font-bold text-gray-900 text-sm">{mod.title}</h3>
                 </div>
-                <Badge variant="danger">Severity: CRITICAL</Badge>
+                <Badge variant={mod.health}>{mod.status}</Badge>
+              </div>
+              
+              <div className="p-4 flex-1 flex flex-col justify-between">
+                <div className="mb-4">
+                  <p className="text-xl font-black text-gray-900">{mod.value}</p>
+                  <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-0.5">{mod.label}</p>
+                </div>
+                
+                <p className="text-[11px] text-gray-500 leading-relaxed line-clamp-2">
+                  {mod.desc}
+                </p>
               </div>
 
-              <div className="p-5 space-y-5 relative z-10">
-                <div>
-                  <div className="flex justify-between items-center mb-1.5">
-                    <span className="text-[10px] text-gray-400 font-mono">ID: ALT-8829-ZN</span>
-                    <span className="text-[10px] text-gray-400 flex items-center">
-                      <Activity className="w-3 h-3 mr-1" /> Source: Recording Agent
-                    </span>
-                  </div>
-                  <p className="text-[11.5px] text-gray-300 leading-relaxed">
-                    Recording Agent detected new soil contamination data in Zone B. This contradicts the feasibility assumptions and poses a <span className="text-rose-400 font-bold bg-rose-500/10 px-1 py-0.5 rounded border border-rose-500/20">High Risk</span> to downstream budget and timeline baselines.
-                  </p>
-                </div>
-
-                {/* Quantified Impact Grid */}
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="bg-black/40 border border-white/5 p-3 rounded-lg">
-                    <p className="text-[9px] font-bold text-gray-500 uppercase tracking-widest mb-1">Est. Budget Impact</p>
-                    <p className="text-sm font-bold text-rose-400">+$2.5M - $4.0M</p>
-                  </div>
-                  <div className="bg-black/40 border border-white/5 p-3 rounded-lg">
-                    <p className="text-[9px] font-bold text-gray-500 uppercase tracking-widest mb-1">Est. Timeline Impact</p>
-                    <p className="text-sm font-bold text-rose-400">+14 to 21 Days</p>
-                  </div>
-                </div>
-
-                <div className="flex space-x-3 pt-1">
-                  <button className="flex-1 py-2.5 bg-rose-600 hover:bg-rose-500 rounded-lg text-[10px] font-black uppercase tracking-widest transition-colors flex justify-center items-center shadow-lg shadow-rose-900/50">
-                    <Edit3 className="w-3.5 h-3.5 mr-1.5" /> Initiate Change Request
-                  </button>
-                  <button className="px-4 py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-[10px] font-black uppercase tracking-widest transition-colors text-gray-300">
-                    Dismiss
-                  </button>
-                </div>
+              <div className="px-4 py-3 bg-gray-50/50 border-t border-gray-50 text-[10px] font-bold text-gray-400 uppercase tracking-widest flex justify-between items-center group-hover:text-blue-600 group-hover:bg-blue-50/30 transition-colors">
+                <span>Enter Module</span>
+                <ArrowRight className="w-3.5 h-3.5 transform group-hover:translate-x-1 transition-transform" />
               </div>
             </Card>
-          )}
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
 
-          {/* Unified Tabbed Detail Card */}
-          <Card className="flex-1 flex flex-col shrink-0 overflow-hidden">
-            {/* Card Header */}
-            <div className="px-6 py-5 border-b border-gray-100 shrink-0 bg-white z-10">
-              <div className="flex justify-between items-start mb-1">
-                <h3 className="text-sm font-bold text-gray-900 uppercase tracking-tight">{activeElement?.title}</h3>
-                <Badge variant="default">{activeElement?.version}</Badge>
+// 2. Requirement Detail View (Sub-page for a specific element)
+const RequirementDetailView = ({ element, onBack, onBackToDashboard }) => {
+  return (
+    <div className="space-y-6 animate-in slide-in-from-right-4 duration-500 pb-10">
+      
+      {/* 麵包屑導航 */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center space-x-2 text-[10px] font-bold uppercase tracking-widest text-gray-400">
+          <button onClick={onBackToDashboard} className="hover:text-blue-600 transition-colors flex items-center">
+             <LayoutDashboard className="w-3 h-3 mr-1" /> Modules
+          </button>
+          <ChevronRight className="w-3 h-3" />
+          <button onClick={onBack} className="hover:text-blue-600 transition-colors flex items-center">
+             Requirements
+          </button>
+          <ChevronRight className="w-3 h-3" />
+          <span className="text-gray-900">{element.title}</span>
+        </div>
+        <button onClick={onBack} className="text-xs font-bold text-gray-500 hover:text-gray-900 flex items-center transition-colors">
+          <ArrowLeft className="w-4 h-4 mr-1.5" /> Back to Overview
+        </button>
+      </div>
+
+      {/* 詳情標題區塊 */}
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
+        <div>
+          <div className="flex items-center space-x-3 mb-2">
+            <div className={`p-2 rounded-lg ${element.drift ? 'bg-rose-50 text-rose-500' : 'bg-blue-50 text-blue-500'}`}>
+              <Database className="w-6 h-6" />
+            </div>
+            <h2 className="text-2xl font-bold text-gray-900">{element.title} Dossier</h2>
+            <Badge variant={element.drift ? 'danger' : 'success'}>{element.version}</Badge>
+          </div>
+          <p className="text-sm text-gray-500 max-w-2xl leading-relaxed ml-12">
+            SSOT baseline record governing this specific requirement domain. Actively monitored by Jarvis Recording Agents for cross-module consistency.
+          </p>
+        </div>
+        <button className="mt-4 md:mt-0 text-[10px] font-bold text-blue-600 bg-blue-50 px-4 py-2 rounded-lg border border-blue-100 flex items-center hover:bg-blue-100 transition-colors uppercase tracking-widest">
+          <ExternalLink className="w-3.5 h-3.5 mr-1.5" /> Open Raw JSON Record
+        </button>
+      </div>
+
+      {/* 異常警告橫幅 (如果存在 Drift) */}
+      {element.drift && (
+        <div className="bg-rose-50 border-l-4 border-rose-500 p-4 rounded-r-xl flex items-start space-x-3 animate-pulse">
+          <AlertTriangle className="w-5 h-5 text-rose-500 mt-0.5" />
+          <div>
+            <h4 className="text-xs font-black text-rose-800 uppercase tracking-widest">Active Drift Detected</h4>
+            <p className="text-sm text-rose-700 font-medium mt-1">{element.drift}</p>
+          </div>
+        </div>
+      )}
+
+      {/* 詳情核心內容 */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        {/* 左側：結構化數據與憑證 */}
+        <Card className="lg:col-span-2 p-6 flex flex-col space-y-8">
+           
+           {/* Domain-Specific Core Data (Dynamically rendered based on PDF sections) */}
+           <div>
+             <div className="flex items-center justify-between mb-4 border-b border-gray-100 pb-2">
+               <h3 className="text-xs font-bold uppercase tracking-widest text-gray-400">Captured Domain Data</h3>
+               <Badge variant="info">SSOT Synchronized</Badge>
+             </div>
+             
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+               {Object.entries(element.domainData).map(([key, value], idx) => (
+                 <div key={idx} className="p-3 bg-gray-50 rounded-xl border border-gray-100/50">
+                   <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">{key}</p>
+                   <p className={`text-sm font-bold mt-1 ${value.includes('Drift') || value.includes('Warning') ? 'text-rose-600' : 'text-gray-900'}`}>
+                     {value}
+                   </p>
+                 </div>
+               ))}
+             </div>
+           </div>
+
+           {/* 關聯模組傳導 (Impact Propagation) */}
+           <div>
+             <h3 className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-4 border-b border-gray-100 pb-2">Impact Propagation (Linked Modules)</h3>
+             <div className="flex flex-wrap gap-2">
+               {element.links.map(link => (
+                 <div key={link} className={`px-3 py-2 rounded-lg flex items-center border ${element.drift ? 'bg-rose-50 border-rose-100 text-rose-700' : 'bg-gray-50 border-gray-200 text-gray-700'}`}>
+                   <GitBranch className={`w-3.5 h-3.5 mr-2 ${element.drift ? 'text-rose-400' : 'text-gray-400'}`} />
+                   <span className="text-xs font-bold">{link} Module</span>
+                   {element.drift && <span className="ml-2 text-[10px] bg-white px-1.5 py-0.5 rounded text-rose-600 font-black">At Risk</span>}
+                 </div>
+               ))}
+             </div>
+           </div>
+
+           {/* 原始憑證區塊 */}
+           <div className="flex-1">
+              <div className="flex justify-between items-center mb-4 border-b border-gray-100 pb-2">
+                <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest flex items-center">
+                  Source Evidence & Metadata
+                </h3>
               </div>
-              <p className="text-[10.5px] text-gray-500 font-medium leading-relaxed">{activeElement?.statement}</p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                 <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-100 hover:border-blue-200 cursor-pointer group transition-colors">
+                   <div className="flex items-center text-xs font-medium text-gray-700">
+                     <Database className="w-4 h-4 mr-3 text-gray-400 group-hover:text-blue-500" />
+                     <div className="flex flex-col">
+                       <span>{element.title.replace(/\s+/g, '_')}_Master_v{element.version.replace('v', '')}.json</span>
+                       <span className="text-[9px] text-gray-400">Structured Data Payload</span>
+                     </div>
+                   </div>
+                   <Badge variant="success">Verified</Badge>
+                 </div>
+                 <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-100 hover:border-blue-200 cursor-pointer group transition-colors">
+                   <div className="flex items-center text-xs font-medium text-gray-700">
+                     <FileText className="w-4 h-4 mr-3 text-gray-400 group-hover:text-blue-500" />
+                     <div className="flex flex-col">
+                       <span>Source_Document_Extraction.pdf</span>
+                       <span className="text-[9px] text-gray-400">Agent Parsed Original</span>
+                     </div>
+                   </div>
+                   <Badge variant="success">Verified</Badge>
+                 </div>
+              </div>
+           </div>
+        </Card>
+
+        {/* 右側：Agent 軌跡與稽核紀錄 */}
+        <Card className="lg:col-span-1 p-6 bg-slate-50 border-gray-100">
+           <h3 className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-6 flex items-center">
+             <History className="w-4 h-4 mr-2" /> Agent Activity & Audit
+           </h3>
+           
+           <div className="space-y-6 relative before:absolute before:inset-0 before:ml-2 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-gray-200 before:to-transparent">
+              {/* Timeline Items */}
+              <div className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
+                 <div className="flex items-center justify-center w-5 h-5 rounded-full border border-white bg-blue-500 text-white shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10">
+                    <Activity className="w-2.5 h-2.5" />
+                 </div>
+                 <div className="w-[calc(100%-2.5rem)] md:w-[calc(50%-1.5rem)] p-3 rounded-lg border border-blue-100 bg-white shadow-sm">
+                    <div className="flex items-center justify-between mb-1">
+                       <span className="text-[9px] font-black text-blue-600 uppercase">Recording Agent</span>
+                       <span className="text-[8px] text-gray-400">10m ago</span>
+                    </div>
+                    <p className="text-[10px] text-gray-700">Cross-referenced linked modules. Integrity check passed.</p>
+                 </div>
+              </div>
+
+              {element.drift && (
+                <div className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
+                   <div className="flex items-center justify-center w-5 h-5 rounded-full border border-white bg-rose-500 text-white shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10">
+                      <AlertTriangle className="w-2.5 h-2.5" />
+                   </div>
+                   <div className="w-[calc(100%-2.5rem)] md:w-[calc(50%-1.5rem)] p-3 rounded-lg border border-rose-100 bg-rose-50 shadow-sm">
+                      <div className="flex items-center justify-between mb-1">
+                         <span className="text-[9px] font-black text-rose-600 uppercase">System Alert</span>
+                         <span className="text-[8px] text-rose-400">2h ago</span>
+                      </div>
+                      <p className="text-[10px] text-rose-800 font-medium">Drift detected via cross-module validation.</p>
+                   </div>
+                </div>
+              )}
+
+              <div className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
+                 <div className="flex items-center justify-center w-5 h-5 rounded-full border border-white bg-gray-200 text-gray-500 shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10">
+                    <GitCommit className="w-2.5 h-2.5" />
+                 </div>
+                 <div className="w-[calc(100%-2.5rem)] md:w-[calc(50%-1.5rem)] p-3 rounded-lg border border-gray-100 bg-white shadow-sm">
+                    <div className="flex items-center justify-between mb-1">
+                       <span className="text-[9px] font-black text-gray-500 uppercase">PMO Action</span>
+                       <span className="text-[8px] text-gray-400">Feb 15</span>
+                    </div>
+                    <p className="text-[10px] text-gray-600">Baseline {element.version} formally approved and committed to SSOT.</p>
+                 </div>
+              </div>
+           </div>
+           
+           <button className="w-full mt-6 py-2 bg-white border border-gray-200 text-gray-600 hover:text-blue-600 hover:border-blue-200 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-colors">
+             View Full Audit Log
+           </button>
+        </Card>
+      </div>
+    </div>
+  );
+};
+
+// 3. Requirements Overview Page (List/Cards View)
+const RequirementsPageView = ({ onBack }) => {
+  const [viewMode, setViewMode] = useState('map'); // 'map' or 'table'
+  const [selectedElement, setSelectedElement] = useState(null); // null 狀態表示顯示總覽
+
+  // 若有選中要素，則進入 Detail 視圖
+  if (selectedElement) {
+    return (
+      <RequirementDetailView 
+        element={selectedElement} 
+        onBack={() => setSelectedElement(null)} 
+        onBackToDashboard={() => onBack('Dashboard')} 
+      />
+    );
+  }
+
+  // 否則顯示 Overview 視圖
+  return (
+    <div className="space-y-6 animate-in slide-in-from-right-4 duration-500 pb-10">
+      
+      {/* 麵包屑導航 */}
+      <div className="flex items-center space-x-2 text-[10px] font-bold uppercase tracking-widest text-gray-400">
+        <button onClick={() => onBack('Dashboard')} className="hover:text-blue-600 transition-colors flex items-center">
+           <LayoutDashboard className="w-3 h-3 mr-1" /> Command Modules
+        </button>
+        <ChevronRight className="w-3 h-3" />
+        <span className="text-gray-900">Requirements Overview</span>
+      </div>
+
+      {/* 1. Baseline Command Strip */}
+      <Card className="flex flex-col md:flex-row items-start md:items-center justify-between p-4 bg-gray-900 text-white shadow-lg shadow-gray-200/50">
+        <div className="flex items-center space-x-6">
+          <div className="flex items-center space-x-3 pr-6 border-r border-gray-700">
+            <div className="p-2 bg-blue-500/20 rounded-lg">
+              <Database className="w-5 h-5 text-blue-400" />
+            </div>
+            <div>
+              <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Baseline Integrity</p>
+              <p className="text-xl font-black text-white">99.2%</p>
+            </div>
+          </div>
+          
+          <div className="flex space-x-8">
+            <div>
+              <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Open Drifts</p>
+              <div className="flex items-center space-x-2 mt-0.5">
+                <div className="w-2 h-2 rounded-full bg-rose-500 animate-pulse" />
+                <p className="text-sm font-bold text-rose-400">2 Critical</p>
+              </div>
+            </div>
+            <div>
+              <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Pending Review</p>
+              <p className="text-sm font-bold text-amber-400 mt-0.5">1 Approval</p>
+            </div>
+          </div>
+        </div>
+        
+        <div className="mt-4 md:mt-0 flex space-x-3">
+          <button className="px-4 py-2 bg-white/10 hover:bg-white/20 border border-white/10 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-colors">
+            Audit Logs
+          </button>
+        </div>
+      </Card>
+
+      {/* 2. Main Workspace: Map/Table + Drift Radar */}
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        
+        {/* 左側/主欄：九大要素總覽 */}
+        <div className="lg:col-span-3 flex flex-col space-y-4">
+          <div className="flex items-center justify-between bg-white p-3 rounded-xl border border-gray-100 shadow-sm">
+            <div className="pl-2">
+              <h3 className="text-sm font-black text-gray-900 uppercase tracking-tight">Digital Gene Bank (9 Key Elements)</h3>
+              <p className="text-[10px] text-gray-400 font-medium mt-0.5">Select an element to view detailed SSOT records and agent activity.</p>
             </div>
             
-            {/* Tab Navigation */}
-            <div className="flex px-2 border-b border-gray-100 bg-gray-50/80 shrink-0">
-              {[
-                { id: 'attributes', label: 'Attributes & Evidence', icon: Database },
-                { id: 'linkage', label: 'SSOT Linkage', icon: GitBranch },
-                { id: 'history', label: 'Audit Trail', icon: History }
-              ].map(tab => (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center px-4 py-3 text-[10px] font-bold uppercase tracking-widest border-b-2 transition-colors ${
-                    activeTab === tab.id
-                      ? 'border-blue-500 text-blue-600'
-                      : 'border-transparent text-gray-400 hover:text-gray-700'
-                  }`}
-                >
-                  <tab.icon className="w-3.5 h-3.5 mr-2" />
-                  {tab.label}
-                </button>
-              ))}
+            {/* View Mode Toggle (Segmented Control) */}
+            <div className="flex items-center bg-gray-100/80 p-1 rounded-lg border border-gray-200/50">
+              <button 
+                onClick={() => setViewMode('map')}
+                className={`flex items-center px-4 py-1.5 rounded-md text-[10px] font-bold uppercase transition-all ${viewMode === 'map' ? 'bg-white shadow-sm text-blue-600' : 'text-gray-500 hover:text-gray-900'}`}
+              >
+                <LayoutGrid className="w-3.5 h-3.5 mr-1.5" /> Map
+              </button>
+              <button 
+                onClick={() => setViewMode('table')}
+                className={`flex items-center px-4 py-1.5 rounded-md text-[10px] font-bold uppercase transition-all ${viewMode === 'table' ? 'bg-white shadow-sm text-blue-600' : 'text-gray-500 hover:text-gray-900'}`}
+              >
+                <List className="w-3.5 h-3.5 mr-1.5" /> List
+              </button>
             </div>
+          </div>
 
-            {/* Scrollable Tab Content */}
-            <div className="flex-1 overflow-y-auto p-6 no-scrollbar bg-white">
-              
-              {/* TAB 1: Attributes & Evidence */}
-              {activeTab === 'attributes' && (
-                <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
-                  {/* Structured Fields */}
-                  <div>
-                    <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-3 border-b border-gray-50 pb-2">Structured Data Attributes</p>
-                    <div className="grid grid-cols-1 gap-3">
-                      {activeElement?.specificFields.map((field, idx) => (
-                        <div key={idx} className="bg-gray-50/50 p-2.5 rounded-lg border border-gray-100 flex justify-between items-center">
-                          <span className="text-[10px] font-bold text-gray-500">{field.label}</span>
-                          <span className="text-xs font-bold text-gray-900 text-right">{field.value}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* SSOT Evidence */}
-                  <div>
-                    <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-3 border-b border-gray-50 pb-2">Source Evidence</p>
-                    <div className="space-y-2">
-                      {activeElement?.evidence.map((doc, i) => (
-                        <div key={i} className="flex items-center px-3 py-2 bg-blue-50/30 border border-blue-100 hover:border-blue-300 rounded-md text-[11px] font-medium text-blue-800 transition-colors cursor-pointer group">
-                          <FileText className="w-3.5 h-3.5 mr-2 text-blue-500" />
-                          {doc}
-                          <LinkIcon className="w-3 h-3 ml-auto text-blue-300 group-hover:text-blue-500" />
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* TAB 2: SSOT Linkage */}
-              {activeTab === 'linkage' && (
-                <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
-                  <div>
-                    <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-3 border-b border-gray-50 pb-2">Downstream Impact</p>
-                    <div className="space-y-2">
-                      {activeElement?.linkages.map((link, idx) => (
-                        <div key={idx} className="flex items-center justify-between px-3 py-2 bg-white border border-gray-100 rounded-md text-[11px] font-medium transition-colors">
-                          <div className="flex items-center text-gray-700">
-                            <GitBranch className="w-3.5 h-3.5 mr-2 text-blue-400" />
-                            {link.target}
-                          </div>
-                          <span className={`text-[9px] font-black uppercase ${link.impact === 'High Risk' ? 'text-rose-500' : 'text-gray-400'}`}>
-                            {link.impact}
+          {/* Baseline Map View (3x3 Grid) - NEW SLEEK DESIGN */}
+          {viewMode === 'map' && (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+              {REQUIREMENTS_ELEMENTS.map((req) => (
+                <div 
+                  key={req.id}
+                  onClick={() => setSelectedElement(req)}
+                  className={`flex flex-col relative overflow-hidden rounded-xl border bg-white cursor-pointer transition-all duration-300 group
+                    ${req.drift ? 'border-rose-200 hover:border-rose-400 hover:shadow-lg hover:shadow-rose-100/50' 
+                                : 'border-gray-200 hover:border-blue-300 hover:shadow-lg hover:shadow-blue-50/50'}`}
+                >
+                  {/* Subtle Top Accent Line */}
+                  <div className={`absolute top-0 left-0 w-full h-1 ${req.status === 'danger' ? 'bg-rose-500' : req.status === 'warning' ? 'bg-amber-400' : 'bg-emerald-500'}`} />
+                  
+                  {/* Card Body */}
+                  <div className="p-5 flex-1 flex flex-col">
+                    <div className="flex justify-between items-start mb-4">
+                      <div className={`p-2.5 rounded-lg transition-colors ${req.status === 'danger' ? 'bg-rose-50 text-rose-600' : req.status === 'warning' ? 'bg-amber-50 text-amber-600' : 'bg-slate-50 text-slate-500 group-hover:bg-blue-50 group-hover:text-blue-600'}`}>
+                        <Target className="w-4 h-4" />
+                      </div>
+                      <div className="flex flex-col items-end space-y-1.5">
+                        <Badge variant={req.status === 'danger' ? 'danger' : req.status === 'warning' ? 'warning' : 'default'} className="shadow-sm">
+                          {req.version}
+                        </Badge>
+                        {req.drift && (
+                          <span className="text-[9px] font-black text-rose-500 flex items-center animate-pulse tracking-widest uppercase">
+                            <AlertTriangle className="w-2.5 h-2.5 mr-1" /> Drift
                           </span>
-                        </div>
-                      ))}
+                        )}
+                      </div>
                     </div>
-                  </div>
-                </div>
-              )}
-
-              {/* TAB 3: Audit Trail */}
-              {activeTab === 'history' && (
-                <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
-                  <div className="relative border-l border-gray-100 ml-3 pl-5 space-y-6">
-                    {VERSION_HISTORY.map((hist, i) => (
-                      <div key={i} className="relative">
-                        {/* Timeline dot */}
-                        <div className={`absolute -left-[25px] top-1 w-2.5 h-2.5 rounded-full border-2 border-white shadow-sm ${hist.type === 'drift' ? 'bg-rose-500' : 'bg-blue-500'}`} />
-                        
-                        <div className="flex justify-between items-start mb-0.5">
-                          <span className="text-[10px] font-black text-gray-900">{hist.version}</span>
-                          <span className="text-[9px] text-gray-400">{hist.date}</span>
-                        </div>
-                        <p className="text-[11px] text-gray-700 font-medium leading-relaxed mt-1">{hist.action}</p>
-                        <span className="inline-block mt-1.5 text-[9px] font-bold text-gray-400 uppercase tracking-widest">
-                          By: {hist.author}
+                    
+                    <h4 className="text-base font-bold text-gray-900 mb-1 leading-tight group-hover:text-blue-600 transition-colors">{req.title}</h4>
+                    
+                    {/* Completeness Progress Bar */}
+                    <div className="mt-auto pt-4">
+                      <div className="flex justify-between text-[9px] font-bold uppercase tracking-widest mb-1.5">
+                        <span className="text-gray-400">Data Integrity</span>
+                        <span className={req.status === 'danger' ? 'text-rose-600' : req.status === 'warning' ? 'text-amber-600' : 'text-emerald-600'}>
+                          {req.completeness}%
                         </span>
                       </div>
-                    ))}
+                      <div className="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                        <div 
+                          className={`h-full rounded-full ${req.status === 'danger' ? 'bg-rose-500' : req.status === 'warning' ? 'bg-amber-400' : 'bg-emerald-500'}`} 
+                          style={{ width: `${req.completeness}%` }} 
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Card Footer */}
+                  <div className="px-5 py-3 bg-gray-50/80 border-t border-gray-100 flex items-center justify-between group-hover:bg-blue-50/50 transition-colors">
+                    <div className="flex items-center space-x-2">
+                      <div className="w-6 h-6 rounded-full bg-white border border-gray-200 flex items-center justify-center text-[9px] font-black text-gray-700 shadow-sm">
+                        {req.owner.charAt(0)}
+                      </div>
+                      <span className="text-[10px] text-gray-600 font-bold">{req.owner}</span>
+                    </div>
+                    <div className="flex items-center text-[10px] font-bold text-gray-400 group-hover:text-blue-600 transition-colors" title="Linked Modules">
+                      <GitBranch className="w-3.5 h-3.5 mr-1.5" />
+                      {req.links.length} Nodes
+                    </div>
                   </div>
                 </div>
+              ))}
+            </div>
+          )}
+
+          {/* Audit Table View */}
+          {viewMode === 'table' && (
+            <Card className="overflow-hidden border border-gray-200">
+              <table className="w-full text-left">
+                <thead className="bg-gray-50 text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+                  <tr>
+                    <th className="px-4 py-3">Element</th>
+                    <th className="px-4 py-3">Status</th>
+                    <th className="px-4 py-3">Version</th>
+                    <th className="px-4 py-3">Owner</th>
+                    <th className="px-4 py-3">Linked Impact</th>
+                    <th className="px-4 py-3 text-right">Action</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100">
+                  {REQUIREMENTS_ELEMENTS.map((req) => (
+                    <tr 
+                      key={req.id} 
+                      onClick={() => setSelectedElement(req)}
+                      className="hover:bg-blue-50/30 cursor-pointer transition-colors"
+                    >
+                      <td className="px-4 py-3">
+                        <div className="flex items-center space-x-2">
+                          <div className={`w-1.5 h-1.5 rounded-full ${req.status === 'danger' ? 'bg-rose-500' : req.status === 'warning' ? 'bg-amber-400' : 'bg-emerald-500'}`} />
+                          <span className="text-xs font-bold text-gray-900">{req.title}</span>
+                        </div>
+                      </td>
+                      <td className="px-4 py-3">
+                        {req.drift ? (
+                          <span className="text-[10px] font-bold text-rose-600 flex items-center"><AlertTriangle className="w-3 h-3 mr-1"/> Drift Detected</span>
+                        ) : (
+                          <span className="text-[10px] font-bold text-emerald-600 flex items-center"><CheckCircle2 className="w-3 h-3 mr-1"/> Aligned</span>
+                        )}
+                      </td>
+                      <td className="px-4 py-3 text-xs font-medium text-gray-600">{req.version}</td>
+                      <td className="px-4 py-3 text-xs font-medium text-gray-600">{req.owner}</td>
+                      <td className="px-4 py-3">
+                        <div className="flex space-x-1">
+                          {req.links.map(link => <span key={link} className="px-1.5 py-0.5 bg-gray-100 rounded text-[9px] font-bold text-gray-500">{link}</span>)}
+                        </div>
+                      </td>
+                      <td className="px-4 py-3 text-right">
+                        <span className="text-[10px] font-bold text-blue-600 uppercase">View Details</span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </Card>
+          )}
+        </div>
+
+        {/* 右側：全域 Drift Radar - NEW SLEEK DESIGN */}
+        <div className="lg:col-span-1">
+          <Card className="h-full border border-gray-200 bg-white overflow-hidden shadow-sm flex flex-col">
+            {/* Radar Header */}
+            <div className="px-5 py-4 border-b border-gray-100 bg-gray-50/80 flex justify-between items-center">
+              <div className="flex items-center space-x-2">
+                <Radio className={`w-4 h-4 ${REQUIREMENTS_ELEMENTS.some(r => r.drift) ? 'text-rose-500 animate-pulse' : 'text-gray-400'}`} />
+                <h3 className="text-xs font-black uppercase tracking-widest text-gray-900">Global Drift Radar</h3>
+              </div>
+              {REQUIREMENTS_ELEMENTS.some(r => r.drift) && (
+                <span className="flex h-2 w-2 relative">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-rose-500"></span>
+                </span>
               )}
+            </div>
+
+            {/* Radar Body */}
+            <div className="p-5 flex-1 bg-[#FAFAFA]">
+              <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-4">Active Impact Propagation</p>
               
+              <div className="space-y-4">
+                {/* Drift Item 1 */}
+                <div onClick={() => setSelectedElement(REQUIREMENTS_ELEMENTS[4])} className="bg-white rounded-lg p-4 border border-rose-200 shadow-sm hover:shadow-md hover:border-rose-400 cursor-pointer transition-all relative overflow-hidden group">
+                  <div className="absolute top-0 left-0 w-1 h-full bg-rose-500" />
+                  <div className="flex justify-between items-start mb-2.5">
+                    <span className="text-[10px] font-black text-rose-700 uppercase flex items-center tracking-wider">
+                      <AlertTriangle className="w-3 h-3 mr-1.5" /> Project Budget
+                    </span>
+                    <span className="text-[8px] text-gray-400 font-bold uppercase tracking-widest">T+0 Sync</span>
+                  </div>
+                  <p className="text-xs font-bold text-gray-800 leading-snug mb-4">Base cost exceeds target by 5% (VO Sum Escalation)</p>
+                  
+                  <div className="pt-3 border-t border-gray-100 flex flex-col space-y-2">
+                    <div className="flex items-center justify-between bg-rose-50 px-2 py-1.5 rounded-md border border-rose-100">
+                      <span className="flex items-center text-[9px] font-bold text-rose-700 uppercase tracking-wider">
+                        <ArrowRightLeft className="w-3 h-3 mr-1.5" /> Finance
+                      </span>
+                      <span className="text-[9px] font-bold text-rose-600">Deficit Risk</span>
+                    </div>
+                    <div className="flex items-center justify-between bg-amber-50 px-2 py-1.5 rounded-md border border-amber-100">
+                      <span className="flex items-center text-[9px] font-bold text-amber-700 uppercase tracking-wider">
+                        <ArrowRightLeft className="w-3 h-3 mr-1.5" /> Procurement
+                      </span>
+                      <span className="text-[9px] font-bold text-amber-600">Re-Tender Req.</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Drift Item 2 */}
+                <div onClick={() => setSelectedElement(REQUIREMENTS_ELEMENTS[3])} className="bg-white rounded-lg p-4 border border-amber-200 shadow-sm hover:shadow-md hover:border-amber-400 cursor-pointer transition-all relative overflow-hidden group">
+                  <div className="absolute top-0 left-0 w-1 h-full bg-amber-400" />
+                  <div className="flex justify-between items-start mb-2.5">
+                    <span className="text-[10px] font-black text-amber-700 uppercase flex items-center tracking-wider">
+                      <AlertCircle className="w-3 h-3 mr-1.5" /> Site Info
+                    </span>
+                  </div>
+                  <p className="text-xs font-bold text-gray-800 leading-snug mb-4">Boundary adjustment pending Buildings Dept review.</p>
+                  
+                  <div className="pt-3 border-t border-gray-100">
+                    <div className="flex items-center justify-between bg-amber-50 px-2 py-1.5 rounded-md border border-amber-100">
+                      <span className="flex items-center text-[9px] font-bold text-amber-700 uppercase tracking-wider">
+                        <ArrowRightLeft className="w-3 h-3 mr-1.5" /> Approvals
+                      </span>
+                      <span className="text-[9px] font-bold text-amber-600">Delay +3 Days</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </Card>
         </div>
@@ -502,10 +758,37 @@ const RequirementsPageView = () => {
   );
 };
 
-// --- Core Application Shell ---
+// Fallback Generic Module View
+const GenericModuleView = ({ activeModule, onBack }) => (
+  <div className="space-y-6 animate-in slide-in-from-right-4 duration-500">
+     <div className="flex items-center space-x-2 text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-8">
+        <button onClick={() => onBack('Dashboard')} className="hover:text-blue-600 transition-colors flex items-center">
+           <LayoutDashboard className="w-3 h-3 mr-1" /> Command Modules
+        </button>
+        <ChevronRight className="w-3 h-3" />
+        <span className="text-gray-900">{activeModule} Management</span>
+     </div>
+     
+     <div className="flex flex-col items-center justify-center h-[500px] text-center space-y-4">
+        <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center border border-gray-100">
+           <PenTool className="w-8 h-8 text-gray-300" />
+        </div>
+        <h2 className="text-2xl font-bold text-gray-900">{activeModule} Workspace</h2>
+        <p className="text-gray-400 text-sm max-w-md">Detailed SSOT interface for this module is available. Use the 'Requirements' module to see a fully populated example.</p>
+     </div>
+  </div>
+);
 
+// --- Router ---
+const ModulesView = ({ activeModule, setActiveModule }) => {
+  if (activeModule === "Dashboard") return <DashboardView onNavigate={setActiveModule} />;
+  if (activeModule === "Requirements") return <RequirementsPageView onBack={setActiveModule} />;
+  return <GenericModuleView activeModule={activeModule} onBack={setActiveModule} />;
+};
+
+// --- App Shell ---
 export default function App() {
-  const [activeModule, setActiveModule] = useState("Requirements");
+  const [activeModule, setActiveModule] = useState("Dashboard"); // Default to Overview Dashboard
   const [isSidebarOpen, setSidebarOpen] = useState(true);
 
   const sidebarItems = [
@@ -529,14 +812,13 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-[#FDFDFE] flex font-sans text-gray-900 antialiased overflow-hidden">
-      
-      {/* Sidebar Shell */}
+      {/* Sidebar */}
       <aside className={`bg-white border-r border-gray-100 transition-all duration-300 flex flex-col shrink-0 ${isSidebarOpen ? 'w-64' : 'w-20'}`}>
         <div className="p-6 flex items-center space-x-3 h-16 shrink-0">
           <div className="w-8 h-8 bg-gray-900 rounded-lg flex items-center justify-center shadow-xl">
              <span className="text-white font-black text-sm italic">J</span>
           </div>
-          {isSidebarOpen && <span className="font-bold text-lg tracking-tight">JARVIS<span className="text-blue-600">PMO</span></span>}
+          {isSidebarOpen && <span className="font-bold text-lg tracking-tight uppercase">JARVIS<span className="text-blue-600">PMO</span></span>}
         </div>
 
         <nav className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto no-scrollbar scroll-smooth">
@@ -548,6 +830,7 @@ export default function App() {
                 </div>
               ) : <div key={idx} className="h-4" />;
             }
+
             const isActive = activeModule === item.id;
             return (
               <button
@@ -578,10 +861,9 @@ export default function App() {
         </div>
       </aside>
 
-      {/* Main Content Area */}
+      {/* Main Content */}
       <main className="flex-1 flex flex-col h-screen overflow-hidden">
-        
-        {/* Header Shell */}
+        {/* Header */}
         <header className="bg-white/80 backdrop-blur-md border-b border-gray-100 h-16 flex items-center justify-between px-8 shrink-0 z-30">
           <div className="flex items-center space-x-4">
              <button onClick={() => setSidebarOpen(!isSidebarOpen)} className="p-1.5 hover:bg-gray-100 rounded-lg text-gray-400">
@@ -592,6 +874,7 @@ export default function App() {
                 Portfolios <ChevronRight className="w-3 h-3 mx-1" /> <span className="text-gray-900">Horizon Estates</span>
              </div>
           </div>
+
           <div className="flex items-center space-x-6">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" />
@@ -604,28 +887,19 @@ export default function App() {
             <div className="flex items-center space-x-2">
                <button className="p-2 text-gray-400 hover:bg-gray-50 rounded-lg relative">
                  <Bell className="w-4 h-4" />
+                 <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-rose-500 rounded-full border border-white" />
                </button>
-               <button className="p-2 text-gray-400 hover:bg-gray-50 rounded-lg"><MoreVertical className="w-4 h-4" /></button>
             </div>
           </div>
         </header>
 
-        {/* Scrollable View Area */}
-        <div className="flex-1 overflow-y-auto p-4 md:p-8 no-scrollbar bg-[#FDFDFE] relative">
-          <div className="max-w-[1400px] mx-auto">
-             {activeModule === "Requirements" ? (
-               <RequirementsPageView />
-             ) : (
-               <div className="flex flex-col items-center justify-center h-64 text-gray-400">
-                  <Activity className="w-12 h-12 mb-4 opacity-20" />
-                  <p className="text-sm font-bold uppercase tracking-widest">{activeModule} Module Selected</p>
-                  <p className="text-xs mt-2">Switch back to Requirements to view the implementation.</p>
-               </div>
-             )}
+        {/* Scrollable Area */}
+        <div className="flex-1 overflow-y-auto p-8 no-scrollbar bg-[#FDFDFE] relative">
+          <div className="max-w-6xl mx-auto pb-20">
+             <ModulesView activeModule={activeModule} setActiveModule={setActiveModule} />
           </div>
         </div>
       </main>
-
     </div>
   );
 }

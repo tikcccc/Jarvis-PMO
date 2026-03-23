@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import type { ECharts, EChartsOption } from "echarts";
 import type { ComponentPropsWithoutRef, ReactNode } from "react";
 import { useEffect, useRef, useState } from "react";
@@ -9,10 +10,10 @@ import {
   CheckCircle2,
   DollarSign,
   FileText,
-  Filter,
   Hammer,
   Layers,
   Maximize2,
+  Minimize2,
   Share2,
   ShieldAlert,
   Split,
@@ -65,6 +66,9 @@ const issueSeverityToneClassMap: Record<DesignIssue["severityLabel"], string> = 
   Medium: "text-amber-600",
   Low: "text-emerald-600"
 } as const;
+
+const DESIGN_2D_DRAWING_SRC = "/image/design/2d%20drawing.png";
+const DESIGN_3D_BIM_SRC = "/image/design/3d%20bim.jpg";
 
 const trendScaleMin = 90;
 const trendScaleMax = 110;
@@ -152,6 +156,104 @@ function DesignBadge({
     >
       {children}
     </span>
+  );
+}
+
+function DesignViewerSurface({
+  selectedIssue
+}: {
+  selectedIssue: DesignIssue | null;
+}) {
+  const [viewerMode, setViewerMode] = useState<"2d" | "3d">("2d");
+  const [isExpanded, setIsExpanded] = useState(false);
+  const viewerSrc = viewerMode === "2d" ? DESIGN_2D_DRAWING_SRC : DESIGN_3D_BIM_SRC;
+  const viewerAlt = viewerMode === "2d" ? "2D design coordination drawing" : "3D BIM coordination view";
+  const toggleViewerMode = () => setViewerMode((current) => (current === "2d" ? "3d" : "2d"));
+  const toggleExpanded = () => setIsExpanded((current) => !current);
+
+  useEffect(() => {
+    if (!isExpanded) {
+      return;
+    }
+
+    const previousOverflow = document.body.style.overflow;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsExpanded(false);
+      }
+    };
+
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isExpanded]);
+
+  const renderViewerCanvas = (expanded: boolean) => (
+    <div
+      className={cn(
+        "overflow-hidden border border-slate-300/70 bg-slate-950 shadow-[0_24px_60px_rgba(15,23,42,0.16)]",
+        expanded ? "relative h-full w-full rounded-none border-0" : "absolute inset-0 rounded-none border-0 shadow-none"
+      )}
+    >
+      <Image
+        src={viewerSrc}
+        alt={viewerAlt}
+        fill
+        sizes={expanded ? "90vw" : "(min-width: 1280px) 66vw, 100vw"}
+        className={cn(
+          "object-cover object-center transition-transform duration-700 ease-[var(--jarvis-motion-ease-emphasis)] motion-safe:group-hover:scale-[1.03]",
+          selectedIssue ? "scale-100 opacity-100" : "scale-[1.02] grayscale-[0.32] opacity-45"
+        )}
+      />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.18),transparent_38%),linear-gradient(135deg,rgba(15,23,42,0.06),transparent_30%,rgba(15,23,42,0.14))]" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-slate-950/16 via-transparent to-slate-950/22" />
+      <div className="jarvis-viewer-scan pointer-events-none absolute inset-x-[8%] top-[-24%] h-24 bg-gradient-to-b from-transparent via-sky-400/16 to-transparent opacity-60 mix-blend-screen" />
+
+      <div className="absolute right-5 top-5 z-20 flex items-center gap-1 rounded-xl border border-white/14 bg-slate-950/76 p-1 shadow-[0_18px_36px_rgba(15,23,42,0.28)] backdrop-blur-md">
+        <button
+          type="button"
+          onClick={toggleViewerMode}
+          className="inline-flex h-7 items-center rounded-lg border border-white/10 bg-white/6 px-2.5 text-[9px] font-semibold uppercase tracking-[0.18em] text-white/84 transition-colors hover:bg-white/10 hover:text-white"
+        >
+          {viewerMode === "2d" ? "View 3D" : "View 2D"}
+        </button>
+        <IconButton
+          variant="surface"
+          size="sm"
+          onClick={toggleExpanded}
+          className="h-7 w-7 border-white/10 bg-white/6 text-white/84 shadow-none hover:border-white/18 hover:bg-white/12 hover:text-white"
+        >
+          {isExpanded ? <Minimize2 className="h-3.5 w-3.5" /> : <Maximize2 className="h-3.5 w-3.5" />}
+        </IconButton>
+      </div>
+
+    </div>
+  );
+
+  return (
+    <>
+      <div className="group relative flex h-[392px] cursor-zoom-in items-center justify-center overflow-hidden border-b border-slate-100 bg-slate-100">
+        {renderViewerCanvas(false)}
+      </div>
+
+      {isExpanded ? (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/46 p-8 backdrop-blur-sm"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Expanded design viewer"
+          onClick={toggleExpanded}
+        >
+          <div className="group relative h-full max-h-[84vh] w-full max-w-[1380px]" onClick={(event) => event.stopPropagation()}>
+            {renderViewerCanvas(true)}
+          </div>
+        </div>
+      ) : null}
+    </>
   );
 }
 
@@ -311,71 +413,7 @@ export function DesignPage() {
               </div>
             </div>
 
-            <div className="group relative flex h-[380px] items-center justify-center overflow-hidden border-b border-slate-100 bg-slate-50">
-              <div
-                className="pointer-events-none absolute inset-0 opacity-20"
-                style={{
-                  backgroundImage:
-                    "linear-gradient(#94a3b8 1px, transparent 1px), linear-gradient(90deg, #94a3b8 1px, transparent 1px)",
-                  backgroundSize: "32px 32px"
-                }}
-              />
-
-              <div
-                className="pointer-events-none absolute inset-0 h-16 translate-y-full bg-gradient-to-b from-transparent via-blue-500 to-transparent opacity-10"
-                style={{ animation: "design-scan 5s linear infinite" }}
-              />
-
-              <div className="pointer-events-none absolute bottom-5 left-1/2 z-0 -translate-x-1/2 text-center opacity-30">
-                <p className="jarvis-text-10 font-black uppercase tracking-[0.4em] text-slate-400">WEBGL BIM VIEWER PLACEHOLDER</p>
-              </div>
-
-              <div className="absolute top-4 left-4 z-10 flex flex-col gap-2.5">
-                <div className="flex items-center rounded-md border border-emerald-100 bg-white/90 px-2.5 py-1.5 shadow-sm backdrop-blur-md">
-                  <Activity className="mr-2 h-3.5 w-3.5 text-emerald-500" />
-                  <span className="text-[9px] font-bold uppercase tracking-widest text-emerald-700">Design Agent Active</span>
-                </div>
-                <div className="rounded-md border border-slate-200 bg-white/90 px-2.5 py-1.5 shadow-sm backdrop-blur-md">
-                  <span className="text-[9px] font-semibold uppercase tracking-widest text-slate-600">LOD 400 Extracted</span>
-                </div>
-              </div>
-
-              <div className="absolute top-4 right-4 z-10 flex gap-2">
-                <IconButton variant="surface" size="sm" className="border-slate-200 bg-white/90 text-slate-500 backdrop-blur-md hover:bg-white hover:text-blue-600">
-                  <Filter className="h-4 w-4" />
-                </IconButton>
-                <IconButton variant="surface" size="sm" className="border-slate-200 bg-white/90 text-slate-500 backdrop-blur-md hover:bg-white hover:text-blue-600">
-                  <Maximize2 className="h-4 w-4" />
-                </IconButton>
-              </div>
-
-              <div className="relative h-72 w-72 scale-100 transition-transform duration-1000 group-hover:scale-105">
-                <div className="absolute inset-0 origin-center rotate-12 rounded-2xl border-[3px] border-blue-200/80 bg-blue-50/40 shadow-inner backdrop-blur-sm transition-all duration-700" />
-                <div className="absolute inset-6 origin-center -rotate-3 rounded-2xl border-[2px] border-slate-300 bg-white/80 shadow-md backdrop-blur-md transition-all duration-700" />
-
-                {activePackageId === "pkg-towerA" ? (
-                  <>
-                    <div className="absolute top-1/4 left-1/3 h-10 w-10 rounded-full border-2 border-rose-400 bg-rose-500/10 opacity-60 animate-ping" />
-                    <div className="absolute top-1/4 left-1/3 z-20 flex h-10 w-10 items-center justify-center rounded-full border-2 border-rose-500 bg-white/90 shadow-lg shadow-rose-500/20 backdrop-blur-md transition-colors hover:bg-rose-50">
-                      <ShieldAlert className="h-4 w-4 text-rose-600" />
-                    </div>
-                    <div className="absolute right-1/4 bottom-1/3 z-20 flex h-14 w-14 items-center justify-center rounded-lg border-2 border-dashed border-amber-400 bg-white/90 shadow-lg shadow-amber-500/20 backdrop-blur-md transition-colors hover:bg-amber-50">
-                      <span className="text-[9px] font-black uppercase tracking-wider text-amber-700">SPEC</span>
-                    </div>
-                  </>
-                ) : null}
-
-                {activePackageId === "pkg-podium" ? (
-                  <div className="absolute top-1/2 left-1/2 z-20 flex h-24 w-24 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-xl border-2 border-dashed border-rose-400 bg-white/90 shadow-lg shadow-rose-500/20 backdrop-blur-md transition-colors hover:bg-rose-50">
-                    <span className="jarvis-text-10 px-2 text-center leading-relaxed font-black uppercase tracking-widest text-rose-700">
-                      Construct-
-                      <br />
-                      ability
-                    </span>
-                  </div>
-                ) : null}
-              </div>
-            </div>
+            <DesignViewerSurface selectedIssue={selectedIssue} />
 
             <div className="flex flex-col justify-between gap-3 border-b border-slate-100 bg-white px-5 py-3 md:flex-row md:items-center">
               <div className="flex items-center space-x-2">
@@ -605,17 +643,6 @@ export function DesignPage() {
           </div>
         </PrototypeCard>
       </div>
-
-      <style jsx global>{`
-        @keyframes design-scan {
-          0% {
-            top: -20%;
-          }
-          100% {
-            top: 120%;
-          }
-        }
-      `}</style>
     </div>
   );
 }

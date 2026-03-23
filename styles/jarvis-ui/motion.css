@@ -49,6 +49,10 @@
   animation: jarvis-ai-aurora var(--jarvis-motion-duration-ambient) linear infinite;
 }
 
+.jarvis-viewer-scan {
+  animation: jarvis-viewer-scan 5s linear infinite;
+}
+
 @keyframes jarvis-fade-in {
   from {
     opacity: 0;
@@ -97,12 +101,23 @@
   }
 }
 
+@keyframes jarvis-viewer-scan {
+  0% {
+    transform: translateY(-135%);
+  }
+
+  100% {
+    transform: translateY(145%);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-in,
   .fade-in,
   .rise-in,
   .slide-in-from-right-4,
-  .jarvis-ai-ambient::before {
+  .jarvis-ai-ambient::before,
+  .jarvis-viewer-scan {
     animation-duration: 1ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 1ms !important;
