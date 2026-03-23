@@ -10,6 +10,7 @@
 ## 2. Approved Source Inputs
 
 - Visual source:
+- Module PRD source:
 - Scope and naming source:
 - Supporting coding docs:
 - Current implementation references:

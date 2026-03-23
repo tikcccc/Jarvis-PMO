@@ -50,5 +50,6 @@ Prototype phase may use simplified error handling:
 ## 6. Source Governance
 
 - Input data should trace back to approved files in `reference-doc/IN/`.
+- Module-shaped mock responses should align with the matching split module PRD markdown under `reference-doc/IN/**/2026.03.JPM.Platform/` when available.
 - `reference-doc/PENDING` is not a valid API data source.
 - If generated `OUT` materials are used, they must be traceable to the current active `IN` baseline.

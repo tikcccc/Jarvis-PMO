@@ -1,0 +1,759 @@
+import React, { useState, useEffect, useRef } from 'react';
+import { 
+  LayoutDashboard, Layers, Target, Milestone, FileCheck, ShoppingCart, 
+  PenTool, Wallet, CreditCard, Eye, ShieldCheck, HardHat, Key, Search, 
+  Bell, MoreVertical, ChevronRight, ArrowUpRight, TrendingUp, MapPin, 
+  Activity, CheckCircle2, AlertCircle, Clock, Scan, Database, Filter, 
+  Maximize2, ExternalLink, Info, Calendar, FileText, UploadCloud, Split, 
+  ShieldAlert, ArrowRightLeft, DollarSign, BarChart3, Box, Cpu, Zap,
+  CheckCircle, AlertTriangle, Hammer, Ruler, TrendingDown, BarChart2, PieChart,
+  Share2
+} from 'lucide-react';
+
+// --- 共用 UI 元件 (Shared UI Components) ---
+
+const Card = ({ children, className = "" }) => (
+  <div className={`bg-white rounded-2xl border border-slate-200/70 shadow-sm transition-all duration-300 hover:shadow-md ${className}`}>
+    {children}
+  </div>
+);
+
+const Badge = ({ children, variant = "default" }) => {
+  const styles = {
+    default: "bg-slate-100 text-slate-700",
+    success: "bg-emerald-50 text-emerald-700 border border-emerald-200/50",
+    warning: "bg-amber-50 text-amber-700 border border-amber-200/50",
+    danger: "bg-rose-50 text-rose-700 border border-rose-200/50",
+    info: "bg-blue-50 text-blue-700 border border-blue-200/50",
+    purple: "bg-purple-50 text-purple-700 border border-purple-200/50",
+  };
+  return (
+    <span className={`px-2.5 py-1 rounded-md text-[11px] font-semibold uppercase tracking-wider ${styles[variant] || styles.default}`}>
+      {children}
+    </span>
+  );
+};
+
+// --- ECharts 動態載入封裝 (ECharts Dynamic Wrapper) ---
+const EChartsWrapper = ({ option, style, className }) => {
+  const chartRef = useRef(null);
+
+  useEffect(() => {
+    let chartInstance = null;
+
+    const initChart = () => {
+      if (window.echarts && chartRef.current) {
+        chartInstance = window.echarts.init(chartRef.current);
+        chartInstance.setOption(option);
+      }
+    };
+
+    if (!window.echarts) {
+      const script = document.createElement('script');
+      script.src = 'https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js';
+      script.async = true;
+      script.onload = initChart;
+      document.head.appendChild(script);
+    } else {
+      initChart();
+    }
+
+    const handleResize = () => chartInstance?.resize();
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      chartInstance?.dispose();
+    };
+  }, [option]);
+
+  return <div ref={chartRef} style={style} className={className} />;
+};
+
+// --- 模擬資料 (Mock Data) ---
+const KPIS = [
+  { label: "Model Packages Synced", val: "8/9", status: "Healthy", color: "blue", icon: Box },
+  { label: "Open Issues (Clash/Spec)", val: "24", status: "-12 this week", color: "rose", icon: AlertTriangle },
+  { label: "MiC Ind. Index", val: "85/100", status: "Target Met", color: "emerald", icon: Cpu },
+  { label: "Forecast Cost Delta", val: "+1.2%", status: "Under Control", color: "amber", icon: DollarSign },
+];
+
+const PACKAGES = [
+  { id: "pkg-podium", name: "Podium & Retail Zone", status: "warning", sync: "98%" },
+  { id: "pkg-towerA", name: "Tower A (L1-L20)", status: "danger", sync: "85%" },
+  { id: "pkg-towerB", name: "Tower B (L1-L20)", status: "success", sync: "100%" },
+  { id: "pkg-basement", name: "Basement Carpark", status: "success", sync: "100%" },
+];
+
+const ISSUES_DATA = {
+  "pkg-towerA": [
+    { id: "ISS-4092", type: "Clash", severity: "High", trade: "MEP vs Structural", area: "Tower A - L12 Shaft", desc: "HVAC Main Duct intersects with Shear Wall SW-04.", specRef: "N/A", status: "Open" },
+    { id: "ISS-4093", type: "Spec Mismatch", severity: "Medium", trade: "Architecture", area: "Tower A - L15 Lobby", desc: "Floor finish specified as Marble in Doc, but BIM model shows Ceramic Tile.", specRef: "SPEC-FIN-02", status: "Review" },
+    { id: "ISS-4095", type: "Missing Info", severity: "High", trade: "Facade", area: "Tower A - South Elev", desc: "Curtain wall bracket details missing, preventing accurate steel quantity extraction.", specRef: "LOD 400 Req", status: "Open" },
+    { id: "ISS-4098", type: "Clash", severity: "Low", trade: "Plumbing vs Elec", area: "Tower A - L08 Ceiling", desc: "Cable tray clearance < 100mm from sprinkler pipe.", specRef: "MEP-COORD-01", status: "Resolved" },
+  ],
+  "pkg-podium": [
+    { id: "ISS-3101", type: "Error", severity: "High", trade: "Structural", area: "Podium - Transfer Plate", desc: "Rebar density exceeds constructability limits (MiC constraint).", specRef: "STR-MIC-05", status: "Open" },
+  ]
+};
+
+const TRADE_COSTS = [
+  { trade: "Structural Steel", budget: 45.0, extracted: 46.2, unit: "M", status: "over" },
+  { trade: "MEP Systems", budget: 32.5, extracted: 31.8, unit: "M", status: "under" },
+  { trade: "Facade & Glazing", budget: 28.0, extracted: 28.0, unit: "M", status: "on-track" },
+];
+
+const AGENT_SUGGESTIONS = [
+  { id: "VE-01", type: "Value Engineering", desc: "Replace specified generic fire doors on L1-L5 with pre-certified sizes to reduce unit cost.", savings: "$120,000", status: "Pending PMO" },
+  { id: "VE-02", type: "Constructability", desc: "Optimize MEP routing in Basement to allow standard 3m modular pipe racks.", savings: "$330,000", status: "In Review" },
+];
+
+// --- ECharts 圖表設定 (ECharts Options) ---
+const issueDistributionOption = {
+  tooltip: { trigger: 'item', backgroundColor: '#ffffff', textStyle: { color: '#0f172a', fontSize: 11 }, borderColor: '#e2e8f0', padding: 8, borderRadius: 8 },
+  series: [
+    {
+      type: 'pie',
+      radius: ['60%', '90%'], 
+      avoidLabelOverlap: false,
+      itemStyle: { borderColor: '#fff', borderWidth: 2 },
+      label: { show: false },
+      data: [
+        { value: 12, name: 'Clashes', itemStyle: { color: '#f43f5e' } },
+        { value: 8, name: 'Spec Mismatch', itemStyle: { color: '#fbbf24' } },
+        { value: 4, name: 'Missing Info', itemStyle: { color: '#a855f7' } }
+      ]
+    }
+  ]
+};
+
+const costTrendOption = {
+  tooltip: { 
+    trigger: 'axis', 
+    backgroundColor: '#ffffff', 
+    textStyle: { color: '#0f172a', fontSize: 12 }, 
+    borderColor: '#e2e8f0',
+    padding: 10,
+    borderRadius: 8,
+    formatter: '{b} <br/>Actual: <span style="font-weight:600">${c}M</span> <br/><span style="color:#64748b">Budget: $100M</span>'
+  },
+  grid: { top: 15, right: 10, bottom: 20, left: 35 },
+  xAxis: { 
+    type: 'category', 
+    data: ['Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar'], 
+    axisLine: { show: false }, 
+    axisTick: { show: false }, 
+    axisLabel: { color: '#64748b', fontSize: 10, margin: 8, fontWeight: 500 } 
+  },
+  yAxis: { 
+    type: 'value', 
+    min: 90, 
+    max: 110,
+    splitLine: { lineStyle: { color: '#f1f5f9', type: 'dashed' } }, 
+    axisLabel: { color: '#94a3b8', fontSize: 10, fontWeight: 500 } 
+  },
+  series: [
+    {
+      data: [102, 105, 103, 106, 101, 101.2],
+      type: 'bar',
+      barWidth: '25%',
+      itemStyle: {
+        color: (params) => params.value > 100 ? '#f43f5e' : '#10b981',
+        borderRadius: [3, 3, 0, 0]
+      },
+      markLine: {
+        data: [{ yAxis: 100, name: 'Budget' }],
+        lineStyle: { color: '#cbd5e1', type: 'dashed', width: 1.5 },
+        symbol: 'none',
+        label: { show: false }
+      }
+    }
+  ]
+};
+
+// --- 設計管理主視圖 (Design Page View) ---
+const DesignPageView = () => {
+  const [activePackage, setActivePackage] = useState(PACKAGES[1].id);
+  const [selectedIssue, setSelectedIssue] = useState(ISSUES_DATA["pkg-towerA"][0]);
+
+  const currentIssues = ISSUES_DATA[activePackage] || [];
+
+  return (
+    <div className="space-y-6 animate-in fade-in duration-500 pb-10">
+      
+      {/* 1. 模組標題列 (Module Header) */}
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+        <div>
+          <div className="flex items-center space-x-3 mb-1.5">
+            <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Project Design Management</h2>
+            <Badge variant="info">SSOT BIM-Cost Sync</Badge>
+          </div>
+          <p className="text-slate-500 text-xs font-medium">Real-time Model Health, Specification Consistency & Design-to-Quantity Extraction</p>
+        </div>
+        <div className="flex space-x-3">
+          <button className="px-4 py-2 bg-white border border-slate-200 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition-all flex items-center shadow-sm">
+            <FileText className="w-4 h-4 mr-2 text-slate-400" /> AUDIT LOGS
+          </button>
+          <button className="px-4 py-2 bg-slate-900 text-white rounded-lg text-xs font-semibold hover:bg-slate-800 shadow-md shadow-slate-900/10 transition-all flex items-center">
+            <Activity className="w-4 h-4 mr-2 text-blue-400" /> INITIATE AGENT
+          </button>
+        </div>
+      </div>
+
+      {/* 2. KPI 數據面板 (KPI Overview Grid) */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        {KPIS.map((kpi, i) => (
+          <Card key={i} className="p-5 flex flex-col justify-between group">
+            <div className="flex justify-between items-start">
+              <div className={`p-2 bg-${kpi.color}-50 text-${kpi.color}-600 rounded-lg ring-1 ring-${kpi.color}-100 transition-transform group-hover:scale-105`}>
+                <kpi.icon className="w-4 h-4" />
+              </div>
+              <Badge variant={kpi.color === 'rose' ? 'danger' : kpi.color === 'amber' ? 'warning' : kpi.color === 'emerald' ? 'success' : 'info'}>
+                {kpi.status}
+              </Badge>
+            </div>
+            <div className="mt-4">
+              <p className="text-[10px] text-slate-500 font-semibold uppercase tracking-wider leading-none mb-1.5">{kpi.label}</p>
+              <p className="text-2xl font-bold text-slate-900">{kpi.val}</p>
+            </div>
+          </Card>
+        ))}
+      </div>
+
+      {/* 3. 設計血緣窄版帶 (Compact Design Lineage Strip) - 改為上下排版 */}
+      <Card className="px-6 py-5 bg-gradient-to-r from-white to-slate-50/50 flex flex-col space-y-5">
+        
+        {/* 上半部：標題與描述 */}
+        <div className="flex items-center justify-between border-b border-slate-100/50 pb-2">
+          <div>
+            <div className="flex items-center space-x-2.5 mb-1.5">
+              <div className="p-1 bg-slate-100 rounded">
+                <Share2 className="w-3.5 h-3.5 text-slate-500" />
+              </div>
+              <h3 className="text-[11px] font-bold uppercase tracking-widest text-slate-800">Design Lineage (SSOT)</h3>
+            </div>
+            <p className="text-[10px] text-slate-500 font-medium">Approved drawing lineage from master plan to construction release.</p>
+          </div>
+          <button className="text-[10px] font-bold text-blue-600 hover:text-blue-800 uppercase tracking-widest hidden sm:block">View Full History</button>
+        </div>
+
+        {/* 下半部：全寬時間軸 */}
+        <div className="relative flex items-center justify-between px-6 sm:px-12 py-2 w-full max-w-5xl mx-auto">
+          {/* 連接線 (考慮到兩側的 padding，使用 left/right 稍微內縮) */}
+          <div className="absolute top-1/2 left-8 right-8 sm:left-14 sm:right-14 h-px bg-slate-200 border-t border-dashed border-slate-300 -translate-y-1/2" />
+
+          {[
+            { stage: "Master Plan", date: "2025-Q4", status: "Base", icon: MapPin },
+            { stage: "GBP", date: "2026-01", status: "Approved", icon: FileText },
+            { stage: "Tender", date: "2026-03", status: "Active", icon: ShoppingCart },
+            { stage: "Construction", date: "Pending", status: "Locked", icon: Hammer },
+          ].map((step, i) => (
+            <div key={i} className="relative z-10 flex flex-col items-center group cursor-pointer w-24">
+              <div className={`w-8 h-8 rounded-full border-2 border-white shadow-sm flex items-center justify-center transition-all duration-300 ${
+                step.status === 'Active'
+                  ? 'bg-blue-600 text-white scale-110 ring-[3px] ring-blue-50'
+                  : step.status === 'Approved'
+                    ? 'bg-emerald-500 text-white hover:scale-105'
+                    : 'bg-slate-100 text-slate-400 hover:bg-slate-200'
+              }`}>
+                <step.icon className="w-3.5 h-3.5" />
+              </div>
+              <div className="mt-2.5 text-center">
+                <p className={`text-[10px] font-bold uppercase tracking-wider whitespace-nowrap transition-colors ${step.status === 'Active' ? 'text-blue-600' : 'text-slate-700'}`}>{step.stage}</p>
+                <p className="text-[9px] text-slate-400 font-medium whitespace-nowrap mt-0.5">{step.date}</p>
+              </div>
+
+              <div className="absolute -top-10 opacity-0 group-hover:opacity-100 transition-opacity bg-slate-900 text-white shadow-lg rounded-md px-2.5 py-1 whitespace-nowrap pointer-events-none">
+                <span className="text-[9px] font-semibold tracking-wide">View Record</span>
+                <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-slate-900 rotate-45"></div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </Card>
+
+      {/* 4. 主要協同工作台佈局 (Main Coordination Layout) */}
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+        
+        {/* 左/中：工作台核心 (Workbench Left/Center) */}
+        <div className="xl:col-span-2">
+          <Card className="flex flex-col overflow-hidden border-slate-200/80 shadow-md h-full">
+            {/* 分包選擇器 (Package Selector) - Segmented Control 風格 */}
+            <div className="px-5 py-4 border-b border-slate-100 bg-slate-50/50 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <div className="flex items-center space-x-2">
+                  <div className="p-1 bg-white shadow-sm rounded border border-slate-100">
+                    <Layers className="w-3.5 h-3.5 text-slate-600" />
+                  </div>
+                  <h3 className="font-bold text-slate-900 text-xs uppercase tracking-wide">Design Control Surface</h3>
+                </div>
+              </div>
+              
+              {/* 優化後的按鈕區域 */}
+              <div className="flex bg-slate-200/60 p-1 rounded-lg overflow-x-auto no-scrollbar border border-slate-200/50">
+                {PACKAGES.map(pkg => (
+                  <button
+                    key={pkg.id}
+                    onClick={() => {
+                      setActivePackage(pkg.id);
+                      setSelectedIssue(ISSUES_DATA[pkg.id]?.[0] || null);
+                    }}
+                    className={`px-3 py-1.5 rounded-md text-[10px] font-semibold uppercase tracking-wide whitespace-nowrap transition-all duration-200 flex items-center ${
+                      activePackage === pkg.id 
+                        ? 'bg-white text-blue-700 shadow-sm' 
+                        : 'text-slate-500 hover:text-slate-800 hover:bg-slate-200/50'
+                    }`}
+                  >
+                    {pkg.name}
+                    {pkg.status === 'danger' && <span className="ml-1.5 inline-block w-1.5 h-1.5 bg-rose-500 rounded-full animate-pulse shadow-[0_0_6px_rgba(244,63,94,0.6)]" />}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* 模擬 BIM 畫布 (Mock BIM Viewer Canvas) */}
+            <div className="h-[380px] bg-slate-50 relative border-b border-slate-100 overflow-hidden flex items-center justify-center group">
+              <div className="absolute inset-0 opacity-20 pointer-events-none" style={{backgroundImage: 'linear-gradient(#94a3b8 1px, transparent 1px), linear-gradient(90deg, #94a3b8 1px, transparent 1px)', backgroundSize: '32px 32px'}} />
+              
+              <div className="absolute inset-0 opacity-10 pointer-events-none bg-gradient-to-b from-transparent via-blue-500 to-transparent h-16 animate-[pulse_3s_ease-in-out_infinite] translate-y-full" style={{ animation: 'scan 5s linear infinite' }} />
+              <style dangerouslySetInnerHTML={{__html: `@keyframes scan { 0% { top: -20%; } 100% { top: 120%; } }`}} />
+
+              <div className="absolute bottom-5 left-1/2 -translate-x-1/2 z-0 pointer-events-none opacity-30 text-center">
+                <p className="text-[10px] font-black tracking-[0.4em] uppercase text-slate-400">WEBGL BIM VIEWER PLACEHOLDER</p>
+              </div>
+
+              <div className="absolute top-4 left-4 z-10 flex flex-col gap-2.5">
+                <div className="bg-white/90 backdrop-blur-md px-2.5 py-1.5 rounded-md shadow-sm border border-emerald-100 flex items-center">
+                  <Activity className="w-3.5 h-3.5 text-emerald-500 mr-2" />
+                  <span className="text-[9px] font-bold text-emerald-700 uppercase tracking-widest">Design Agent Active</span>
+                </div>
+                <div className="bg-white/90 backdrop-blur-md px-2.5 py-1.5 rounded-md shadow-sm border border-slate-200">
+                  <span className="text-[9px] font-semibold text-slate-600 uppercase tracking-widest">LOD 400 Extracted</span>
+                </div>
+              </div>
+
+              <div className="absolute top-4 right-4 z-10 flex gap-2">
+                <button className="p-2 bg-white/90 backdrop-blur-md shadow-sm border border-slate-200 rounded-lg text-slate-500 hover:text-blue-600 hover:bg-white transition-all">
+                  <Filter className="w-4 h-4" />
+                </button>
+                <button className="p-2 bg-white/90 backdrop-blur-md shadow-sm border border-slate-200 rounded-lg text-slate-500 hover:text-blue-600 hover:bg-white transition-all">
+                  <Maximize2 className="w-4 h-4" />
+                </button>
+              </div>
+
+              {/* 抽象 BIM 物件 (BIM Abstract Object) */}
+              <div className="relative w-72 h-72 scale-100 group-hover:scale-105 transition-transform duration-1000">
+                <div className="absolute inset-0 border-[3px] border-blue-200/80 rounded-2xl bg-blue-50/40 rotate-12 transform origin-center transition-all duration-700 shadow-inner backdrop-blur-sm" />
+                <div className="absolute inset-6 border-[2px] border-slate-300 rounded-2xl bg-white/80 -rotate-3 transform origin-center transition-all duration-700 shadow-md backdrop-blur-md" />
+                
+                {activePackage === 'pkg-towerA' && (
+                  <>
+                    <div className="absolute top-1/4 left-1/3 w-10 h-10 border-2 border-rose-400 bg-rose-500/10 rounded-full animate-ping opacity-60" />
+                    <div className="absolute top-1/4 left-1/3 w-10 h-10 border-2 border-rose-500 bg-white/90 backdrop-blur-md rounded-full flex items-center justify-center shadow-lg shadow-rose-500/20 cursor-pointer hover:bg-rose-50 transition-colors z-20">
+                      <ShieldAlert className="w-4 h-4 text-rose-600" />
+                    </div>
+                    <div className="absolute bottom-1/3 right-1/4 w-14 h-14 border-2 border-amber-400 bg-white/90 backdrop-blur-md rounded-lg border-dashed flex items-center justify-center shadow-lg shadow-amber-500/20 cursor-pointer hover:bg-amber-50 transition-colors z-20">
+                      <span className="text-[9px] font-black text-amber-700 uppercase tracking-widest">SPEC</span>
+                    </div>
+                  </>
+                )}
+                {activePackage === 'pkg-podium' && (
+                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-24 h-24 border-2 border-rose-400 bg-white/90 backdrop-blur-md rounded-xl border-dashed flex items-center justify-center shadow-lg shadow-rose-500/20 cursor-pointer hover:bg-rose-50 transition-colors z-20">
+                     <span className="text-[10px] font-black text-rose-700 uppercase tracking-widest text-center px-2 leading-relaxed">Construct-<br/>ability</span>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* 問題分佈狀態列 (Issue Distribution Toolbar) */}
+            <div className="px-5 py-3 border-b border-slate-100 bg-white flex flex-col md:flex-row md:items-center justify-between gap-3">
+              <div className="flex items-center space-x-2">
+                <div className="p-1 bg-slate-50 rounded">
+                  <ShieldAlert className="w-3.5 h-3.5 text-slate-500" />
+                </div>
+                <h4 className="text-[11px] font-bold text-slate-800 uppercase tracking-widest">Active Issue Matrix</h4>
+              </div>
+              
+              <div className="flex items-center bg-slate-50 p-1 rounded-lg border border-slate-200/80 shadow-sm">
+                <div className="flex space-x-4 mx-3">
+                  <div className="flex items-center text-[10px] font-semibold text-rose-600">
+                    <span className="w-1.5 h-1.5 rounded-full bg-rose-500 mr-1.5 shadow-sm"/> Clashes (12)
+                  </div>
+                  <div className="flex items-center text-[10px] font-semibold text-amber-600">
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-400 mr-1.5 shadow-sm"/> Spec Mismatch (8)
+                  </div>
+                  <div className="flex items-center text-[10px] font-semibold text-purple-600">
+                    <span className="w-1.5 h-1.5 rounded-full bg-purple-500 mr-1.5 shadow-sm"/> Missing Info (4)
+                  </div>
+                </div>
+                <div className="pl-3 border-l border-slate-200 h-8 flex items-center">
+                  <EChartsWrapper option={issueDistributionOption} style={{ width: '40px', height: '40px' }} />
+                </div>
+              </div>
+            </div>
+
+            {/* 問題矩陣列表 (Issue Matrix Table) */}
+            <div className="p-0 overflow-x-auto">
+              <table className="w-full text-left border-collapse">
+                <thead className="bg-slate-50/50 text-[10px] font-semibold text-slate-500 uppercase tracking-wider border-b border-slate-200">
+                  <tr>
+                    <th className="px-5 py-3 whitespace-nowrap">Issue ID</th>
+                    <th className="px-5 py-3 whitespace-nowrap">Type</th>
+                    <th className="px-5 py-3 whitespace-nowrap">Trade & Location</th>
+                    <th className="px-5 py-3 whitespace-nowrap">Severity</th>
+                    <th className="px-5 py-3 text-right whitespace-nowrap">Status</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 bg-white">
+                  {currentIssues.length > 0 ? currentIssues.map((issue) => (
+                    <tr 
+                      key={issue.id} 
+                      onClick={() => setSelectedIssue(issue)}
+                      className={`cursor-pointer transition-colors duration-200 ${selectedIssue?.id === issue.id ? 'bg-blue-50/60' : 'hover:bg-slate-50'}`}
+                    >
+                      <td className="px-5 py-3.5 text-xs font-semibold text-slate-900">{issue.id}</td>
+                      <td className="px-5 py-3.5">
+                        <Badge variant={issue.type === 'Clash' ? 'danger' : issue.type === 'Spec Mismatch' ? 'warning' : issue.type === 'Missing Info' ? 'purple' : 'default'}>
+                          {issue.type}
+                        </Badge>
+                      </td>
+                      <td className="px-5 py-3.5">
+                        <p className="text-xs font-medium text-slate-900 mb-0.5">{issue.trade}</p>
+                        <p className="text-[10px] text-slate-500">{issue.area}</p>
+                      </td>
+                      <td className="px-5 py-3.5">
+                        <span className={`text-[10px] font-bold uppercase tracking-wider ${issue.severity === 'High' ? 'text-rose-600' : issue.severity === 'Medium' ? 'text-amber-600' : 'text-emerald-600'}`}>
+                          {issue.severity}
+                        </span>
+                      </td>
+                      <td className="px-5 py-3.5 text-right">
+                        <span className="text-[10px] font-semibold text-slate-500">{issue.status}</span>
+                      </td>
+                    </tr>
+                  )) : (
+                    <tr>
+                      <td colSpan="5" className="px-5 py-10 text-center text-sm font-medium text-slate-400">
+                        No active issues detected in this package.
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </Card>
+        </div>
+
+        {/* 右側：深度洞察與分析面板 (RIGHT: Insight & Log Panels) */}
+        <div className="flex flex-col gap-6 h-full">
+          
+          {/* 面板 1：問題深度解析 (Panel 1: Issue Deep Dive) */}
+          <Card className="p-5 shrink-0">
+            <div className="flex items-center mb-4 pb-3 border-b border-slate-100">
+              <div className="p-1 bg-blue-50 rounded md mr-2">
+                <Split className="w-3.5 h-3.5 text-blue-600" />
+              </div>
+              <h3 className="font-bold text-slate-900 text-xs tracking-wide uppercase">Issue Deep Dive</h3>
+            </div>
+            
+            {selectedIssue ? (
+              <div className="space-y-4 animate-in slide-in-from-right-2 fade-in duration-300">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{selectedIssue.id}</span>
+                    <h4 className="text-sm font-bold text-slate-900 mt-1">{selectedIssue.type} Exception</h4>
+                  </div>
+                  <Badge variant={selectedIssue.severity === 'High' ? 'danger' : 'warning'}>{selectedIssue.severity}</Badge>
+                </div>
+                
+                <div className="bg-slate-50 rounded-lg p-3 border border-slate-100">
+                  <p className="text-xs text-slate-700 leading-relaxed font-medium">
+                    {selectedIssue.desc}
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-2 gap-2.5">
+                  <div className="p-2.5 bg-white rounded-lg border border-slate-200 shadow-sm">
+                    <p className="text-[9px] font-semibold text-slate-400 uppercase tracking-widest mb-0.5">Location</p>
+                    <p className="text-[11px] font-semibold text-slate-900 truncate">{selectedIssue.area}</p>
+                  </div>
+                  <div className="p-2.5 bg-white rounded-lg border border-slate-200 shadow-sm">
+                    <p className="text-[9px] font-semibold text-slate-400 uppercase tracking-widest mb-0.5">Spec Ref</p>
+                    <p className="text-[11px] font-semibold text-slate-900 truncate">{selectedIssue.specRef}</p>
+                  </div>
+                </div>
+
+                <div className="pt-1 flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2.5">
+                  <button className="flex-1 py-2.5 bg-blue-50 text-blue-700 rounded-lg text-[11px] font-bold uppercase tracking-wide hover:bg-blue-100 transition-colors shadow-sm">
+                    Assign RFI
+                  </button>
+                  <button className="flex-1 py-2.5 border border-slate-200 text-slate-700 rounded-lg text-[11px] font-bold uppercase tracking-wide hover:bg-slate-50 hover:border-slate-300 transition-colors shadow-sm">
+                    View in 3D
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="py-10 text-center">
+                 <CheckCircle2 className="w-8 h-8 text-emerald-200 mx-auto mb-2" />
+                 <p className="text-xs font-medium text-slate-400">Select an issue from the matrix to view details.</p>
+              </div>
+            )}
+          </Card>
+
+          {/* 面板 2：AI 設計建議 (Panel 2: Design Agent Suggestions) */}
+          <Card className="p-5 border-amber-100/50 bg-gradient-to-b from-white to-amber-50/20 shrink-0">
+            <div className="flex items-center mb-4 pb-3 border-b border-slate-100">
+              <div className="p-1 bg-amber-50 rounded md mr-2">
+                <Zap className="w-3.5 h-3.5 text-amber-500" />
+              </div>
+              <h3 className="font-bold text-slate-900 text-xs tracking-wide uppercase">AI Design Suggestions</h3>
+            </div>
+
+            <div className="space-y-3">
+              {AGENT_SUGGESTIONS.map((sugg, i) => (
+                <div key={i} className="p-3 bg-white border border-slate-200 rounded-lg hover:border-amber-200 hover:shadow-sm transition-all duration-300 group">
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-[9px] font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded uppercase tracking-wider border border-amber-100/50">
+                      {sugg.type}
+                    </span>
+                    <span className="text-[10px] font-semibold text-slate-400">{sugg.status}</span>
+                  </div>
+                  <p className="text-xs text-slate-700 leading-relaxed font-medium mb-3">
+                    {sugg.desc}
+                  </p>
+                  <div className="flex items-center justify-between border-t border-slate-100 pt-2.5">
+                    <span className="text-[9px] text-slate-400 uppercase font-bold tracking-widest">Est. Savings</span>
+                    <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">{sugg.savings}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Card>
+
+          {/* 面板 4 (移至右側並壓縮)：DfMA 與工業化分析 (Panel 4: DfMA Constructability Index) */}
+          <Card className="p-5 bg-gradient-to-br from-slate-900 to-slate-800 text-white overflow-hidden relative border-slate-800 shadow-md flex-1 flex flex-col justify-between">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-blue-600/20 blur-[30px] rounded-full pointer-events-none" />
+            
+            <div className="relative z-10 flex flex-col h-full">
+              <div className="flex items-center space-x-2 mb-4 border-b border-slate-700/50 pb-3 shrink-0">
+                <div className="p-1 bg-blue-500/20 rounded-md border border-blue-500/30">
+                  <Hammer className="w-3.5 h-3.5 text-blue-400" />
+                </div>
+                <h3 className="text-[11px] font-bold uppercase tracking-widest text-slate-100">DfMA Constructability</h3>
+              </div>
+
+              <div className="space-y-4 flex-1 flex flex-col justify-center">
+                <div>
+                  <div className="flex justify-between text-[10px] font-semibold uppercase tracking-wider mb-1.5">
+                    <span className="text-slate-400">MiC Standardization</span>
+                    <span className="text-emerald-400 font-bold">92%</span>
+                  </div>
+                  <div className="h-1.5 w-full bg-slate-800 rounded-full overflow-hidden border border-slate-700">
+                    <div className="h-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.5)]" style={{ width: '92%' }} />
+                  </div>
+                </div>
+                
+                <div>
+                  <div className="flex justify-between text-[10px] font-semibold uppercase tracking-wider mb-1.5">
+                    <span className="text-slate-400">Non-Standard Elements</span>
+                    <span className="text-amber-400 font-bold">8.4%</span>
+                  </div>
+                  <div className="h-1.5 w-full bg-slate-800 rounded-full overflow-hidden border border-slate-700">
+                    <div className="h-full bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.5)]" style={{ width: '8.4%' }} />
+                  </div>
+                </div>
+              </div>
+
+              <div className="pt-4 mt-auto shrink-0">
+                <div className="p-3 bg-slate-800/60 rounded-lg border border-slate-700/50 backdrop-blur-sm">
+                  <p className="text-[10px] text-slate-300 leading-relaxed font-medium italic">
+                    "Highly adapted for off-site prefabrication. Est. wet-trade reduction: 65%."
+                  </p>
+                </div>
+              </div>
+            </div>
+          </Card>
+
+        </div>
+      </div>
+
+      {/* 5. 下層分析列 (滿版獨立一行)：成本擷取器 */}
+      <div className="mt-6">
+        <Card className="p-6">
+          <div className="flex flex-col xl:flex-row gap-8 xl:items-start">
+            
+            {/* 左側：圖表區塊 (現在變寬了) */}
+            <div className="flex-1 border-b xl:border-b-0 xl:border-r border-slate-100 pb-6 xl:pb-0 xl:pr-8">
+              <div className="flex justify-between items-center mb-5 h-8">
+                <div className="flex items-center">
+                  <div className="p-1 bg-emerald-50 rounded mr-2">
+                    <DollarSign className="w-4 h-4 text-emerald-600" />
+                  </div>
+                  <h3 className="font-bold text-slate-900 text-sm uppercase tracking-wide">Trade Cost Extractor</h3>
+                </div>
+                <Badge variant="info">LIVE SYNC</Badge>
+              </div>
+              <div className="flex justify-between items-center mb-4">
+                <span className="text-[11px] text-slate-500 uppercase tracking-widest font-semibold flex items-center">
+                  <BarChart2 className="w-3.5 h-3.5 mr-1.5 text-slate-400" /> 6-Month Cost Deviation Trend
+                </span>
+              </div>
+              {/* 圖表現在可以佔滿這半邊的寬度 */}
+              <EChartsWrapper option={costTrendOption} style={{ width: '100%', height: '220px' }} />
+            </div>
+
+            {/* 右側：成本列表 (改為網格佈局，排成一排) */}
+            <div className="xl:w-[45%] flex flex-col">
+              <div className="mb-5 h-8 hidden xl:flex items-center">
+                <h4 className="text-[11px] text-slate-500 uppercase tracking-widest font-bold">Real-time Package Cost Sync</h4>
+              </div>
+              {/* 這裡運用 grid 讓三個項目在平板以上並排顯示，達到一個一行的效果 */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 xl:grid-cols-1 gap-5">
+                {TRADE_COSTS.map((trade, i) => {
+                  const percent = Math.min((trade.extracted / trade.budget) * 100, 100);
+                  return (
+                    <div key={i} className="space-y-3 bg-slate-50/50 p-4 rounded-xl border border-slate-100">
+                      <div className="flex justify-between items-end">
+                        <p className="text-xs font-semibold text-slate-800">{trade.trade}</p>
+                        <div className="text-right">
+                          <p className={`text-sm font-bold ${trade.status === 'over' ? 'text-rose-600' : 'text-emerald-600'}`}>
+                            ${trade.extracted}{trade.unit}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="relative h-1.5 w-full bg-slate-200/60 rounded-full overflow-hidden">
+                        <div
+                          className={`absolute top-0 left-0 h-full ${trade.status === 'over' ? 'bg-rose-500' : 'bg-emerald-500'} transition-all duration-1000 ease-out`}
+                          style={{ width: `${percent}%` }}
+                        />
+                      </div>
+
+                      <div className="flex justify-between text-[10px] font-semibold uppercase tracking-wider">
+                        <span className="text-slate-500">BGT: ${trade.budget}{trade.unit}</span>
+                        {trade.status === 'over' && <span className="text-rose-600 flex items-center"><TrendingUp className="w-2.5 h-2.5 mr-0.5" /> +{((trade.extracted-trade.budget)/trade.budget*100).toFixed(1)}%</span>}
+                        {trade.status === 'under' && <span className="text-emerald-600 flex items-center"><TrendingDown className="w-2.5 h-2.5 mr-0.5" /> -{((trade.budget-trade.extracted)/trade.budget*100).toFixed(1)}%</span>}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+            
+          </div>
+        </Card>
+      </div>
+    </div>
+  );
+};
+
+// --- 應用程式主框架 (App Shell) ---
+export default function App() {
+  const [activeModule, setActiveModule] = useState("Design");
+  const [isSidebarOpen, setSidebarOpen] = useState(true);
+
+  const sidebarItems = [
+    { id: "Dashboard", label: "Strategic Overview", icon: LayoutDashboard },
+    { type: "divider", label: "Portfolio Management" },
+    { id: "Portfolio", label: "Portfolio (SSOT)", icon: Layers },
+    { id: "Requirements", label: "Requirements", icon: Target },
+    { id: "Milestones", label: "Milestones", icon: Milestone },
+    { id: "Approvals", label: "Gov Approvals", icon: FileCheck },
+    { type: "divider", label: "Execution" },
+    { id: "Procurement", label: "Procurement", icon: ShoppingCart },
+    { id: "Design", label: "Design (BIM-Cost)", icon: PenTool },
+    { id: "Finance", label: "Finance", icon: Wallet },
+    { id: "Payment", label: "Jarvis PAY", icon: CreditCard },
+    { type: "divider", label: "Site & Quality" },
+    { id: "Progress", label: "Eagle Eye Progress", icon: Eye },
+    { id: "Quality", label: "DWSS Quality", icon: ShieldCheck },
+    { id: "Safety", label: "Smart Site Safety", icon: HardHat },
+    { id: "Handover", label: "Digital Twin Handover", icon: Key },
+  ];
+
+  return (
+    <div className="min-h-screen bg-slate-50 flex font-sans text-slate-900 antialiased selection:bg-blue-100 selection:text-blue-900 overflow-hidden">
+      {/* 側邊欄 (Sidebar) */}
+      <aside className={`bg-white border-r border-slate-200 transition-all duration-300 flex flex-col shrink-0 z-40 relative ${isSidebarOpen ? 'w-[280px]' : 'w-20'}`}>
+        <div className="p-6 flex items-center space-x-3 h-20 shrink-0 border-b border-slate-100">
+          <div className="w-10 h-10 bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl flex items-center justify-center shadow-lg shadow-slate-900/10 shrink-0">
+             <span className="text-white font-black text-lg italic tracking-tighter">J</span>
+          </div>
+          {isSidebarOpen && <span className="font-bold text-xl tracking-tight uppercase whitespace-nowrap">JARVIS<span className="text-blue-600">PMO</span></span>}
+        </div>
+
+        <nav className="flex-1 px-4 py-6 space-y-1 overflow-y-auto no-scrollbar">
+          {sidebarItems.map((item, idx) => {
+            if (item.type === 'divider') {
+              return isSidebarOpen ? (
+                <div key={idx} className="px-3 pt-6 pb-2 text-[11px] font-bold text-slate-400 uppercase tracking-widest">
+                  {item.label}
+                </div>
+              ) : <div key={idx} className="h-6" />;
+            }
+            const isActive = activeModule === item.id;
+            return (
+              <button
+                key={item.id}
+                onClick={() => setActiveModule(item.id)}
+                className={`w-full flex items-center space-x-3 px-3 py-3 rounded-xl transition-all duration-200 group ${
+                  isActive 
+                    ? 'bg-blue-50/80 text-blue-700 font-semibold shadow-sm ring-1 ring-blue-600/10' 
+                    : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900 font-medium'
+                }`}
+              >
+                <item.icon className={`w-5 h-5 shrink-0 transition-colors ${isActive ? 'text-blue-600' : 'text-slate-400 group-hover:text-slate-600'}`} />
+                {isSidebarOpen && <span className="text-sm truncate">{item.label}</span>}
+              </button>
+            );
+          })}
+        </nav>
+      </aside>
+
+      {/* 主內容區 (Main Content) */}
+      <main className="flex-1 flex flex-col h-screen overflow-hidden relative">
+        {/* 頂部導航列 (Top Header) */}
+        <header className="bg-white/80 backdrop-blur-xl border-b border-slate-200/80 h-20 flex items-center justify-between px-8 shrink-0 z-30 sticky top-0">
+          <div className="flex items-center space-x-4">
+             <button onClick={() => setSidebarOpen(!isSidebarOpen)} className="p-2 hover:bg-slate-100 rounded-xl text-slate-400 transition-colors">
+               <ChevronRight className={`w-5 h-5 transition-transform duration-300 ${isSidebarOpen ? 'rotate-180' : ''}`} />
+             </button>
+             <div className="h-5 w-px bg-slate-200 mx-2" />
+             <div className="flex items-center text-[12px] font-bold text-slate-400 uppercase tracking-widest">
+               Project Preview <ChevronRight className="w-3.5 h-3.5 mx-2" /> <span className="text-slate-800">Horizon Estates</span>
+             </div>
+          </div>
+          <div className="flex items-center space-x-6">
+            <div className="relative group">
+              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-blue-500 transition-colors" />
+              <input type="text" placeholder="Search SSOT Data..." className="pl-10 pr-4 py-2.5 bg-slate-100/80 border border-transparent rounded-xl text-xs font-semibold focus:bg-white focus:border-blue-200 focus:ring-4 focus:ring-blue-50 outline-none w-72 transition-all placeholder:text-slate-400" />
+            </div>
+            <button className="p-2.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-xl relative transition-colors">
+               <Bell className="w-5 h-5" />
+               <span className="absolute top-2 right-2 w-2 h-2 bg-rose-500 rounded-full border-2 border-white" />
+            </button>
+          </div>
+        </header>
+
+        {/* 捲動區域 (Scrollable Content) */}
+        <div className="flex-1 overflow-y-auto p-8 lg:p-10 no-scrollbar">
+          <div className="max-w-7xl mx-auto">
+             {activeModule === "Design" ? <DesignPageView /> : (
+               <div className="flex flex-col items-center justify-center h-[70vh] text-slate-300 animate-in fade-in duration-500">
+                 <Database className="w-20 h-20 mb-5 opacity-20" />
+                 <p className="text-sm font-bold uppercase tracking-widest text-slate-400">Loading Module...</p>
+               </div>
+             )}
+          </div>
+        </div>
+      </main>
+
+      {/* Jarvis AI 懸浮球 (Jarvis AI Floating Button) */}
+      <button className="fixed bottom-10 right-10 w-16 h-16 bg-slate-900 text-white rounded-2xl shadow-2xl shadow-slate-900/20 flex items-center justify-center hover:-translate-y-1 hover:shadow-slate-900/30 transition-all duration-300 group z-50">
+        <Zap className="w-7 h-7 group-hover:rotate-12 group-hover:scale-110 transition-transform duration-300 text-blue-400" />
+        <div className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-blue-500 rounded-full border-4 border-white flex items-center justify-center">
+          <div className="w-1.5 h-1.5 bg-white rounded-full animate-ping" />
+        </div>
+      </button>
+    </div>
+  );
+}

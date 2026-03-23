@@ -1,5 +1,5 @@
-import { GenericModulePage } from "@/components/modules/generic/generic-module-page";
+import { DesignPage } from "@/components/modules/design/design-page";
 
 export default function DesignRoute() {
-  return <GenericModulePage moduleId="design" />;
+  return <DesignPage />;
 }

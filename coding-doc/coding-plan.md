@@ -8,6 +8,7 @@ Turn the current Jarvis PMO prototype reference into a maintainable Next.js fron
 
 - Confirm the active input set under `reference-doc/IN/`.
 - Freeze the current visual baseline from `prototype.html`.
+- Create or refresh split module PRD working copies from the approved `2026.03.JPM.Platform.pdf` and map them to `prototype.html` modules when they are part of the active input set.
 - Document source priority and `IN` / `OUT` / `PENDING` usage rules.
 - Record route and module naming before implementation starts.
 
@@ -39,6 +40,7 @@ Implement the complex reference-heavy pages first:
 5. Finance
 
 These pages define most of the shell, grid, table, progress bar, and dark-panel patterns used elsewhere.
+- Before implementing each module, load the matching split module PRD markdown when available and record that source in the corresponding module doc.
 - During each screen migration, decide whether the module needs a chart-first, map-first, or workbench-first analytical surface.
 - Before implementation, classify the module archetype and reading path, for example map-first, queue/casework-first, comparison/risk-first, timeline-first, live-operations-first, finance/scenario-first, or coordination/canvas-first.
 - Record whether summary signals belong in a top KPI band, compact ribbon, inline strip, or inside the primary surface instead of assuming every route needs the same top section.
@@ -57,6 +59,7 @@ These pages define most of the shell, grid, table, progress bar, and dark-panel 
 - Handover
 
 During this phase, reuse existing shared sections whenever possible instead of cloning new markup.
+- Before implementing each module, load the matching split module PRD markdown when available and record that source in the corresponding module doc.
 - Keep workbench-first modules such as requirements and approvals focused on queue, table, detail, and evidence patterns unless a chart has a clear operational role.
 - Do not reuse the exact same `top KPI + main workbench + right side panel` rhythm across unrelated modules just because it already exists.
 - If two modules share a similar composition, document the workflow reason in the module doc instead of implying the similarity is the default.

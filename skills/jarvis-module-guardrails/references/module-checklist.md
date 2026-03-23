@@ -6,6 +6,7 @@ Use this checklist before finishing a module implementation or module-doc update
 
 - Active source folder under `reference-doc/IN/` is identified.
 - `prototype.html` was used for shell and panel language.
+- The matching split module PRD file under `reference-doc/IN/**/2026.03.JPM.Platform/` was used when available.
 - `gemeni_chat.md` was used for module naming and intent.
 - `reference-doc/PENDING/**` was not used unless explicitly approved.
 
@@ -31,6 +32,7 @@ Use this checklist before finishing a module implementation or module-doc update
 ## Documentation
 
 - `coding-doc/modules/<module>.md` reflects the new current state.
+- `coding-doc/modules/<module>.md` records the matching split PRD source path when one exists.
 - Cross-cutting `coding-doc/*.md` files were updated if behavior or schema changed.
 - Current gaps are recorded if the module is still partial.
 

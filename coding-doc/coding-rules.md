@@ -8,6 +8,8 @@ Keep the Next.js prototype implementation consistent with the approved reference
 
 - Treat `reference-doc/IN/` as the active implementation baseline.
 - Use the latest dated folder under `reference-doc/IN/` unless a human points to a different input set.
+- When the active input set includes `2026.03.JPM.Platform/index.md` and matching per-module markdown, load those files before editing the corresponding module.
+- Treat split module PRD markdown as the default module-functional PRD working copy derived from the approved PDF; if wording is ambiguous because of extraction noise, verify against the sibling PDF.
 - Treat `reference-doc/OUT/` as comparison material only.
 - Do not use `reference-doc/PENDING/` without explicit approval.
 
@@ -66,5 +68,6 @@ Keep the Next.js prototype implementation consistent with the approved reference
 
 - New routes and modules must preserve documented PMO naming.
 - Module-specific behavior and implementation status should be tracked in `coding-doc/modules/<module>.md`.
+- Module docs should record the matching split PRD source file when one exists in the active input set.
 - Architecture, data contract, acceptance criteria, and test strategy docs must stay aligned with implementation.
 - Changes that alter behavior or schema must update both code and `coding-doc/` in the same pass.

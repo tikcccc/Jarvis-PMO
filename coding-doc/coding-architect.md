@@ -11,11 +11,15 @@ Use project sources in this order:
 1. `reference-doc/IN/2026-3-20 prototype developement/prototype.html`
    - Primary visual and layout source of truth.
    - Sidebar, header, cards, icons, spacing, page sections, and interaction density must follow this file.
-2. `reference-doc/IN/2026-3-20 prototype developement/gemeni_chat.md`
+2. `reference-doc/IN/2026-3-20 prototype developement/2026.03.JPM.Platform/index.md` and the matching per-module markdown
+   - Primary module PRD working copy derived from `reference-doc/IN/2026-3-20 prototype developement/2026.03.JPM.Platform.pdf`.
+   - Use for detailed module workflow, data capture, agent behavior, and module acceptance semantics.
+   - If extraction wording looks ambiguous, verify against the source PDF instead of guessing.
+3. `reference-doc/IN/2026-3-20 prototype developement/gemeni_chat.md`
    - Product scope, module naming, module intent, and implementation notes.
-3. `reference-doc/OUT/*`
+4. `reference-doc/OUT/*`
    - Agent-generated reference only. Useful for comparison, not the primary source of truth.
-4. `reference-doc/PENDING/*`
+5. `reference-doc/PENDING/*`
    - Ignore by default. Only use after explicit human approval.
 
 If more dated folders appear under `reference-doc/IN/`, the latest dated folder should be treated as the default input set unless the user points to another folder.

@@ -250,6 +250,88 @@ export interface ProcurementIssueLog {
   tone: Tone;
   timeLabel: string;
 }
+
+export interface DesignSummaryMetric {
+  id: string;
+  label: string;
+  value: string;
+  statusLabel: string;
+  tone: Tone;
+  icon: IconName;
+}
+
+export interface DesignLineageStage {
+  id: string;
+  stage: string;
+  dateLabel: string;
+  statusLabel: string;
+  tone: Tone;
+  icon: IconName;
+}
+
+export interface DesignPackage {
+  id: string;
+  name: string;
+  syncLabel: string;
+  statusLabel: string;
+  tone: Tone;
+}
+
+export interface DesignIssue {
+  id: string;
+  packageId: string;
+  typeLabel: string;
+  typeTone: Tone;
+  severityLabel: "High" | "Medium" | "Low";
+  severityTone: Tone;
+  trade: string;
+  area: string;
+  description: string;
+  specReference: string;
+  statusLabel: string;
+  statusTone: Tone;
+}
+
+export interface DesignSuggestion {
+  id: string;
+  packageId: string;
+  typeLabel: string;
+  description: string;
+  savingsLabel: string;
+  statusLabel: string;
+  tone: Tone;
+}
+
+export interface DesignIssueDistributionBucket {
+  id: string;
+  label: string;
+  count: number;
+  colorHex: string;
+}
+
+export interface DesignTradeCostItem {
+  id: string;
+  trade: string;
+  budgetValue: number;
+  extractedValue: number;
+  unit: string;
+  status: "over" | "under" | "on-track";
+}
+
+export interface DesignTradeCostTrendPoint {
+  id: string;
+  monthLabel: string;
+  actualValue: number;
+  budgetValue: number;
+}
+
+export interface DesignDfmaSignal {
+  id: string;
+  label: string;
+  valueLabel: string;
+  progressPercent: number;
+  tone: Tone;
+}
 ```
 
 ## 4. Data File Ownership
@@ -281,6 +363,16 @@ Suggested file mapping:
   - `Record<string, ProcurementBidder[]>`
   - `Record<string, ProcurementSupplierProfile>`
   - `ProcurementIssueLog[]`
+- `lib/mock-data/design.ts`
+  - `DesignSummaryMetric[]`
+  - `DesignLineageStage[]`
+  - `DesignPackage[]`
+  - `Record<string, DesignIssue[]>`
+  - `Record<string, DesignSuggestion[]>`
+  - `DesignIssueDistributionBucket[]`
+  - `DesignTradeCostItem[]`
+  - `DesignTradeCostTrendPoint[]`
+  - `DesignDfmaSignal[]`
 
 ## 5. Contract Rules
 
@@ -295,6 +387,9 @@ Suggested file mapping:
 When mock data conflicts with later generated output, prefer data that traces back to:
 
 1. `reference-doc/IN/**/prototype.html`
-2. `reference-doc/IN/**/gemeni_chat.md`
+2. `reference-doc/IN/**/2026.03.JPM.Platform/index.md` and the matching per-module markdown
+3. `reference-doc/IN/**/gemeni_chat.md`
+
+If split PRD wording is ambiguous because of extraction noise, verify against the sibling `2026.03.JPM.Platform.pdf`.
 
 `reference-doc/OUT` may inform naming consistency but should not silently replace the active baseline.

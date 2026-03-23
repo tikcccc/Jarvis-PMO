@@ -244,3 +244,85 @@ export interface ProcurementIssueLog {
   tone: Tone;
   timeLabel: string;
 }
+
+export interface DesignSummaryMetric {
+  id: string;
+  label: string;
+  value: string;
+  statusLabel: string;
+  tone: Tone;
+  icon: IconName;
+}
+
+export interface DesignLineageStage {
+  id: string;
+  stage: string;
+  dateLabel: string;
+  statusLabel: string;
+  tone: Tone;
+  icon: IconName;
+}
+
+export interface DesignPackage {
+  id: string;
+  name: string;
+  syncLabel: string;
+  statusLabel: string;
+  tone: Tone;
+}
+
+export interface DesignIssue {
+  id: string;
+  packageId: string;
+  typeLabel: string;
+  typeTone: Tone;
+  severityLabel: "High" | "Medium" | "Low";
+  severityTone: Tone;
+  trade: string;
+  area: string;
+  description: string;
+  specReference: string;
+  statusLabel: string;
+  statusTone: Tone;
+}
+
+export interface DesignSuggestion {
+  id: string;
+  packageId: string;
+  typeLabel: string;
+  description: string;
+  savingsLabel: string;
+  statusLabel: string;
+  tone: Tone;
+}
+
+export interface DesignIssueDistributionBucket {
+  id: string;
+  label: string;
+  count: number;
+  colorHex: string;
+}
+
+export interface DesignTradeCostItem {
+  id: string;
+  trade: string;
+  budgetValue: number;
+  extractedValue: number;
+  unit: string;
+  status: "over" | "under" | "on-track";
+}
+
+export interface DesignTradeCostTrendPoint {
+  id: string;
+  monthLabel: string;
+  actualValue: number;
+  budgetValue: number;
+}
+
+export interface DesignDfmaSignal {
+  id: string;
+  label: string;
+  valueLabel: string;
+  progressPercent: number;
+  tone: Tone;
+}

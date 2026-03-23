@@ -36,6 +36,7 @@ The highest-risk failures are visual consistency failures, not data logic bugs. 
 ## 3. Manual QA Checklist
 
 - Compare migrated dashboard against `reference-doc/IN/**/prototype.html`.
+- For module routes with split PRD files under `reference-doc/IN/**/2026.03.JPM.Platform/`, compare route labels, dominant workflow blocks, and action semantics against the matching PRD markdown.
 - Compare at least one deep module page from each major category:
   - Portfolio
   - Approvals

@@ -3,6 +3,7 @@
 ## 1. Source Governance
 
 - Only approved `reference-doc/IN/` files are treated as active agent input.
+- When split module PRD markdown exists under `reference-doc/IN/**/2026.03.JPM.Platform/`, the matching file must be used for module-level workflow and feature intent.
 - `reference-doc/OUT/` is reference output, not the primary implementation baseline.
 - `reference-doc/PENDING/` is ignored unless explicitly approved by a human.
 
@@ -52,6 +53,7 @@
 - If analytical charts are introduced, they use the approved charting approach, keep GIS on the Mapbox stack, and fail safely when data is absent.
 - Mock data is typed and stored outside page components.
 - Procurement page-specific data lives in `lib/mock-data/procurement.ts` and the route file remains a thin composition layer.
+- Module docs record their matching split PRD source files when those working copies exist in the active input set.
 - The architecture, data contract, API seam, acceptance criteria, and test strategy docs stay mutually consistent.
 
 ## 7. Delivery Constraint

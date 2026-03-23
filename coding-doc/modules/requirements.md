@@ -12,6 +12,10 @@
 - Visual source:
   - `reference-doc/IN/2026-3-20 prototype developement/prototype.html`
   - use the shared shell and baseline module card language from the approved prototype
+- Module PRD source:
+  - `reference-doc/IN/2026-3-20 prototype developement/2026.03.JPM.Platform/index.md`
+  - `reference-doc/IN/2026-3-20 prototype developement/2026.03.JPM.Platform/02-requirements.md`
+  - use the split PRD as the detailed functional source for the nine-element SSOT workflow, data capture semantics, and agent behavior; if wording is unclear, verify against the source PDF
 - Scope and naming source:
   - `reference-doc/IN/2026-3-20 prototype developement/gemeni_chat.md`
   - requirements is one of the twelve core modules and is framed as `Project Requirements Management`

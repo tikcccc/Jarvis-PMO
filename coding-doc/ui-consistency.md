@@ -12,7 +12,12 @@ Primary visual reference:
 
 - `reference-doc/IN/2026-3-20 prototype developement/prototype.html`
 
-Scope and naming reference:
+Module-functional PRD reference:
+
+- `reference-doc/IN/2026-3-20 prototype developement/2026.03.JPM.Platform/index.md`
+- matching module markdown under `reference-doc/IN/2026-3-20 prototype developement/2026.03.JPM.Platform/`
+
+Scope and naming cross-check reference:
 
 - `reference-doc/IN/2026-3-20 prototype developement/gemeni_chat.md`
 

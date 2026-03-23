@@ -35,11 +35,13 @@ A skill is a set of local instructions stored in a `SKILL.md` file. For this pro
 
 ### Context and source rules
 - Keep implementation anchored to approved inputs under `reference-doc/IN/`.
+- When the active input set includes `reference-doc/IN/**/2026.03.JPM.Platform/index.md` and matching per-module markdown under `reference-doc/IN/**/2026.03.JPM.Platform/`, treat them as the approved module PRD working copy derived from the approved PDF.
+- If split PRD wording looks ambiguous because of PDF extraction noise, verify against the sibling `2026.03.JPM.Platform.pdf` instead of guessing.
 - Ignore `reference-doc/PENDING/` unless the user explicitly approves it.
 - Keep `coding-doc/` synchronized when behavior, module scope, or data shape changes.
 
 ### Frontend blind-build guardrails
-- When frontend work starts without a new Figma file or fresh reference screenshot, do not treat the task as unconstrained design. Use approved project sources in this order: `reference-doc/IN/**/prototype.html`, `reference-doc/IN/**/gemeni_chat.md`, `coding-doc/coding-architect.md`, `coding-doc/ui-consistency.md`, `coding-doc/acceptance-criteria.md`, then any relevant `coding-doc/modules/*.md`.
+- When frontend work starts without a new Figma file or fresh reference screenshot, do not treat the task as unconstrained design. Use approved project sources in this order: `reference-doc/IN/**/prototype.html`, `reference-doc/IN/**/2026.03.JPM.Platform/index.md`, the matching `reference-doc/IN/**/2026.03.JPM.Platform/*.md` module PRD when available, `reference-doc/IN/**/gemeni_chat.md`, `coding-doc/coding-architect.md`, `coding-doc/ui-consistency.md`, `coding-doc/acceptance-criteria.md`, then any relevant `coding-doc/modules/*.md`.
 - Treat Tailwind CSS as the existing implementation layer in this repository, not as the visual source of truth. Reuse shared tokens, shared primitives, and approved shell patterns before introducing page-local styling.
 - Treat motion the same way: start with the shared motion layer in `styles/jarvis-ui/motion.css` and `coding-doc/animation-architecture.md` before adding runtime animation libraries.
 - The AI may act as implementer and self-reviewer, but it must stay inside the existing shell, token, and module-composition guardrails. Do not invent a new global design language when references are incomplete.

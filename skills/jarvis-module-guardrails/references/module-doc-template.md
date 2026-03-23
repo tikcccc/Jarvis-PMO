@@ -11,6 +11,7 @@ Mirror this structure in `coding-doc/modules/<module>.md`.
    - current implementation status
 2. `Approved Source Inputs`
    - visual source
+   - module PRD source
    - scope and naming source
    - supporting coding docs
    - current implementation references
@@ -53,6 +54,7 @@ Mirror this structure in `coding-doc/modules/<module>.md`.
 ## Writing Rules
 
 - Be concrete and file-backed.
+- Record the matching split PRD path from `reference-doc/IN/**/2026.03.JPM.Platform/` when one exists for the module.
 - Record current implementation status explicitly.
 - Separate current state from target state.
 - Prefer route names and module labels that exactly match approved sources.

@@ -12,6 +12,10 @@
 - Visual source:
   - `reference-doc/IN/2026-3-20 prototype developement/prototype.html`
   - use the shared shell and generic module composition from the approved prototype baseline
+- Module PRD source:
+  - `reference-doc/IN/2026-3-20 prototype developement/2026.03.JPM.Platform/index.md`
+  - `reference-doc/IN/2026-3-20 prototype developement/2026.03.JPM.Platform/05-procurement.md`
+  - use the split PRD as the detailed functional source for tender validation, procurement risk, and supplier-profiling workflow; if wording is unclear, verify against the source PDF
 - Scope and naming source:
   - `reference-doc/IN/2026-3-20 prototype developement/gemeni_chat.md`
   - procurement is one of the twelve core modules and is explicitly framed as `Procurement (Tender Validation)`
