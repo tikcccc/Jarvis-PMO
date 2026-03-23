@@ -1,5 +1,5 @@
-import { GenericModulePage } from "@/components/modules/generic/generic-module-page";
+import { ProgressPage } from "@/components/modules/progress/progress-page";
 
 export default function ProgressRoute() {
-  return <GenericModulePage moduleId="progress" />;
+  return <ProgressPage />;
 }

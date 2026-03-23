@@ -56,6 +56,9 @@ The highest-risk failures are visual consistency failures, not data logic bugs. 
 - On `/`, verify `Portfolio Strategic Map (GIS)` renders real GIS tiles or the configured fallback preview, not a placeholder skeleton.
 - On `/portfolio`, verify both `MAP` and `SATELLITE` modes render and keep marker selection synchronized with the detail panel.
 - On `/portfolio`, verify the route still renders a safe fallback when `NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN` is absent.
+- On `/progress`, verify the GIS overview renders real map tiles or the configured fallback preview and that hovering/selecting zones keeps the selected-zone context synchronized.
+- On `/progress`, verify clicking a zone marker or monitored-zone row opens the matching in-place detail view, the back action returns to the overview, and the stage-based snapshot timeline does not behave like a continuous scrubber.
+- On `/progress`, verify `Delay Impact Analysis` is the only dark emphasis panel on the route and that its content updates coherently for stable versus lagging zones.
 - Test responsive layouts at common widths:
   - 1440px
   - 1280px
@@ -74,6 +77,7 @@ If Playwright is added, capture screenshot checks for:
 - `/procurement`
 - `/finance`
 - `/payment`
+- `/progress`
 
 These routes cover the majority of shared layout and component patterns.
 

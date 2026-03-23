@@ -349,3 +349,63 @@ export interface DesignDfmaSignal {
   progressPercent: number;
   tone: Tone;
 }
+
+export interface ProgressSummaryMetric {
+  id: string;
+  label: string;
+  value: string;
+  detail: string;
+  tone: Tone;
+  icon: IconName;
+}
+
+export interface ProgressCaptureGate {
+  id: string;
+  shortLabel: string;
+  stage: string;
+}
+
+export interface ProgressTradeQuantity {
+  id: string;
+  trade: string;
+  statusLabel: string;
+  tone: Tone;
+  actualPercent: number;
+  plannedPercent: number;
+}
+
+export interface ProgressImpactRow {
+  id: string;
+  label: string;
+  valueLabel: string;
+  tone: Tone;
+}
+
+export interface ProgressImpactAnalysis {
+  headline: string;
+  summary: string;
+  rows: ProgressImpactRow[];
+  ctaLabel: string;
+}
+
+export interface ProgressZone {
+  id: string;
+  mapLabel: string;
+  name: string;
+  area: string;
+  statusLabel: string;
+  tone: Tone;
+  progressPercent: number;
+  cameraCoverageLabel: string;
+  nextCaptureLabel: string;
+  varianceLabel: string;
+  latitude: number;
+  longitude: number;
+  cameraId: string;
+  cameraLocationLabel: string;
+  activeGateId: string;
+  flaggedGateId?: string;
+  captureDates: Record<string, string>;
+  tradeQuantities: ProgressTradeQuantity[];
+  impactAnalysis: ProgressImpactAnalysis;
+}
