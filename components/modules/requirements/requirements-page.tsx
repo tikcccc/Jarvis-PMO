@@ -190,271 +190,263 @@ function RequirementsOverview({
         </Button>
       </Card>
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-4">
-        <div className="flex flex-col gap-4 lg:col-span-3">
-          <div className="flex flex-col items-start justify-between gap-3 rounded-xl border border-gray-100 bg-white p-3 shadow-sm md:flex-row md:items-center">
-            <div className="pl-2">
-              <h3 className="text-sm font-black uppercase tracking-tight text-gray-900">Digital Gene Bank (9 Key Elements)</h3>
-              <p className="jarvis-copy-xs mt-0.5">
-                Select an element to view detailed SSOT records and agent activity.
-              </p>
+      <Card className="overflow-hidden border border-gray-200 bg-white shadow-sm">
+        <div className="flex flex-col gap-3 border-b border-gray-100 bg-gray-50/80 px-5 py-4 md:flex-row md:items-center md:justify-between">
+          <div>
+            <div className="flex items-center gap-2">
+              <Radio
+                className={cn("h-4 w-4", driftCount > 0 ? "text-rose-500 motion-safe:animate-pulse" : "text-gray-400")}
+              />
+              <h3 className="jarvis-control-label text-gray-900">Global Drift Radar</h3>
             </div>
-
-            <div className="flex items-center rounded-lg border border-gray-200/60 bg-gray-100/80 p-1">
-              <button
-                type="button"
-                onClick={() => setViewMode("map")}
-                className={cn(
-                  "jarvis-control-label-compact inline-flex items-center rounded-md px-4 py-1.5 transition-all",
-                  viewMode === "map" ? "bg-white text-blue-600 shadow-sm" : "text-gray-500 hover:text-gray-900"
-                )}
-              >
-                <LayoutGrid className="mr-1.5 h-3.5 w-3.5" />
-                Map
-              </button>
-              <button
-                type="button"
-                onClick={() => setViewMode("list")}
-                className={cn(
-                  "jarvis-control-label-compact inline-flex items-center rounded-md px-4 py-1.5 transition-all",
-                  viewMode === "list" ? "bg-white text-blue-600 shadow-sm" : "text-gray-500 hover:text-gray-900"
-                )}
-              >
-                <List className="mr-1.5 h-3.5 w-3.5" />
-                List
-              </button>
-            </div>
+            <p className="jarvis-copy-xs mt-1 pl-6">Top active cross-module propagation signals under the current baseline.</p>
           </div>
 
-          {viewMode === "map" ? (
-            <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
-              {requirementRecords.map((record) => {
+          {driftCount > 0 ? (
+            <span className="relative ml-6 flex h-2 w-2 md:ml-0">
+              <span className="absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75 motion-safe:animate-ping" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-rose-500" />
+            </span>
+          ) : null}
+        </div>
+
+        <div className="bg-[#FAFAFA] p-5">
+          <p className="jarvis-text-10 mb-4 font-bold uppercase tracking-widest text-gray-400">Active Impact Propagation</p>
+
+          {radarRecords.length ? (
+            <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+              {radarRecords.map((record) => {
                 const stateTone = getRequirementStateTone(record);
 
                 return (
-                  <Card
+                  <button
                     key={record.id}
+                    type="button"
                     onClick={() => onOpenRequirement(record.id)}
                     className={cn(
-                      "group relative flex cursor-pointer flex-col overflow-hidden border bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg",
-                      toneBorderClassMap[stateTone]
+                      "group relative w-full overflow-hidden rounded-lg border bg-white p-4 text-left shadow-sm transition-all hover:shadow-md",
+                      stateTone === "danger" ? "border-rose-200 hover:border-rose-400" : "border-amber-200 hover:border-amber-400"
                     )}
                   >
-                    <div className={cn("absolute top-0 left-0 h-1 w-full", toneAccentClassMap[stateTone])} />
+                    <div className={cn("absolute top-0 left-0 h-full w-1", toneAccentClassMap[stateTone])} />
 
-                    <div className="flex flex-1 flex-col p-5">
-                      <div className="mb-4 flex items-start justify-between">
-                        <div className={cn("rounded-lg p-2.5 transition-colors", toneIconClassMap[stateTone])}>
-                          <Target className="h-4 w-4" />
-                        </div>
-
-                        <div className="flex flex-col items-end gap-1.5">
-                          <Badge tone={stateTone} className="shadow-sm">
-                            {record.version}
-                          </Badge>
-                          {stateTone === "danger" ? (
-                            <span className="jarvis-text-10 flex items-center font-black uppercase tracking-widest text-rose-500 motion-safe:animate-pulse">
-                              <AlertTriangle className="mr-1 h-2.5 w-2.5" />
-                              Drift
-                            </span>
-                          ) : stateTone === "warning" ? (
-                            <span className="jarvis-text-10 flex items-center font-black uppercase tracking-widest text-amber-500">
-                              <AlertCircle className="mr-1 h-2.5 w-2.5" />
-                              Review
-                            </span>
-                          ) : null}
-                        </div>
-                      </div>
-
-                      <h4 className="text-base leading-tight font-bold text-gray-900 transition-colors group-hover:text-blue-600">
+                    <div className="mb-2.5 flex items-start justify-between gap-3">
+                      <span className={cn("jarvis-control-label-compact flex items-center", toneTextClassMap[stateTone])}>
+                        {stateTone === "danger" ? (
+                          <AlertTriangle className="mr-1.5 h-3 w-3" />
+                        ) : (
+                          <AlertCircle className="mr-1.5 h-3 w-3" />
+                        )}
                         {record.title}
-                      </h4>
-                      <p className="mt-2 min-h-[2.75rem] text-[11px] leading-relaxed text-gray-500">{record.statement}</p>
-
-                      <div className="mt-auto pt-4">
-                        <div className="jarvis-text-10 mb-1.5 flex justify-between font-bold uppercase tracking-widest">
-                          <span className="text-gray-400">Data Integrity</span>
-                          <span className={toneTextClassMap[stateTone]}>{record.integrityScore}%</span>
-                        </div>
-                        <ProgressBar value={record.integrityScore} barClassName={toneAccentClassMap[stateTone]} />
-                      </div>
+                      </span>
+                      <span className="jarvis-text-10 font-bold uppercase tracking-widest text-gray-400">
+                        {record.syncTimeLabel}
+                      </span>
                     </div>
 
-                    <div className="flex items-center justify-between border-t border-gray-100 bg-gray-50/80 px-5 py-3 transition-colors group-hover:bg-blue-50/50">
-                      <div className="flex items-center gap-2">
-                        <div className="flex h-6 w-6 items-center justify-center rounded-full border border-gray-200 bg-white text-[9px] font-black text-gray-700 shadow-sm">
-                          {record.owner.charAt(0)}
-                        </div>
-                        <span className="jarvis-text-11 font-bold text-gray-600">{record.owner}</span>
-                      </div>
+                    <p className="text-xs leading-snug font-bold text-gray-800">{record.riskAlert?.message ?? record.statement}</p>
 
-                      <div className="jarvis-text-10 flex items-center font-bold text-gray-400 transition-colors group-hover:text-blue-600">
-                        <GitBranch className="mr-1.5 h-3.5 w-3.5" />
-                        {record.relatedModules.length} Nodes
-                      </div>
+                    <div className="mt-4 space-y-2 border-t border-gray-100 pt-3">
+                      {record.linkages.slice(0, 2).map((link) => (
+                        <div
+                          key={link.id}
+                          className={cn(
+                            "flex items-center justify-between rounded-md border px-2 py-1.5",
+                            toneSurfaceClassMap[link.tone]
+                          )}
+                        >
+                          <span className="jarvis-control-label-compact flex items-center">
+                            <ArrowRightLeft className="mr-1.5 h-3 w-3" />
+                            {link.targetLabel}
+                          </span>
+                          <span className="jarvis-text-10 font-bold">{link.impactLabel}</span>
+                        </div>
+                      ))}
                     </div>
-                  </Card>
+                  </button>
                 );
               })}
             </div>
           ) : (
-            <Card className="overflow-hidden border border-gray-200">
-              <table className="w-full text-left">
-                <thead className="bg-gray-50 text-[10px] font-bold uppercase tracking-widest text-gray-400">
-                  <tr>
-                    <th className="px-4 py-3">Element</th>
-                    <th className="px-4 py-3">Status</th>
-                    <th className="px-4 py-3">Version</th>
-                    <th className="px-4 py-3">Owner</th>
-                    <th className="px-4 py-3">Linked Impact</th>
-                    <th className="px-4 py-3 text-right">Action</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-100">
-                  {requirementRecords.map((record) => {
-                    const stateTone = getRequirementStateTone(record);
-
-                    return (
-                      <tr
-                        key={record.id}
-                        onClick={() => onOpenRequirement(record.id)}
-                        className="cursor-pointer transition-colors hover:bg-blue-50/30"
-                      >
-                        <td className="px-4 py-3">
-                          <div className="flex items-center gap-2">
-                            <div className={cn("h-1.5 w-1.5 rounded-full", toneAccentClassMap[stateTone])} />
-                            <span className="text-xs font-bold text-gray-900">{record.title}</span>
-                          </div>
-                        </td>
-                        <td className="px-4 py-3">
-                          <span className={cn("jarvis-text-10 flex items-center font-bold", toneTextClassMap[stateTone])}>
-                            {stateTone === "danger" ? (
-                              <AlertTriangle className="mr-1 h-3 w-3" />
-                            ) : stateTone === "warning" ? (
-                              <AlertCircle className="mr-1 h-3 w-3" />
-                            ) : (
-                              <CheckCircle2 className="mr-1 h-3 w-3" />
-                            )}
-                            {getRequirementStateLabel(record)}
-                          </span>
-                        </td>
-                        <td className="px-4 py-3 text-xs font-medium text-gray-600">{record.version}</td>
-                        <td className="px-4 py-3 text-xs font-medium text-gray-600">{record.owner}</td>
-                        <td className="px-4 py-3">
-                          <div className="flex flex-wrap gap-1">
-                            {record.relatedModules.slice(0, 3).map((moduleName) => (
-                              <span
-                                key={moduleName}
-                                className="rounded bg-gray-100 px-1.5 py-0.5 text-[9px] font-bold text-gray-500"
-                              >
-                                {moduleName}
-                              </span>
-                            ))}
-                            {record.relatedModules.length > 3 ? (
-                              <span className="rounded bg-gray-100 px-1.5 py-0.5 text-[9px] font-bold text-gray-500">
-                                +{record.relatedModules.length - 3}
-                              </span>
-                            ) : null}
-                          </div>
-                        </td>
-                        <td className="px-4 py-3 text-right">
-                          <span className="jarvis-control-label-compact text-blue-600">View Details</span>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </Card>
+            <div className="rounded-lg border border-dashed border-gray-200 bg-white px-4 py-6 text-center">
+              <p className="text-sm font-bold text-gray-700">No active propagation signals</p>
+              <p className="jarvis-copy-xs mt-1">All requirement domains are currently aligned with the baseline.</p>
+            </div>
           )}
         </div>
+      </Card>
 
-        <div className="lg:col-span-1">
-          <Card className="flex h-full flex-col overflow-hidden border border-gray-200 bg-white shadow-sm">
-            <div className="flex items-center justify-between border-b border-gray-100 bg-gray-50/80 px-5 py-4">
-              <div className="flex items-center gap-2">
-                <Radio
+      <div className="flex flex-col gap-4">
+        <div className="flex flex-col items-start justify-between gap-3 rounded-xl border border-gray-100 bg-white p-3 shadow-sm md:flex-row md:items-center">
+          <div className="pl-2">
+            <h3 className="text-sm font-black uppercase tracking-tight text-gray-900">Digital Gene Bank (9 Key Elements)</h3>
+            <p className="jarvis-copy-xs mt-0.5">Select an element to view detailed SSOT records and agent activity.</p>
+          </div>
+
+          <div className="flex items-center rounded-lg border border-gray-200/60 bg-gray-100/80 p-1">
+            <button
+              type="button"
+              onClick={() => setViewMode("map")}
+              className={cn(
+                "jarvis-control-label-compact inline-flex items-center rounded-md px-4 py-1.5 transition-all",
+                viewMode === "map" ? "bg-white text-blue-600 shadow-sm" : "text-gray-500 hover:text-gray-900"
+              )}
+            >
+              <LayoutGrid className="mr-1.5 h-3.5 w-3.5" />
+              Map
+            </button>
+            <button
+              type="button"
+              onClick={() => setViewMode("list")}
+              className={cn(
+                "jarvis-control-label-compact inline-flex items-center rounded-md px-4 py-1.5 transition-all",
+                viewMode === "list" ? "bg-white text-blue-600 shadow-sm" : "text-gray-500 hover:text-gray-900"
+              )}
+            >
+              <List className="mr-1.5 h-3.5 w-3.5" />
+              List
+            </button>
+          </div>
+        </div>
+
+        {viewMode === "map" ? (
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
+            {requirementRecords.map((record) => {
+              const stateTone = getRequirementStateTone(record);
+
+              return (
+                <Card
+                  key={record.id}
+                  onClick={() => onOpenRequirement(record.id)}
                   className={cn(
-                    "h-4 w-4",
-                    driftCount > 0 ? "text-rose-500 motion-safe:animate-pulse" : "text-gray-400"
+                    "group relative flex cursor-pointer flex-col overflow-hidden border bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg",
+                    toneBorderClassMap[stateTone]
                   )}
-                />
-                <h3 className="jarvis-control-label text-gray-900">Global Drift Radar</h3>
-              </div>
+                >
+                  <div className={cn("absolute top-0 left-0 h-1 w-full", toneAccentClassMap[stateTone])} />
 
-              {driftCount > 0 ? (
-                <span className="relative flex h-2 w-2">
-                  <span className="absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75 motion-safe:animate-ping" />
-                  <span className="relative inline-flex h-2 w-2 rounded-full bg-rose-500" />
-                </span>
-              ) : null}
-            </div>
+                  <div className="flex flex-1 flex-col p-5">
+                    <div className="mb-4 flex items-start justify-between">
+                      <div className={cn("rounded-lg p-2.5 transition-colors", toneIconClassMap[stateTone])}>
+                        <Target className="h-4 w-4" />
+                      </div>
 
-            <div className="flex-1 bg-[#FAFAFA] p-5">
-              <p className="jarvis-text-10 mb-4 font-bold uppercase tracking-widest text-gray-400">
-                Active Impact Propagation
-              </p>
+                      <div className="flex flex-col items-end gap-1.5">
+                        <Badge tone={stateTone} className="shadow-sm">
+                          {record.version}
+                        </Badge>
+                        {stateTone === "danger" ? (
+                          <span className="jarvis-text-10 flex items-center font-black uppercase tracking-widest text-rose-500 motion-safe:animate-pulse">
+                            <AlertTriangle className="mr-1 h-2.5 w-2.5" />
+                            Drift
+                          </span>
+                        ) : stateTone === "warning" ? (
+                          <span className="jarvis-text-10 flex items-center font-black uppercase tracking-widest text-amber-500">
+                            <AlertCircle className="mr-1 h-2.5 w-2.5" />
+                            Review
+                          </span>
+                        ) : null}
+                      </div>
+                    </div>
 
-              <div className="space-y-4">
-                {radarRecords.map((record) => {
+                    <h4 className="text-base leading-tight font-bold text-gray-900 transition-colors group-hover:text-blue-600">
+                      {record.title}
+                    </h4>
+                    <p className="mt-2 min-h-[2.75rem] text-[11px] leading-relaxed text-gray-500">{record.statement}</p>
+
+                    <div className="mt-auto pt-4">
+                      <div className="jarvis-text-10 mb-1.5 flex justify-between font-bold uppercase tracking-widest">
+                        <span className="text-gray-400">Data Integrity</span>
+                        <span className={toneTextClassMap[stateTone]}>{record.integrityScore}%</span>
+                      </div>
+                      <ProgressBar value={record.integrityScore} barClassName={toneAccentClassMap[stateTone]} />
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between border-t border-gray-100 bg-gray-50/80 px-5 py-3 transition-colors group-hover:bg-blue-50/50">
+                    <div className="flex items-center gap-2">
+                      <div className="flex h-6 w-6 items-center justify-center rounded-full border border-gray-200 bg-white text-[9px] font-black text-gray-700 shadow-sm">
+                        {record.owner.charAt(0)}
+                      </div>
+                      <span className="jarvis-text-11 font-bold text-gray-600">{record.owner}</span>
+                    </div>
+
+                    <div className="jarvis-text-10 flex items-center font-bold text-gray-400 transition-colors group-hover:text-blue-600">
+                      <GitBranch className="mr-1.5 h-3.5 w-3.5" />
+                      {record.relatedModules.length} Nodes
+                    </div>
+                  </div>
+                </Card>
+              );
+            })}
+          </div>
+        ) : (
+          <Card className="overflow-hidden border border-gray-200">
+            <table className="w-full text-left">
+              <thead className="bg-gray-50 text-[10px] font-bold uppercase tracking-widest text-gray-400">
+                <tr>
+                  <th className="px-4 py-3">Element</th>
+                  <th className="px-4 py-3">Status</th>
+                  <th className="px-4 py-3">Version</th>
+                  <th className="px-4 py-3">Owner</th>
+                  <th className="px-4 py-3">Linked Impact</th>
+                  <th className="px-4 py-3 text-right">Action</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-100">
+                {requirementRecords.map((record) => {
                   const stateTone = getRequirementStateTone(record);
 
                   return (
-                    <button
+                    <tr
                       key={record.id}
-                      type="button"
                       onClick={() => onOpenRequirement(record.id)}
-                      className={cn(
-                        "group relative w-full overflow-hidden rounded-lg border bg-white p-4 text-left shadow-sm transition-all hover:shadow-md",
-                        stateTone === "danger"
-                          ? "border-rose-200 hover:border-rose-400"
-                          : "border-amber-200 hover:border-amber-400"
-                      )}
+                      className="cursor-pointer transition-colors hover:bg-blue-50/30"
                     >
-                      <div className={cn("absolute top-0 left-0 h-full w-1", toneAccentClassMap[stateTone])} />
-
-                      <div className="mb-2.5 flex items-start justify-between gap-3">
-                        <span className={cn("jarvis-control-label-compact flex items-center", toneTextClassMap[stateTone])}>
+                      <td className="px-4 py-3">
+                        <div className="flex items-center gap-2">
+                          <div className={cn("h-1.5 w-1.5 rounded-full", toneAccentClassMap[stateTone])} />
+                          <span className="text-xs font-bold text-gray-900">{record.title}</span>
+                        </div>
+                      </td>
+                      <td className="px-4 py-3">
+                        <span className={cn("jarvis-text-10 flex items-center font-bold", toneTextClassMap[stateTone])}>
                           {stateTone === "danger" ? (
-                            <AlertTriangle className="mr-1.5 h-3 w-3" />
+                            <AlertTriangle className="mr-1 h-3 w-3" />
+                          ) : stateTone === "warning" ? (
+                            <AlertCircle className="mr-1 h-3 w-3" />
                           ) : (
-                            <AlertCircle className="mr-1.5 h-3 w-3" />
+                            <CheckCircle2 className="mr-1 h-3 w-3" />
                           )}
-                          {record.title}
+                          {getRequirementStateLabel(record)}
                         </span>
-                        <span className="jarvis-text-10 font-bold uppercase tracking-widest text-gray-400">
-                          {record.syncTimeLabel}
-                        </span>
-                      </div>
-
-                      <p className="text-xs leading-snug font-bold text-gray-800">
-                        {record.riskAlert?.message ?? record.statement}
-                      </p>
-
-                      <div className="mt-4 space-y-2 border-t border-gray-100 pt-3">
-                        {record.linkages.slice(0, 2).map((link) => (
-                          <div
-                            key={link.id}
-                            className={cn(
-                              "flex items-center justify-between rounded-md border px-2 py-1.5",
-                              toneSurfaceClassMap[link.tone]
-                            )}
-                          >
-                            <span className="jarvis-control-label-compact flex items-center">
-                              <ArrowRightLeft className="mr-1.5 h-3 w-3" />
-                              {link.targetLabel}
+                      </td>
+                      <td className="px-4 py-3 text-xs font-medium text-gray-600">{record.version}</td>
+                      <td className="px-4 py-3 text-xs font-medium text-gray-600">{record.owner}</td>
+                      <td className="px-4 py-3">
+                        <div className="flex flex-wrap gap-1">
+                          {record.relatedModules.slice(0, 3).map((moduleName) => (
+                            <span key={moduleName} className="rounded bg-gray-100 px-1.5 py-0.5 text-[9px] font-bold text-gray-500">
+                              {moduleName}
                             </span>
-                            <span className="jarvis-text-10 font-bold">{link.impactLabel}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </button>
+                          ))}
+                          {record.relatedModules.length > 3 ? (
+                            <span className="rounded bg-gray-100 px-1.5 py-0.5 text-[9px] font-bold text-gray-500">
+                              +{record.relatedModules.length - 3}
+                            </span>
+                          ) : null}
+                        </div>
+                      </td>
+                      <td className="px-4 py-3 text-right">
+                        <span className="jarvis-control-label-compact text-blue-600">View Details</span>
+                      </td>
+                    </tr>
                   );
                 })}
-              </div>
-            </div>
+              </tbody>
+            </table>
           </Card>
-        </div>
+        )}
       </div>
     </div>
   );
