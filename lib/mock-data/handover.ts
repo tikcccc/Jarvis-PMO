@@ -4,7 +4,44 @@ export const handoverCommandSummary: HandoverCommandSummary = {
   portfolioStatusPercent: 86.4,
   verifiedAssetsLabel: "12 / 14",
   verifiedAssetsDetail: "Digital twin packs cleared for release",
-  waveLabel: "Phase 1 closeout wave"
+  waveLabel: "Phase 1 closeout wave",
+  overviewMetrics: [
+    {
+      id: "rectification-rate",
+      label: "Rectification Rate",
+      valueLabel: "91.2%",
+      tone: "success",
+      icon: "shieldCheck",
+      badgeLabel: "AI Verified",
+      progressPercent: 91
+    },
+    {
+      id: "lod-consistency",
+      label: "LOD 500 Consistency",
+      valueLabel: "99.9%",
+      tone: "info",
+      icon: "box",
+      detailLabel: "Compliant below 5 mm variance"
+    },
+    {
+      id: "active-snags",
+      label: "Active Snags",
+      valueLabel: "14",
+      tone: "warning",
+      icon: "alertTriangle",
+      detailLabel: "6 contractor evidence packs pending",
+      progressPercent: 40
+    },
+    {
+      id: "forecasted-handover",
+      label: "Forecasted Handover",
+      valueLabel: "May 15, 2026",
+      tone: "info",
+      icon: "clock",
+      detailLabel: "52 days remaining",
+      emphasis: "emphasis"
+    }
+  ]
 };
 
 export const handoverSiteViewport = {
@@ -17,17 +54,17 @@ export const handoverAuditFeed: HandoverAuditFeedItem[] = [
   {
     id: "tower-a-scan",
     tone: "info",
-    message: "JARVIS_SCAN_09 is reconciling Tower A point-cloud evidence against BIM LOD 500 and defect closure proof."
+    message: "JARVIS_SCAN_09 is reconciling Tower A point-cloud evidence against BIM LOD 500 and the latest defect-closure proof."
   },
   {
     id: "car-park-certificate",
     tone: "success",
-    message: "Basement Car Park consistency certificate was minted after the final laser-scan sweep and evidence hash check."
+    message: "Basement Car Park consistency certificate was minted after the final laser-scan sweep and evidence hash validation."
   },
   {
     id: "podium-rectification",
     tone: "warning",
-    message: "Podium atrium snag loop remains open while sealant and tile-alignment evidence waits for AI closure."
+    message: "Podium atrium sealant and tile-alignment pack is still waiting for AI comparison before the handover dossier can close."
   }
 ];
 
@@ -84,7 +121,11 @@ export const handoverZones: HandoverZone[] = [
         severityLabel: "High",
         severityTone: "danger",
         detectedDateLabel: "2026-03-20",
-        noteLabel: "Pre-fix and post-fix captures are aligned, but hairline spread still exceeds the tolerance band."
+        noteLabel: "Pre-fix and post-fix captures are aligned, but the hairline spread still exceeds the tolerance band by 0.4 mm.",
+        baselineLabel: "Reality 360 baseline",
+        comparisonLabel: "BIM heatmap compare",
+        matchScoreLabel: "98.5% match",
+        actionLabel: "Confirm Closure"
       },
       {
         id: "DEF_1045",
@@ -95,17 +136,22 @@ export const handoverZones: HandoverZone[] = [
         severityLabel: "Medium",
         severityTone: "warning",
         detectedDateLabel: "2026-03-21",
-        noteLabel: "Contractor evidence has not been uploaded with the required matching camera angle for auto-closure."
+        noteLabel: "Contractor evidence has not been uploaded with the required matching camera angle for auto-closure.",
+        baselineLabel: "Original Eagle Eye capture",
+        comparisonLabel: "Latest contractor proof",
+        matchScoreLabel: "86.4% match",
+        actionLabel: "Request Re-shot"
       }
     ],
     verification: {
-      statusLabel: "Sync Active",
-      statusTone: "info",
+      statusLabel: "Sync Complete",
+      statusTone: "success",
       consistencyLabel: "99.9%",
       varianceLabel: "Variance detected: +/- 3.2 mm",
-      certificateLabel: "Pending closeout sign-off",
+      certificateLabel: "Reality-vs-Model Cert",
       noteLabel:
-        "Final reality-vs-model comparison is inside the accepted geometry threshold. Handover release is blocked only by two open snag records.",
+        "Point-cloud evidence is synchronized with the LOD 500 model. Handover release is blocked only by the remaining snag loop.",
+      recordActionLabel: "View Blockchain Record",
       checks: [
         {
           id: "tower-a-geometry",
@@ -206,7 +252,11 @@ export const handoverZones: HandoverZone[] = [
         severityLabel: "Medium",
         severityTone: "warning",
         detectedDateLabel: "2026-03-18",
-        noteLabel: "Corrosion treatment evidence is missing the required close-range capture for AI comparison."
+        noteLabel: "Corrosion treatment evidence is missing the required close-range capture for AI comparison.",
+        baselineLabel: "Pipe condition baseline",
+        comparisonLabel: "Sealant and coating proof",
+        matchScoreLabel: "81.7% match",
+        actionLabel: "Escalate to MEP team"
       },
       {
         id: "DEF_0988",
@@ -217,7 +267,11 @@ export const handoverZones: HandoverZone[] = [
         severityLabel: "Low",
         severityTone: "info",
         detectedDateLabel: "2026-03-15",
-        noteLabel: "Follow-up panorama confirmed the corrected tile line is now within the finish tolerance."
+        noteLabel: "Follow-up panorama confirmed the corrected tile line is now within the finish tolerance.",
+        baselineLabel: "Pre-fix finish capture",
+        comparisonLabel: "AI closure evidence",
+        matchScoreLabel: "99.1% match",
+        actionLabel: "Archive Record"
       }
     ],
     verification: {
@@ -225,9 +279,10 @@ export const handoverZones: HandoverZone[] = [
       statusTone: "warning",
       consistencyLabel: "99.8%",
       varianceLabel: "Variance detected: +/- 4.8 mm",
-      certificateLabel: "Rectification pack still open",
+      certificateLabel: "Reality-vs-Model Cert",
       noteLabel:
-        "The podium is structurally aligned to model, but finish-stage defects continue to hold back the digital handover release package.",
+        "The podium remains structurally aligned to model, but finish-stage defects continue to hold back the digital handover release package.",
+      recordActionLabel: "Review Open Variances",
       checks: [
         {
           id: "podium-geometry",
@@ -323,15 +378,16 @@ export const handoverZones: HandoverZone[] = [
       statusLabel: "Certified",
       statusTone: "success",
       consistencyLabel: "100%",
-      varianceLabel: "Variance detected: +/- 1.4 mm",
-      certificateLabel: "Consistency certificate issued",
+      varianceLabel: "Variance detected: +/- 1.1 mm",
+      certificateLabel: "Reality-vs-Model Cert",
       noteLabel:
-        "The basement package has cleared geometry, completeness, and defect-closeout gates and is ready for formal digital twin handover.",
+        "All closure evidence has been sealed and the final geometry scan passed with no outstanding variance flags.",
+      recordActionLabel: "Download Signed Record",
       checks: [
         {
           id: "car-park-geometry",
           label: "Geometry delta",
-          valueLabel: "+/- 1.4 mm",
+          valueLabel: "+/- 1.1 mm",
           tone: "success"
         },
         {
@@ -350,26 +406,26 @@ export const handoverZones: HandoverZone[] = [
     },
     manualAssets: [
       {
-        id: "car-park-lpr",
-        assetLabel: "LPR Camera Gateway",
-        assetTypeLabel: "Security",
-        locationLabel: "B1 vehicle entry",
+        id: "car-park-fan",
+        assetLabel: "Jet Fan Cluster 3",
+        assetTypeLabel: "Mechanical",
+        locationLabel: "B1 north drive aisle",
         statusLabel: "Certified",
         statusTone: "success"
       },
       {
-        id: "car-park-fhr",
-        assetLabel: "Fire Hose Reel Set",
-        assetTypeLabel: "Life Safety",
-        locationLabel: "B1 core lobby",
+        id: "car-park-signage",
+        assetLabel: "Wayfinding Sign Set",
+        assetTypeLabel: "Architectural",
+        locationLabel: "Lift lobby threshold",
         statusLabel: "Verified",
         statusTone: "info"
       },
       {
-        id: "car-park-pump",
-        assetLabel: "Drainage Pump P-2",
-        assetTypeLabel: "Mechanical",
-        locationLabel: "Basement sump room",
+        id: "car-park-drainage",
+        assetLabel: "Drainage Trap Assembly",
+        assetTypeLabel: "Civil",
+        locationLabel: "Pump room inlet",
         statusLabel: "Certified",
         statusTone: "success"
       }

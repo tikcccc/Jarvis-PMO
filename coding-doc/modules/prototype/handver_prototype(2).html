@@ -1,0 +1,466 @@
+import React, { useState, useEffect } from 'react';
+import { 
+  LayoutDashboard, Layers, Target, Milestone, FileCheck, ShoppingCart, 
+  PenTool, Wallet, CreditCard, Eye, ShieldCheck, HardHat, Key, Search, 
+  Bell, MoreVertical, ChevronRight, ArrowUpRight, TrendingUp, MapPin, 
+  Activity, CheckCircle2, AlertCircle, Clock, Scan, Database, Filter, 
+  Maximize2, ExternalLink, Info, Calendar, FileText, UploadCloud, Split, 
+  ShieldAlert, ArrowRightLeft, DollarSign, BarChart3, Percent, AlertTriangle,
+  Box, Smartphone, Wrench, QrCode, ScanLine, FileBadge, ArrowLeft, Globe, List,
+  History, CheckCircle, Map, Camera, Cpu, ArrowRight
+} from 'lucide-react';
+
+// --- Utility Components ---
+const Card = ({ children, className = "", onClick }) => (
+  <div onClick={onClick} className={`bg-white rounded-2xl border border-gray-100 shadow-sm transition-all hover:shadow-md ${className} ${onClick ? 'cursor-pointer' : ''}`}>
+    {children}
+  </div>
+);
+
+const Badge = ({ children, variant = "default", className = "" }) => {
+  const styles = {
+    default: "bg-gray-100 text-gray-700",
+    success: "bg-emerald-50 text-emerald-700 border border-emerald-100",
+    warning: "bg-amber-50 text-amber-700 border border-amber-100",
+    danger: "bg-rose-50 text-rose-700 border border-rose-100",
+    info: "bg-blue-50 text-blue-700 border border-blue-100",
+  };
+  return (
+    <span className={`px-2 py-0.5 rounded-md text-[10px] font-black uppercase tracking-widest ${styles[variant]} ${className}`}>
+      {children}
+    </span>
+  );
+};
+
+// --- Handover Management View ---
+const HandoverPageView = () => {
+  const [viewLevel, setViewLevel] = useState('GIS'); 
+  const [activeZone, setActiveZone] = useState(null);
+  const [selectedDefect, setSelectedDefect] = useState(null);
+  const [visualMode, setVisualMode] = useState('REALITY'); 
+
+  const HANDOVER_DATA = {
+    'TOWER_A': {
+       id: 'TOWER_A',
+       img: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&q=80&w=1200',
+       bimImg: 'https://images.unsplash.com/photo-1503387762-592dea58ef23?auto=format&fit=crop&q=80&w=1200&sat=-100&bri=20',
+       label: 'Tower A - L42 Unit 05',
+       progress: 92,
+       lastScan: '2h ago',
+       kpis: { consistency: '99.9%', closure: '92%', avgTime: '3.1 Hrs', activeDefects: 2 },
+       defects: [
+         { id: "DEF_1042", type: "Wall Crack (>0.2mm)", loc: "L12 Lobby - Grid C4", status: "AI Verifying", severity: "high", date: "2026-03-20", 
+           beforeImg: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&q=80&w=400", 
+           afterImg: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&q=80&w=400&sat=-50",
+           aiScore: 98.5
+         },
+         { id: "DEF_1045", type: "Window Seal Leak", loc: "L42 Unit 05 - Master Bed", status: "Pending Fix", severity: "medium", date: "2026-03-21" },
+         { id: "DEF_1011", type: "Tile Misalignment", loc: "L42 Corridor", status: "Auto-Closed", severity: "low", date: "2026-03-18" },
+       ]
+    },
+    'PODIUM': {
+       id: 'PODIUM',
+       img: 'https://images.unsplash.com/photo-1519567281799-eb15baa0fb66?auto=format&fit=crop&q=80&w=1200',
+       label: 'Podium - Main Atrium',
+       progress: 78,
+       lastScan: '1d ago',
+       kpis: { consistency: '99.8%', closure: '78%', avgTime: '5.4 Hrs', activeDefects: 12 },
+       defects: [
+         { id: "DEF_1043", type: "Pipe Rusting", loc: "Plant Room B", status: "Pending Fix", severity: "medium", date: "2026-03-18" },
+       ]
+    },
+    'CAR_PARK': {
+       id: 'CAR_PARK',
+       img: 'https://images.unsplash.com/photo-1506521781263-d8422e82f27a?auto=format&fit=crop&q=80&w=1200',
+       label: 'B1 Basement Parking',
+       progress: 100,
+       lastScan: '3d ago',
+       kpis: { consistency: '100%', closure: '100%', avgTime: '1.2 Hrs', activeDefects: 0 },
+       defects: []
+    }
+  };
+
+  const handleZoneSelect = (zone) => {
+    setActiveZone(zone);
+    setViewLevel('PANORAMA');
+    setSelectedDefect(null);
+    setVisualMode('REALITY');
+  };
+
+  const handleBack = () => {
+    setViewLevel('GIS');
+    setActiveZone(null);
+  };
+
+  return (
+    <div className="space-y-6 animate-in fade-in duration-500 max-w-7xl mx-auto">
+      
+      {/* 1. TOP HEADER: As per image_c83ac0.png Style */}
+      <Card className="p-6 border-t-4 border-t-blue-600 shadow-sm overflow-hidden bg-white">
+        <div className="flex flex-col lg:flex-row items-center justify-between space-y-4 lg:space-y-0">
+          <div className="flex items-center space-x-5">
+             <div className="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600 shadow-inner">
+                <Key className="w-6 h-6" />
+             </div>
+             <div>
+                <h2 className="text-2xl font-black text-gray-900 tracking-tight uppercase leading-none">Handover Master Command</h2>
+                <p className="text-[10px] text-gray-400 font-bold uppercase tracking-[0.2em] mt-2">Zero-Defect Digital Twin Delivery Engine</p>
+             </div>
+          </div>
+
+          <div className="flex items-center space-x-6">
+             {/* Portfolio Sync Section from Image */}
+             <div className="bg-gray-50/80 px-8 py-5 rounded-2xl border border-gray-100 flex items-center space-x-12">
+                <div>
+                   <p className="text-[10px] font-black text-gray-400 uppercase mb-3 tracking-tighter">Portfolio Sync Status</p>
+                   <div className="flex items-center space-x-5">
+                      <span className="text-3xl font-black text-gray-900">86.4%</span>
+                      <div className="w-48 h-3.5 bg-gray-200 rounded-full overflow-hidden shadow-inner">
+                         <div className="h-full bg-blue-600 transition-all duration-1000 relative" style={{ width: '86.4%' }}>
+                            <div className="absolute inset-0 bg-white/20 animate-pulse" />
+                         </div>
+                      </div>
+                   </div>
+                </div>
+                <div className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm text-center min-w-[130px]">
+                   <p className="text-[10px] font-black text-emerald-600 uppercase mb-1">Verified Assets</p>
+                   <p className="text-2xl font-black text-gray-900">12<span className="text-sm text-gray-300">/14</span></p>
+                </div>
+             </div>
+          </div>
+        </div>
+      </Card>
+
+      {/* 2. KPI CARDS: Re-integrated */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <Card className="p-5 border-l-4 border-l-emerald-500">
+           <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Rectification Rate</p>
+           <div className="flex items-end justify-between mt-2">
+              <h3 className="text-2xl font-black text-gray-900">91.2%</h3>
+              <Badge variant="success">AI Verified</Badge>
+           </div>
+           <div className="mt-4 flex space-x-1">
+              {Array.from({ length: 10 }).map((_, i) => (
+                <div key={i} className={`h-1.5 flex-1 rounded-full ${i < 9 ? 'bg-emerald-500' : 'bg-gray-100'}`} />
+              ))}
+           </div>
+        </Card>
+        <Card className="p-5 border-l-4 border-l-blue-500">
+           <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">LOD 500 Consistency</p>
+           <div className="flex items-end justify-between mt-2">
+              <h3 className="text-2xl font-black text-gray-900">99.9%</h3>
+              <ShieldCheck className="w-5 h-5 text-emerald-500 mb-1" />
+           </div>
+           <p className="mt-2 text-[9px] font-bold text-emerald-600 uppercase">Compliant (&lt; 5mm)</p>
+        </Card>
+        <Card className="p-5 border-l-4 border-l-amber-500">
+           <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Active Snags</p>
+           <div className="flex items-end justify-between mt-2">
+              <h3 className="text-2xl font-black text-gray-900">14</h3>
+              <p className="text-[10px] font-bold text-gray-400 mb-1">Items Pending</p>
+           </div>
+           <div className="mt-4 h-1.5 w-full bg-gray-100 rounded-full overflow-hidden">
+              <div className="h-full bg-amber-500" style={{ width: '40%' }} />
+           </div>
+        </Card>
+        <Card className="p-5 bg-gray-900 text-white">
+           <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Forecasted Handover</p>
+           <div className="mt-3 flex items-center justify-between">
+              <h3 className="text-xl font-black text-blue-400">May 15, 2026</h3>
+              <Clock className="w-5 h-5 text-gray-600" />
+           </div>
+           <p className="text-[10px] font-bold text-gray-500 uppercase mt-2">52 Days Remaining</p>
+        </Card>
+      </div>
+
+      {/* 3. Main View Selection */}
+      {viewLevel === 'GIS' ? (
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-in slide-in-from-bottom-4 duration-500">
+          
+          {/* GIS Macro Map View */}
+          <Card className="lg:col-span-2 h-[600px] relative overflow-hidden group shadow-xl border-none">
+            <div className="absolute inset-0 grayscale-[0.6] transition-all duration-1000 group-hover:grayscale-0" style={{backgroundImage: 'url("https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80&w=2000")', backgroundSize: 'cover', backgroundPosition: 'center'}} />
+            <div className="absolute inset-0 bg-gradient-to-br from-white/90 via-transparent to-black/20" />
+            
+            <div className="absolute top-6 left-6 z-10 bg-white/95 backdrop-blur-md px-4 py-3 rounded-2xl border border-gray-100 shadow-sm">
+              <Badge variant="info">GIS Spatial Hub</Badge>
+              <h3 className="text-lg font-black text-gray-900 mt-1 uppercase tracking-tight">Portfolio Handover Scoping</h3>
+            </div>
+
+            {/* GIS Interactive Pins with Progress Bars */}
+            {Object.values(HANDOVER_DATA).map((zone) => (
+              <button 
+                key={zone.id}
+                onClick={() => handleZoneSelect(zone.id)}
+                className={`absolute flex flex-col items-center group/pin transition-all hover:scale-110 z-20`}
+                style={{ 
+                  top: zone.id === 'TOWER_A' ? '35%' : zone.id === 'PODIUM' ? '60%' : '75%',
+                  left: zone.id === 'TOWER_A' ? '30%' : zone.id === 'PODIUM' ? '65%' : '45%'
+                }}
+              >
+                <div className="bg-white/95 backdrop-blur-md px-4 py-3 rounded-xl shadow-2xl border border-gray-100 mb-2 transform group-hover/pin:-translate-y-2 transition-all w-56 text-left">
+                  <div className="flex justify-between items-start mb-2">
+                     <p className="text-xs font-black text-gray-900 uppercase tracking-tighter">{zone.label}</p>
+                     <Badge variant={zone.progress === 100 ? 'success' : 'info'} className="text-[9px]">{zone.progress}%</Badge>
+                  </div>
+                  <div className="h-2 w-full bg-gray-100 rounded-full overflow-hidden">
+                     <div className={`h-full ${zone.progress === 100 ? 'bg-emerald-500' : 'bg-blue-600'} transition-all duration-700`} style={{ width: `${zone.progress}%` }} />
+                  </div>
+                  <div className="flex justify-between items-center mt-2">
+                     <p className="text-[8px] text-gray-400 font-bold uppercase tracking-widest">Digital Twin Status</p>
+                     <div className="flex items-center space-x-1">
+                        <ShieldCheck className="w-3 h-3 text-emerald-500" />
+                        <span className="text-[8px] font-black text-emerald-600 uppercase">Synced</span>
+                     </div>
+                  </div>
+                </div>
+                <div className="relative">
+                   <div className={`w-10 h-10 ${zone.progress === 100 ? 'bg-emerald-500' : 'bg-blue-600'} rounded-full flex items-center justify-center text-white ring-4 ring-white shadow-xl relative z-10`}>
+                     <MapPin className="w-5 h-5" />
+                   </div>
+                   {zone.progress !== 100 && (
+                      <div className="absolute -inset-1.5 bg-blue-500/20 rounded-full animate-ping" />
+                   )}
+                </div>
+              </button>
+            ))}
+          </Card>
+
+          {/* Right Sidebar */}
+          <div className="space-y-6">
+            <Card className="p-6 border-none shadow-xl bg-blue-50/20 border-l-4 border-l-blue-600">
+               <div className="flex items-center justify-between mb-5">
+                  <div className="flex items-center space-x-3">
+                     <div className="p-2 bg-blue-600 rounded-lg text-white shadow-lg"><Cpu className="w-4 h-4" /></div>
+                     <span className="text-xs font-black uppercase tracking-widest text-blue-900">Audit Agent Log</span>
+                  </div>
+                  <Badge variant="info" className="animate-pulse">Live</Badge>
+               </div>
+               <div className="space-y-4">
+                  <div className="flex items-start space-x-3">
+                     <ScanLine className="w-4 h-4 text-blue-500 mt-0.5" />
+                     <p className="text-[11px] text-gray-700 leading-relaxed font-medium">
+                       Agent <span className="text-blue-600 font-bold">JARVIS_SCAN_09</span> reconciling Point Cloud data with BIM LOD 500 for <span className="font-bold">Tower A</span>.
+                     </p>
+                  </div>
+                  <div className="flex items-start space-x-3">
+                     <CheckCircle className="w-4 h-4 text-emerald-500 mt-0.5" />
+                     <p className="text-[11px] text-gray-700 leading-relaxed font-medium">
+                       Consistency certificate generated for <span className="font-bold">Basement Car Park</span> via Blockchain node.
+                     </p>
+                  </div>
+               </div>
+            </Card>
+
+            <Card className="flex-1 flex flex-col border-none shadow-xl overflow-hidden min-h-[400px]">
+              <div className="px-6 py-5 border-b border-gray-50 flex items-center justify-between bg-gray-50/50">
+                <h3 className="text-xs font-black uppercase tracking-[0.1em] text-gray-900">Digital Twin Assets</h3>
+                <Filter className="w-4 h-4 text-gray-400" />
+              </div>
+              <div className="flex-1 overflow-y-auto no-scrollbar p-4 space-y-4">
+                {Object.values(HANDOVER_DATA).map((zone) => (
+                  <div key={zone.id} onClick={() => handleZoneSelect(zone.id)} className="p-4 bg-white rounded-2xl border border-gray-100 hover:border-blue-300 transition-all cursor-pointer">
+                    <div className="flex justify-between items-start mb-3">
+                      <p className="text-xs font-black text-gray-900 uppercase">{zone.label}</p>
+                      <Badge variant={zone.progress === 100 ? 'success' : 'info'}>{zone.progress}%</Badge>
+                    </div>
+                    <div className="h-1.5 w-full bg-gray-100 rounded-full overflow-hidden">
+                      <div className={`h-full ${zone.progress === 100 ? 'bg-emerald-500' : 'bg-blue-600'}`} style={{ width: `${zone.progress}%` }} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </Card>
+          </div>
+        </div>
+      ) : (
+        /* --- Micro Level View: Panorama & Snag Management --- */
+        <div className="space-y-6 animate-in fade-in zoom-in-95 duration-300">
+          
+          <div className="flex items-center justify-between bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
+            <div className="flex items-center space-x-4">
+              <button onClick={handleBack} className="px-4 py-2 bg-gray-50 border border-gray-100 rounded-xl text-[10px] font-black text-gray-500 flex items-center hover:bg-blue-50 transition-all uppercase tracking-widest">
+                <ArrowLeft className="w-4 h-4 mr-2" /> Back to Map
+              </button>
+              <div className="h-6 w-px bg-gray-200" />
+              <h3 className="text-xl font-black text-gray-900 uppercase">{HANDOVER_DATA[activeZone].label}</h3>
+            </div>
+            <button className="px-6 py-2 bg-gray-900 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-gray-200">Issue Handover Cert</button>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2 space-y-6">
+              <Card className="h-[500px] relative overflow-hidden group border-none shadow-xl flex flex-col">
+                <div className="absolute top-6 left-6 z-20 flex space-x-2 bg-white/90 backdrop-blur-md p-1 rounded-xl shadow-sm border border-gray-100">
+                  <button onClick={() => setVisualMode('REALITY')} className={`px-4 py-2 rounded-lg text-[10px] font-black uppercase transition-all ${visualMode === 'REALITY' ? 'bg-blue-600 text-white' : 'text-gray-500'}`}>
+                    <Camera className="w-3.5 h-3.5 mr-2 inline" /> Reality 360°
+                  </button>
+                  <button onClick={() => setVisualMode('BIM_HEATMAP')} className={`px-4 py-2 rounded-lg text-[10px] font-black uppercase transition-all ${visualMode === 'BIM_HEATMAP' ? 'bg-gray-900 text-white' : 'text-gray-500'}`}>
+                    <Box className="w-3.5 h-3.5 mr-2 inline" /> BIM Heatmap
+                  </button>
+                </div>
+                <div className="flex-1 relative">
+                  <div className="absolute inset-0" style={{ backgroundImage: `url("${visualMode === 'REALITY' ? HANDOVER_DATA[activeZone].img : HANDOVER_DATA[activeZone].bimImg}")`, backgroundSize: 'cover', backgroundPosition: 'center' }} />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                  <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center space-x-4 bg-white/20 backdrop-blur-md px-6 py-3 rounded-2xl border border-white/30 text-white shadow-xl">
+                     <ArrowRightLeft className="w-4 h-4" />
+                     <span className="text-[10px] font-black uppercase tracking-[0.2em]">Drag to Inspect Digital Twin</span>
+                  </div>
+                </div>
+              </Card>
+
+              <Card className="p-0 border-none shadow-xl overflow-hidden bg-slate-900 text-white">
+                <div className="flex flex-col md:flex-row">
+                  <div className="p-8 md:w-1/2 border-r border-white/10">
+                    <Badge variant="success" className="mb-4">Sync Complete</Badge>
+                    <h3 className="text-xl font-black uppercase mb-2">Reality-vs-Model Cert</h3>
+                    <p className="text-xs text-slate-400 mb-6 font-medium leading-relaxed">Point Cloud data synchronized with LOD 500 BIM. Overall consistency verified at 99.9%.</p>
+                    <div className="space-y-3">
+                       <div className="flex justify-between border-b border-white/10 pb-2">
+                          <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Consistency Score</span>
+                          <span className="text-lg font-black text-emerald-400">{HANDOVER_DATA[activeZone].kpis.consistency}</span>
+                       </div>
+                    </div>
+                  </div>
+                  <div className="p-8 md:w-1/2 flex flex-col items-center justify-center text-center">
+                     <ScanLine className="w-12 h-12 text-blue-400 mb-4 animate-pulse" />
+                     <button className="px-6 py-2.5 bg-blue-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-blue-500/20">View Blockchain Record</button>
+                  </div>
+                </div>
+              </Card>
+            </div>
+
+            <div className="space-y-6">
+              <Card className="p-0 border-none shadow-xl flex flex-col min-h-[500px] overflow-hidden">
+                <div className="px-6 py-5 border-b border-gray-100 flex justify-between items-center bg-white">
+                   <h3 className="text-xs font-black uppercase tracking-tight text-gray-900">AI Snag Auto-Closure</h3>
+                   <Badge variant="danger" className="animate-pulse">{HANDOVER_DATA[activeZone].defects.length} Pending</Badge>
+                </div>
+                <div className="flex-1 bg-gray-50/50 overflow-y-auto no-scrollbar p-4 space-y-4">
+                   {HANDOVER_DATA[activeZone].defects.map((def, i) => (
+                     <div key={i} className="space-y-2">
+                        <div 
+                          onClick={() => setSelectedDefect(selectedDefect?.id === def.id ? null : def)}
+                          className={`p-4 bg-white rounded-2xl border transition-all cursor-pointer ${selectedDefect?.id === def.id ? 'border-blue-500 shadow-md ring-2 ring-blue-50' : 'border-gray-200'}`}
+                        >
+                           <div className="flex justify-between items-start mb-2">
+                              <Badge variant="info">{def.id}</Badge>
+                              <Badge variant={def.status === 'Auto-Closed' ? 'success' : 'warning'}>{def.status}</Badge>
+                           </div>
+                           <p className="text-sm font-black text-gray-900">{def.type}</p>
+                           <p className="text-[10px] text-gray-400 font-bold mt-1 flex items-center"><MapPin className="w-3 h-3 mr-1" /> {def.loc}</p>
+                        </div>
+
+                        {selectedDefect?.id === def.id && def.beforeImg && (
+                           <div className="p-4 bg-gray-900 rounded-2xl animate-in slide-in-from-top-2">
+                              <h4 className="text-[10px] font-black text-gray-500 uppercase mb-3">Vision AI Verification</h4>
+                              <div className="grid grid-cols-2 gap-2 mb-4">
+                                 <div className="relative rounded-lg overflow-hidden aspect-square border border-gray-700">
+                                    <img src={def.beforeImg} className="object-cover w-full h-full opacity-60" />
+                                    <span className="absolute bottom-2 left-2 text-[8px] font-bold text-rose-400 bg-black/60 px-1">Baseline</span>
+                                 </div>
+                                 <div className="relative rounded-lg overflow-hidden aspect-square border border-gray-700">
+                                    <img src={def.afterImg} className="object-cover w-full h-full" />
+                                    <span className="absolute bottom-2 left-2 text-[8px] font-bold text-emerald-400 bg-black/60 px-1">Latest</span>
+                                 </div>
+                              </div>
+                              <div className="bg-gray-800 p-3 rounded-xl flex justify-between items-center border border-gray-700">
+                                 <p className="text-[10px] font-bold text-emerald-400">Match: {def.aiScore}%</p>
+                                 <button className="px-3 py-1.5 bg-blue-600 text-white rounded-lg text-[9px] font-black uppercase tracking-widest">Confirm Closure</button>
+                              </div>
+                           </div>
+                        )}
+                     </div>
+                   ))}
+                </div>
+              </Card>
+
+              <Card className="p-6 border-none shadow-xl bg-white">
+                 <div className="flex justify-between items-start mb-4">
+                    <h3 className="text-sm font-black uppercase tracking-tight text-gray-900">Digital Asset Manual (FM)</h3>
+                    <QrCode className="w-5 h-5 text-gray-300" />
+                 </div>
+                 <div className="space-y-2">
+                    {['Chiller Unit A1', 'Smart Meter Module', 'Facade Panel (Type B)'].map((asset, i) => (
+                      <div key={i} className="flex items-center justify-between p-3 bg-gray-50 rounded-xl hover:bg-blue-50 transition-colors cursor-pointer group">
+                         <span className="text-xs font-black text-gray-700">{asset}</span>
+                         <ArrowUpRight className="w-4 h-4 text-gray-300 group-hover:text-blue-600" />
+                      </div>
+                    ))}
+                 </div>
+              </Card>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+// --- App Shell ---
+export default function App() {
+  const [activeModule, setActiveModule] = useState("Handover");
+  const [isSidebarOpen, setSidebarOpen] = useState(true);
+
+  const sidebarItems = [
+    { id: "Dashboard", label: "Strategic Overview", icon: LayoutDashboard },
+    { type: "divider", label: "Operations" },
+    { id: "Handover", label: "Handover (Digital Twin)", icon: Key },
+  ];
+
+  return (
+    <div className="min-h-screen bg-[#FDFDFE] flex font-sans text-gray-900 antialiased overflow-hidden">
+      <aside className={`bg-white border-r border-gray-100 transition-all duration-300 flex flex-col shrink-0 shadow-sm z-40 ${isSidebarOpen ? 'w-64' : 'w-20'}`}>
+        <div className="p-6 flex items-center space-x-3 h-20 shrink-0 border-b border-gray-50">
+          <div className="w-10 h-10 bg-gray-900 rounded-xl flex items-center justify-center shadow-lg">
+             <span className="text-white font-black text-lg italic">J</span>
+          </div>
+          {isSidebarOpen && <span className="font-black text-lg tracking-tight uppercase">Jarvis<span className="text-blue-600">PMO</span></span>}
+        </div>
+        <nav className="flex-1 px-4 py-6 space-y-1 overflow-y-auto no-scrollbar">
+          {sidebarItems.map((item, idx) => {
+            if (item.type === 'divider') return isSidebarOpen ? <div key={idx} className="px-2 pt-6 pb-2 text-[10px] font-black text-gray-300 uppercase tracking-widest">{item.label}</div> : <div key={idx} className="h-6" />;
+            const isActive = activeModule === item.id;
+            return (
+              <button key={item.id} onClick={() => setActiveModule(item.id)} className={`w-full flex items-center space-x-3 px-3 py-3 rounded-xl transition-all group ${isActive ? 'bg-gray-900 text-white shadow-md' : 'text-gray-500 hover:bg-gray-50'}`}>
+                <item.icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-white' : 'text-gray-400 group-hover:text-blue-600'}`} />
+                {isSidebarOpen && <span className="text-xs font-bold">{item.label}</span>}
+              </button>
+            );
+          })}
+        </nav>
+      </aside>
+      
+      <main className="flex-1 flex flex-col h-screen overflow-hidden">
+        <header className="bg-white/80 backdrop-blur-xl border-b border-gray-100 h-20 flex items-center justify-between px-8 shrink-0 z-30">
+          <div className="flex items-center space-x-4">
+             <button onClick={() => setSidebarOpen(!isSidebarOpen)} className="p-2 hover:bg-gray-100 rounded-xl text-gray-400 transition-colors">
+               <ChevronRight className={`w-5 h-5 transition-transform ${isSidebarOpen ? 'rotate-180' : ''}`} />
+             </button>
+             <div className="flex items-center text-xs font-bold text-gray-400 uppercase tracking-widest">
+                Portfolios <ChevronRight className="w-3 h-3 mx-2" /> <span className="text-gray-900">Horizon Estates Phase 1</span>
+             </div>
+          </div>
+          <div className="flex items-center space-x-6">
+            <div className="relative group">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 group-focus-within:text-blue-500" />
+              <input type="text" placeholder="Search SSOT Records..." className="pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-100 rounded-xl text-xs font-bold outline-none w-72 focus:ring-2 focus:ring-blue-100 transition-all" />
+            </div>
+            <button className="p-2 text-gray-400 hover:bg-gray-50 rounded-xl relative">
+              <Bell className="w-5 h-5" />
+              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-rose-500 rounded-full border-2 border-white" />
+            </button>
+          </div>
+        </header>
+        
+        <div className="flex-1 overflow-y-auto p-8 no-scrollbar bg-[#FDFDFE]">
+           {activeModule === "Dashboard" ? (
+             <div className="flex items-center justify-center h-full text-gray-300 font-black uppercase tracking-[0.5em]">Executive Dashboard</div>
+           ) : (
+             <HandoverPageView />
+           )}
+        </div>
+      </main>
+    </div>
+  );
+}

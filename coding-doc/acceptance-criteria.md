@@ -54,8 +54,10 @@
 - The safety route uses the approved Mapbox GIS stack for CMP, personnel, excavation, gas, and structural map surfaces, with safe fallback behavior when `NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN` is missing.
 - The progress route keeps GIS-led zone overview and in-place zone drill-down on the same route instead of reverting to a generic placeholder module page, and the GIS legend / markers distinguish normal, watch, and critical delay states.
 - The progress detail view uses timestamped discrete Eagle Eye capture events with stage context, not a continuous video-player scrubber, surfaces timestamp / GPS / weather metadata for the selected snapshot, and reserves the only dark emphasis panel on the route for delay impact analysis.
+- The handover route keeps the `Handover Master Command` header and a compact summary KPI strip ahead of the GIS workspace without drifting from the shared Jarvis shell.
 - The handover route keeps GIS-led asset overview and in-place panorama detail on the same route instead of reverting to a generic placeholder module page.
 - The handover detail view preserves the prototype's AI snag detection, reality-vs-model verification, and digital asset manual surfaces while keeping the Eagle Eye evidence view inside the same route.
+- The handover detail view supports `Reality 360` and `BIM Heatmap` switching while still using the approved Eagle Eye panorama asset as the visual source.
 - Reduced-motion settings disable non-essential ambient motion and replace large travel with lighter or instant transitions.
 
 ## 6. Technical Acceptance
@@ -71,7 +73,7 @@
 - Safety page-specific data lives in `lib/mock-data/safety.ts`, including CMP metrics, device states, GIS nodes, trend series, live-feed metadata, roster entries, and drone findings, and the route composes dedicated safety components rather than the generic placeholder page.
 - Progress page-specific data lives in `lib/mock-data/progress.ts`, including timestamp, GPS, weather, and stage context for capture events, and the route composes dedicated progress components rather than inline generic-module placeholder content.
 - Handover page-specific data lives in `lib/mock-data/handover.ts`, and the route composes dedicated handover components rather than inline generic-module placeholder content.
-- The handover GIS overview uses the approved Mapbox GIS stack with a safe fallback preview when `NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN` is missing, and the detail view uses the approved Eagle Eye panorama asset.
+- The handover GIS overview uses the approved Mapbox GIS stack with a safe fallback preview when `NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN` is missing, and the detail view uses the approved Eagle Eye panorama asset from `public/image/eagle eye/eagle eye.png`.
 - Module docs record their matching split PRD source files when those working copies exist in the active input set.
 - The architecture, data contract, API seam, acceptance criteria, and test strategy docs stay mutually consistent.
 

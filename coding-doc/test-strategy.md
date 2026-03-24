@@ -72,9 +72,11 @@ The highest-risk failures are visual consistency failures, not data logic bugs. 
 - On `/progress`, verify the GIS overview renders real map tiles or the configured fallback preview, that hovering/selecting zones keeps the selected-zone context synchronized, and that the legend / markers distinguish normal, watch, and critical delay states.
 - On `/progress`, verify clicking a zone marker or monitored-zone row opens the matching in-place detail view, the back action returns to the overview, the timestamped snapshot timeline does not behave like a continuous scrubber, and the selected snapshot story shows timestamp, GPS, and weather metadata.
 - On `/progress`, verify `Delay Impact Analysis` is the only dark emphasis panel on the route and that its content updates coherently for stable versus lagging zones.
-- On `/handover`, verify the GIS overview renders real map tiles or the configured fallback preview and that hovering/selecting assets keeps the asset-verification list synchronized.
-- On `/handover`, verify clicking a GIS marker or asset row opens the matching in-place panorama detail and that the back action returns to the overview without route navigation.
-- On `/handover`, verify the detail view uses the approved Eagle Eye panorama asset and that `AI Snag Detection`, `Reality-vs-Model Verification`, and `Digital Asset Manual` update for the selected asset.
+- On `/handover`, verify the command header and four-card summary KPI strip render ahead of the GIS overview without breaking the shared shell density.
+- On `/handover`, verify the GIS overview renders real map tiles or the configured fallback preview and that hovering/selecting assets keeps the digital-twin asset list synchronized.
+- On `/handover`, verify clicking a GIS marker or asset row opens the matching in-place detail workspace and that the back action returns to the overview without route navigation.
+- On `/handover`, verify the detail workspace switches between `Reality 360` and `BIM Heatmap` while still using the approved `public/image/eagle eye/eagle eye.png` asset.
+- On `/handover`, verify selecting a snag record expands its evidence card in place and that `AI Snag Auto-Closure`, `Reality-vs-Model Cert`, and `Digital Asset Manual` update for the selected asset.
 - Test responsive layouts at common widths:
   - 1440px
   - 1280px

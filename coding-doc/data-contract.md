@@ -425,6 +425,19 @@ export interface HandoverCommandSummary {
   verifiedAssetsLabel: string;
   verifiedAssetsDetail: string;
   waveLabel: string;
+  overviewMetrics: HandoverOverviewMetric[];
+}
+
+export interface HandoverOverviewMetric {
+  id: string;
+  label: string;
+  valueLabel: string;
+  tone: Tone;
+  icon: IconName;
+  detailLabel?: string;
+  badgeLabel?: string;
+  progressPercent?: number;
+  emphasis?: "surface" | "emphasis";
 }
 
 export interface HandoverZoneKpi {
@@ -445,6 +458,10 @@ export interface HandoverDefectRecord {
   severityTone: Tone;
   detectedDateLabel: string;
   noteLabel: string;
+  baselineLabel: string;
+  comparisonLabel: string;
+  matchScoreLabel?: string;
+  actionLabel?: string;
 }
 
 export interface HandoverVerificationCheck {
@@ -461,6 +478,7 @@ export interface HandoverVerificationSummary {
   varianceLabel: string;
   certificateLabel: string;
   noteLabel: string;
+  recordActionLabel: string;
   checks: HandoverVerificationCheck[];
 }
 
@@ -678,6 +696,7 @@ Suggested file mapping:
   - `ProgressZone[]`
 - `lib/mock-data/handover.ts`
   - `HandoverCommandSummary`
+  - `HandoverOverviewMetric[]`
   - `HandoverAuditFeedItem[]`
   - `HandoverZone[]`
 - `lib/mock-data/payment.ts`

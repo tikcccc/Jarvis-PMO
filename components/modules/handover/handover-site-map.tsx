@@ -409,14 +409,27 @@ function ZoneMarkerButton({
     >
       <div
         className={cn(
-          "mb-2 rounded-xl border bg-white/95 px-3 py-2 text-center shadow-2xl backdrop-blur transition-[border-color,box-shadow,transform] duration-200",
+          "mb-2 w-56 rounded-xl border bg-white/95 px-4 py-3 text-left shadow-2xl backdrop-blur transition-[border-color,box-shadow,transform] duration-200",
           selected ? "border-blue-200 ring-2 ring-blue-500/25" : "border-white/70 group-hover:-translate-y-0.5"
         )}
       >
-        <p className="jarvis-text-10 font-black uppercase tracking-tight text-gray-900">{zone.mapLabel}</p>
-        <p className={cn("jarvis-text-10 mt-0.5 font-bold uppercase", zone.tone === "success" ? "text-emerald-600" : zone.tone === "warning" ? "text-amber-600" : "text-blue-600")}>
-          {zone.progressPercent}% synced
-        </p>
+        <div className="mb-2 flex items-start justify-between gap-3">
+          <p className="jarvis-text-10 font-black uppercase tracking-tight text-gray-900">{zone.label}</p>
+          <span className={cn("rounded-md px-2 py-0.5 text-[9px] font-black uppercase", zone.tone === "success" ? "bg-emerald-50 text-emerald-600" : zone.tone === "warning" ? "bg-amber-50 text-amber-600" : "bg-blue-50 text-blue-600")}>
+            {zone.progressPercent}%
+          </span>
+        </div>
+
+        <div className="h-1.5 w-full overflow-hidden rounded-full bg-gray-100">
+          <div className={cn("h-full rounded-full", zone.tone === "success" ? "bg-emerald-500" : zone.tone === "warning" ? "bg-amber-500" : "bg-blue-600")} style={{ width: `${zone.progressPercent}%` }} />
+        </div>
+
+        <div className="mt-2 flex items-center justify-between">
+          <p className="jarvis-text-10 font-bold uppercase tracking-widest text-gray-400">{zone.statusLabel}</p>
+          <p className={cn("jarvis-text-10 font-bold uppercase", zone.tone === "success" ? "text-emerald-600" : zone.tone === "warning" ? "text-amber-600" : "text-blue-600")}>
+            Synced
+          </p>
+        </div>
       </div>
       <div className={cn("flex h-9 w-9 items-center justify-center rounded-full border-4 border-white shadow-xl", toneMarkerClassMap[zone.tone])}>
         <MapPin className="h-4 w-4 text-white" />
