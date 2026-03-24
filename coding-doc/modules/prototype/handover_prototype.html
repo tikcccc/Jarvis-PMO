@@ -1,0 +1,449 @@
+import React, { useState, useEffect } from 'react';
+import { 
+  LayoutDashboard, Layers, Target, Milestone, FileCheck, ShoppingCart, 
+  PenTool, Wallet, CreditCard, Eye, ShieldCheck, HardHat, Key, Search, 
+  Bell, MoreVertical, ChevronRight, ArrowUpRight, TrendingUp, MapPin, 
+  Activity, CheckCircle2, AlertCircle, Clock, Scan, Database, Filter, 
+  Maximize2, ExternalLink, Info, Calendar, FileText, UploadCloud, Split, 
+  ShieldAlert, ArrowRightLeft, DollarSign, BarChart3, Percent, AlertTriangle,
+  Box, Smartphone, Wrench, QrCode, ScanLine, FileBadge, ArrowLeft, Globe, List,
+  History, CheckCircle
+} from 'lucide-react';
+
+// --- 通用組件 ---
+const Card = ({ children, className = "" }) => (
+  <div className={`bg-white rounded-xl border border-gray-100 shadow-sm transition-all hover:shadow-md ${className}`}>
+    {children}
+  </div>
+);
+
+const Badge = ({ children, variant = "default" }) => {
+  const styles = {
+    default: "bg-gray-100 text-gray-700",
+    success: "bg-emerald-50 text-emerald-700 border border-emerald-100",
+    warning: "bg-amber-50 text-amber-700 border border-amber-100",
+    danger: "bg-rose-50 text-rose-700 border border-rose-100",
+    info: "bg-blue-50 text-blue-700 border border-blue-100",
+  };
+  return (
+    <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${styles[variant]}`}>
+      {children}
+    </span>
+  );
+};
+
+// --- 移交管理專屬頁面 (Handover) ---
+const HandoverPageView = () => {
+  const [viewLevel, setViewLevel] = useState('GIS'); 
+  const [activeZone, setActiveZone] = useState(null);
+
+  const HANDOVER_DATA = {
+    'TOWER_A': {
+       id: 'TOWER_A',
+       img: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&q=80&w=1200',
+       label: 'Tower A - L42 Unit 05',
+       progress: 92,
+       lastScan: '2h ago',
+       kpis: { consistency: '99.9%', closure: '92%', avgTime: '3.1 Hrs', activeDefects: 2 },
+       defects: [
+          { id: "DEF_1042", type: "Wall Crack (>0.2mm)", loc: "L12 Lobby", status: "AI Verifying", severity: "high", date: "2026-03-20" },
+          { id: "DEF_1045", type: "Window Seal Leak", loc: "L42 Unit 05", status: "Pending Fix", severity: "medium", date: "2026-03-21" },
+       ]
+    },
+    'PODIUM': {
+       id: 'PODIUM',
+       img: 'https://images.unsplash.com/photo-1519567281799-eb15baa0fb66?auto=format&fit=crop&q=80&w=1200',
+       label: 'Podium - Main Atrium',
+       progress: 78,
+       lastScan: '1d ago',
+       kpis: { consistency: '99.8%', closure: '78%', avgTime: '5.4 Hrs', activeDefects: 12 },
+       defects: [
+          { id: "DEF_1043", type: "Pipe Rusting", loc: "Plant Room B", status: "Pending Fix", severity: "medium", date: "2026-03-18" },
+          { id: "DEF_0988", type: "Tile Misalignment", loc: "Entrance", status: "Auto-Closed", severity: "low", date: "2026-03-15" },
+       ]
+    },
+    'CAR_PARK': {
+       id: 'CAR_PARK',
+       img: 'https://images.unsplash.com/photo-1506521781263-d8422e82f27a?auto=format&fit=crop&q=80&w=1200',
+       label: 'B1 Basement Parking',
+       progress: 100,
+       lastScan: '3d ago',
+       kpis: { consistency: '100%', closure: '100%', avgTime: '1.2 Hrs', activeDefects: 0 },
+       defects: []
+    }
+  };
+
+  const handleZoneSelect = (zone) => {
+    setActiveZone(zone);
+    setViewLevel('PANORAMA');
+  };
+
+  const handleBack = () => {
+    setViewLevel('GIS');
+    setActiveZone(null);
+  };
+
+  return (
+    <div className="space-y-6 animate-in fade-in duration-500">
+      
+      {/* 1. Master Progress (對標 PRD 1.2.4 GOD'S EYE VIEW) */}
+      <Card className="p-6 overflow-hidden relative border-t-4 border-t-blue-600">
+        <div className="flex flex-col md:flex-row md:items-center justify-between space-y-4 md:space-y-0 relative z-10">
+          <div>
+            <h2 className="text-xl font-black text-gray-900 tracking-tight flex items-center">
+              <Key className="w-5 h-5 mr-2 text-blue-600" />
+              HANDOVER MASTER COMMAND (PHASE 1)
+            </h2>
+            <p className="text-[10px] text-gray-400 font-bold mt-1 uppercase tracking-[0.2em]">Zero-Defect Digital Twin Delivery Engine</p>
+          </div>
+          <div className="flex items-center space-x-10">
+            <div className="text-right">
+              <p className="text-[10px] font-black text-gray-400 uppercase leading-none mb-1">Portfolio Status</p>
+              <div className="flex items-center justify-end space-x-2">
+                <p className="text-2xl font-black text-gray-900">86.4%</p>
+                <TrendingUp className="w-4 h-4 text-emerald-500" />
+              </div>
+            </div>
+            <div className="w-48 h-2.5 bg-gray-100 rounded-full overflow-hidden border border-gray-50">
+              <div className="h-full bg-blue-600 transition-all duration-1000" style={{ width: '86.4%' }} />
+            </div>
+            <div className="text-center bg-gray-50 px-4 py-2 rounded-xl border border-gray-100">
+              <p className="text-[10px] font-black text-emerald-600 uppercase leading-none mb-1">Verified Assets</p>
+              <p className="text-xl font-black text-gray-900">12 / 14</p>
+            </div>
+          </div>
+        </div>
+      </Card>
+
+      {/* 2. Detailed KPIs (微觀層級對標 PRD 12.3) */}
+      {viewLevel === 'PANORAMA' && (
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 animate-in slide-in-from-top-4 duration-500">
+          {[
+            { label: 'Zone Consistency', val: HANDOVER_DATA[activeZone].kpis.consistency, icon: Box, color: 'emerald' },
+            { label: 'AI Auto-Closure', val: HANDOVER_DATA[activeZone].kpis.closure, icon: ShieldCheck, color: 'blue' },
+            { label: 'Avg Rectification', val: HANDOVER_DATA[activeZone].kpis.avgTime, icon: Clock, color: 'amber' },
+            { label: 'Active Snags', val: HANDOVER_DATA[activeZone].kpis.activeDefects, icon: AlertTriangle, color: 'rose' },
+          ].map((kpi, i) => (
+            <Card key={i} className={`p-4 border-l-4 border-l-${kpi.color}-500`}>
+              <div className="flex justify-between items-start">
+                <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">{kpi.label}</p>
+                <kpi.icon className={`w-3.5 h-3.5 text-${kpi.color}-500`} />
+              </div>
+              <p className={`text-xl font-black text-gray-900 mt-1`}>{kpi.val}</p>
+            </Card>
+          ))}
+        </div>
+      )}
+
+      {/* 3. Main Interface */}
+      {viewLevel === 'GIS' ? (
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* GIS Macro View (對標 PRD 1.2.4 & 11.2.1) */}
+          <Card className="lg:col-span-2 h-[600px] relative overflow-hidden group border-none shadow-2xl">
+            <div className="absolute inset-0 grayscale transition-all duration-1000 group-hover:grayscale-0" style={{backgroundImage: 'url("https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80&w=2000")', backgroundSize: 'cover', backgroundPosition: 'center'}} />
+            <div className="absolute inset-0 bg-gradient-to-br from-white/40 via-transparent to-black/20" />
+            
+            {/* GIS Overlay Elements */}
+            <div className="absolute top-6 left-8 z-10 space-y-1">
+              <Badge variant="info">GIS SPATIAL HUB</Badge>
+              <h3 className="text-2xl font-black text-white drop-shadow-lg uppercase tracking-tight">Macro Project Scoping</h3>
+            </div>
+
+            {/* Map Interaction Pins */}
+            {Object.values(HANDOVER_DATA).map((zone) => (
+              <button 
+                key={zone.id}
+                onClick={() => handleZoneSelect(zone.id)}
+                className={`absolute flex flex-col items-center group/pin transition-all hover:scale-110`}
+                style={{ 
+                  top: zone.id === 'TOWER_A' ? '32%' : zone.id === 'PODIUM' ? '65%' : '78%',
+                  left: zone.id === 'TOWER_A' ? '28%' : zone.id === 'PODIUM' ? '72%' : '48%'
+                }}
+              >
+                <div className="bg-white/95 backdrop-blur-md p-2 rounded-xl shadow-2xl border border-white/50 mb-2 transform group-hover/pin:-translate-y-2 transition-all">
+                  <p className="text-[10px] font-black text-gray-900 uppercase tracking-tighter">{zone.id.replace('_', ' ')}</p>
+                  <p className={`text-[9px] font-bold ${zone.progress === 100 ? 'text-emerald-500' : 'text-blue-600'}`}>
+                    {zone.progress}% SYNCED
+                  </p>
+                </div>
+                <div className={`w-9 h-9 ${zone.progress === 100 ? 'bg-emerald-500' : 'bg-blue-600'} rounded-full flex items-center justify-center text-white ring-4 ring-white shadow-xl`}>
+                  <MapPin className="w-4 h-4" />
+                </div>
+              </button>
+            ))}
+
+            {/* Map Legend */}
+            <div className="absolute bottom-6 left-8 bg-white/80 backdrop-blur-md p-3 rounded-2xl border border-white/50 shadow-xl flex items-center space-x-6">
+              <div className="flex items-center space-x-2">
+                <div className="w-2.5 h-2.5 rounded-full bg-blue-600" />
+                <span className="text-[10px] font-black text-gray-700 uppercase">In Progress</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <div className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
+                <span className="text-[10px] font-black text-gray-700 uppercase">Verified</span>
+              </div>
+            </div>
+          </Card>
+
+          {/* Asset List & Agent Feed (對標 PRD 12.1 & 1.2.1) */}
+          <div className="flex flex-col space-y-6">
+            <Card className="flex-1 flex flex-col border-none shadow-lg">
+              <div className="px-6 py-5 border-b border-gray-50 flex items-center justify-between">
+                <h3 className="text-xs font-black uppercase tracking-[0.1em] text-gray-400 flex items-center">
+                  <List className="w-4 h-4 mr-2 text-blue-500" /> Asset Verification
+                </h3>
+                <Filter className="w-3.5 h-3.5 text-gray-300" />
+              </div>
+              <div className="flex-1 overflow-y-auto no-scrollbar p-3 space-y-3">
+                {Object.values(HANDOVER_DATA).map((zone) => (
+                  <div 
+                    key={zone.id} 
+                    onClick={() => handleZoneSelect(zone.id)}
+                    className="p-4 bg-white rounded-2xl border border-gray-100 hover:border-blue-200 hover:shadow-md transition-all cursor-pointer group"
+                  >
+                    <div className="flex justify-between items-start mb-3">
+                      <div>
+                        <h4 className="text-xs font-black text-gray-900 uppercase">{zone.id.replace('_', ' ')}</h4>
+                        <p className="text-[9px] text-gray-400 font-bold mt-0.5">SCAN: {zone.lastScan}</p>
+                      </div>
+                      <Badge variant={zone.progress === 100 ? 'success' : 'info'}>{zone.progress}%</Badge>
+                    </div>
+                    <div className="h-1.5 w-full bg-gray-50 rounded-full overflow-hidden">
+                      <div className={`h-full ${zone.progress === 100 ? 'bg-emerald-500' : 'bg-blue-600'} transition-all duration-700`} style={{ width: `${zone.progress}%` }} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </Card>
+
+            {/* Audit Agent Info (對標 PRD 1.2.1 AUTOMATED RECORDING) - 已優化為 White Theme */}
+            <Card className="p-5 border-l-4 border-l-blue-600 bg-blue-50/10 shadow-lg">
+              <div className="flex items-center justify-between mb-4">
+                 <div className="flex items-center space-x-3">
+                    <div className="p-2 bg-blue-600 rounded-lg text-white shadow-lg shadow-blue-200"><Activity className="w-4 h-4" /></div>
+                    <span className="text-xs font-black uppercase tracking-widest text-blue-600">Audit Agent Feed</span>
+                 </div>
+                 <Badge variant="info">Real-time</Badge>
+              </div>
+              <div className="space-y-3">
+                 <div className="flex items-start space-x-3">
+                    <History className="w-3.5 h-3.5 text-gray-300 mt-0.5" />
+                    <p className="text-[10px] text-gray-600 leading-relaxed font-medium">
+                      Agent <span className="text-blue-600 font-bold">JARVIS_SCAN_09</span> reconciling Point Cloud data with BIM LOD 500 for <span className="font-bold">Tower A</span>.
+                    </p>
+                 </div>
+                 <div className="flex items-start space-x-3">
+                    <CheckCircle className="w-3.5 h-3.5 text-emerald-400 mt-0.5" />
+                    <p className="text-[10px] text-gray-600 leading-relaxed font-medium">
+                      Consistency certificate generated for <span className="font-bold">Basement Car Park</span> via Blockchain node.
+                    </p>
+                 </div>
+              </div>
+            </Card>
+          </div>
+        </div>
+      ) : (
+        /* Panorama View Level (對標 PRD 12.2.1 - 12.2.4) */
+        <div className="space-y-6 animate-in fade-in zoom-in-95 duration-500">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <button 
+                onClick={handleBack}
+                className="px-5 py-2.5 bg-white border border-gray-100 rounded-2xl text-[10px] font-black text-gray-500 flex items-center hover:bg-gray-50 hover:text-blue-600 transition-all shadow-sm uppercase tracking-widest"
+              >
+                <ArrowLeft className="w-4 h-4 mr-2" /> Macro GIS Map
+              </button>
+              <div className="h-6 w-px bg-gray-200" />
+              <h3 className="text-xl font-black text-gray-900 uppercase tracking-tight">{HANDOVER_DATA[activeZone].label}</h3>
+            </div>
+            <div className="flex space-x-2">
+               <button className="px-4 py-2 bg-blue-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-blue-200">Issue Handover Cert</button>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Eagle Eye Panorama (PRD 12.2.1) */}
+            <Card className="lg:col-span-2 h-[500px] relative overflow-hidden group border-none shadow-2xl">
+              <div 
+                className="absolute inset-0 opacity-90 group-hover:scale-105 transition-all duration-[3000ms]" 
+                style={{backgroundImage: `url("${HANDOVER_DATA[activeZone].img}")`, backgroundSize: 'cover', backgroundPosition: 'center'}} 
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/10" />
+              
+              <div className="absolute top-6 left-6">
+                <Badge variant="success">LIVE 360° EAGLE EYE PERCEPTION</Badge>
+              </div>
+
+              {/* Interaction Hints */}
+              <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex items-center space-x-4 bg-white/10 backdrop-blur-md px-6 py-3 rounded-full border border-white/20 text-white">
+                 <ArrowRightLeft className="w-4 h-4" />
+                 <span className="text-[10px] font-black uppercase tracking-[0.2em]">Drag to Inspect Reality</span>
+              </div>
+            </Card>
+
+            {/* AI Snag Detection (PRD 12.2.2) - 已優化為 White Theme */}
+            <Card className="flex flex-col border-none shadow-xl">
+              <div className="px-6 py-5 border-b border-gray-50 flex justify-between items-center bg-gray-50/30">
+                 <h3 className="text-xs font-black uppercase tracking-widest text-gray-500">AI Snag Detection</h3>
+                 <Badge variant="danger">{HANDOVER_DATA[activeZone].defects.length} Active</Badge>
+              </div>
+              <div className="flex-1 overflow-y-auto no-scrollbar">
+                 {HANDOVER_DATA[activeZone].defects.length > 0 ? (
+                   HANDOVER_DATA[activeZone].defects.map((def, i) => (
+                     <div key={i} className="p-5 border-b border-gray-50 hover:bg-blue-50/30 transition-all group cursor-pointer">
+                        <div className="flex justify-between items-start mb-2">
+                          <span className="text-[9px] font-black text-blue-600 bg-blue-50 px-2 py-0.5 rounded-lg uppercase">{def.id}</span>
+                          <Badge variant={def.status === 'Auto-Closed' ? 'success' : 'warning'}>{def.status}</Badge>
+                        </div>
+                        <p className="text-xs font-bold text-gray-900 group-hover:text-blue-600 transition-colors">{def.type}</p>
+                        <div className="flex items-center justify-between mt-3">
+                          <span className="text-[10px] text-gray-400 font-bold">{def.date}</span>
+                          <button className="text-[9px] font-black text-blue-600 uppercase hover:underline">View Evidence</button>
+                        </div>
+                     </div>
+                   ))
+                 ) : (
+                   <div className="h-full flex flex-col items-center justify-center text-gray-300 space-y-3">
+                      <CheckCircle2 className="w-12 h-12 opacity-20" />
+                      <p className="text-xs font-bold uppercase tracking-widest">Zero Defects Detected</p>
+                   </div>
+                 )}
+              </div>
+            </Card>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Reality-vs-Model Sync (PRD 12.2.3) */}
+            <Card className="p-8 border-none shadow-xl">
+              <div className="flex justify-between items-center mb-8">
+                <div>
+                   <h3 className="text-sm font-black uppercase tracking-tight">Reality-vs-Model Verification</h3>
+                   <p className="text-[10px] text-gray-400 font-bold">LOD 500 Consistency Check</p>
+                </div>
+                <Badge variant="info">Sync Active</Badge>
+              </div>
+              <div className="aspect-video bg-slate-100 rounded-2xl relative overflow-hidden flex items-center justify-center border border-gray-100 shadow-inner group">
+                 <div className="absolute inset-0 opacity-20 group-hover:opacity-40 transition-opacity grayscale" style={{backgroundImage: `url("${HANDOVER_DATA[activeZone].img}")`, backgroundSize: 'cover'}} />
+                 <div className="absolute top-0 bottom-0 left-1/2 w-0.5 bg-blue-500 shadow-[0_0_15px_#3b82f6] z-10 animate-[ping_4s_infinite]" />
+                 <div className="relative z-20 flex flex-col items-center">
+                    <div className="p-4 bg-white rounded-full shadow-2xl mb-4 border border-blue-100 animate-pulse">
+                      <ScanLine className="w-8 h-8 text-blue-600" />
+                    </div>
+                    <p className="text-[11px] text-gray-900 font-black tracking-widest uppercase">Variance Detected: ±3.2mm</p>
+                 </div>
+              </div>
+            </Card>
+            
+            {/* Digital User Manual (PRD 12.2.4) */}
+            <Card className="p-8 border-none shadow-xl">
+               <div className="flex justify-between items-center mb-8">
+                  <div>
+                    <h3 className="text-sm font-black uppercase tracking-tight">Digital Asset Manual</h3>
+                    <p className="text-[10px] text-gray-400 font-bold">Interactive BIM Records</p>
+                  </div>
+                  <Badge variant="success">SSOT Secured</Badge>
+               </div>
+               <div className="space-y-4">
+                  {[
+                    { asset: "Chiller Unit A1", type: "Mechanical", status: "Certified" },
+                    { asset: "Smart Switchboard", type: "Electrical", status: "Verified" },
+                    { asset: "Facade Panel Type B", type: "Architectural", status: "Certified" },
+                  ].map((asset, i) => (
+                    <div key={i} className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl group hover:bg-white hover:ring-2 hover:ring-blue-100 transition-all cursor-pointer">
+                       <div className="flex items-center space-x-4">
+                         <div className="w-10 h-10 bg-white rounded-xl shadow-sm flex items-center justify-center border border-gray-100 group-hover:scale-110 transition-transform">
+                           <Database className="w-4 h-4 text-gray-400" />
+                         </div>
+                         <div>
+                           <p className="text-xs font-black text-gray-900">{asset.asset}</p>
+                           <p className="text-[10px] text-gray-400 font-bold uppercase">{asset.type}</p>
+                         </div>
+                       </div>
+                       <div className="flex items-center space-x-4">
+                         <span className="text-[10px] font-black text-emerald-600 uppercase">{asset.status}</span>
+                         <ArrowUpRight className="w-4 h-4 text-gray-300 group-hover:text-blue-600" />
+                       </div>
+                    </div>
+                  ))}
+               </div>
+            </Card>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+// --- 佈局組件 ---
+const ModulesView = ({ activeModule }) => {
+  if (activeModule === "Handover") return <HandoverPageView />;
+  if (activeModule === "Dashboard") return <DashboardView />;
+  return <div className="p-20 text-center font-bold text-gray-300">Section Under Development</div>;
+};
+
+const DashboardView = () => (
+  <div className="p-20 text-center text-gray-300 font-black uppercase tracking-[0.5em]">Executive Dashboard</div>
+);
+
+export default function App() {
+  const [activeModule, setActiveModule] = useState("Handover");
+  const [isSidebarOpen, setSidebarOpen] = useState(true);
+
+  const sidebarItems = [
+    { id: "Dashboard", label: "Strategic Overview", icon: LayoutDashboard },
+    { type: "divider", label: "Operations" },
+    { id: "Handover", label: "Handover (Digital Twin)", icon: Key },
+  ];
+
+  return (
+    <div className="min-h-screen bg-[#FDFDFE] flex font-sans text-gray-900 antialiased overflow-hidden">
+      <aside className={`bg-white border-r border-gray-100 transition-all duration-300 flex flex-col shrink-0 ${isSidebarOpen ? 'w-64' : 'w-20'}`}>
+        <div className="p-6 flex items-center space-x-3 h-16 shrink-0">
+          <div className="w-8 h-8 bg-gray-900 rounded-lg flex items-center justify-center shadow-xl">
+             <span className="text-white font-black text-sm italic">J</span>
+          </div>
+          {isSidebarOpen && <span className="font-bold text-lg tracking-tight">JARVIS<span className="text-blue-600">PMO</span></span>}
+        </div>
+        <nav className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto no-scrollbar">
+          {sidebarItems.map((item, idx) => {
+            if (item.type === 'divider') return isSidebarOpen ? <div key={idx} className="px-3 pt-6 pb-2 text-[10px] font-black text-gray-300 uppercase tracking-widest">{item.label}</div> : <div key={idx} className="h-4" />;
+            const isActive = activeModule === item.id;
+            return (
+              <button key={item.id} onClick={() => setActiveModule(item.id)} className={`w-full flex items-center space-x-3 px-3 py-2 rounded-xl transition-all ${isActive ? 'bg-blue-50 text-blue-600 font-bold' : 'text-gray-500 hover:bg-gray-50'}`}>
+                <item.icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-blue-600' : 'text-gray-400'}`} />
+                {isSidebarOpen && <span className="text-xs">{item.label}</span>}
+              </button>
+            );
+          })}
+        </nav>
+      </aside>
+      <main className="flex-1 flex flex-col h-screen overflow-hidden">
+        <header className="bg-white/80 backdrop-blur-md border-b border-gray-100 h-16 flex items-center justify-between px-8 shrink-0 z-30">
+          <div className="flex items-center space-x-4">
+             <button onClick={() => setSidebarOpen(!isSidebarOpen)} className="p-1.5 hover:bg-gray-100 rounded-lg text-gray-400">
+               <ChevronRight className={`w-5 h-5 transition-transform ${isSidebarOpen ? 'rotate-180' : ''}`} />
+             </button>
+             <div className="flex items-center text-[11px] font-bold text-gray-400 uppercase tracking-widest">
+                Portfolios <ChevronRight className="w-3 h-3 mx-1" /> <span className="text-gray-900">Horizon Estates</span>
+             </div>
+          </div>
+          <div className="flex items-center space-x-6">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" />
+              <input type="text" placeholder="SSOT DATA SEARCH..." className="pl-9 pr-4 py-2 bg-gray-50 border-none rounded-xl text-[10px] font-bold outline-none w-64" />
+            </div>
+            <button className="p-2 text-gray-400 hover:bg-gray-50 rounded-lg relative">
+              <Bell className="w-4 h-4" />
+              <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-rose-500 rounded-full border border-white" />
+            </button>
+          </div>
+        </header>
+        <div className="flex-1 overflow-y-auto p-8 no-scrollbar bg-[#FDFDFE]">
+          <div className="max-w-6xl mx-auto pb-20">
+             <ModulesView activeModule={activeModule} />
+          </div>
+        </div>
+      </main>
+    </div>
+  );
+}

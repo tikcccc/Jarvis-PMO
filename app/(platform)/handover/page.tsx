@@ -1,5 +1,5 @@
-import { GenericModulePage } from "@/components/modules/generic/generic-module-page";
+import { HandoverPage } from "@/components/modules/handover/handover-page";
 
 export default function HandoverRoute() {
-  return <GenericModulePage moduleId="handover" />;
+  return <HandoverPage />;
 }

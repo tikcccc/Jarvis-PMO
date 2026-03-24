@@ -41,11 +41,6 @@
       "severity": "warn",
       "code": "MISSING_MODULE_DOC",
       "message": "Missing module doc: /home/tikhong/Jarvis PMO/coding-doc/modules/safety.md"
-    },
-    {
-      "severity": "warn",
-      "code": "MISSING_MODULE_DOC",
-      "message": "Missing module doc: /home/tikhong/Jarvis PMO/coding-doc/modules/handover.md"
     }
   ]
 }

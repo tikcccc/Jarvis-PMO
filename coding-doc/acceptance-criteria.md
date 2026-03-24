@@ -49,6 +49,8 @@
 - The payment valuation view supports in-place zone inspection and back navigation to the overview without leaving `/payment`, and the inspection detail uses the approved Eagle Eye panorama asset.
 - The progress route keeps GIS-led zone overview and in-place zone drill-down on the same route instead of reverting to a generic placeholder module page.
 - The progress detail view uses timestamped discrete Eagle Eye capture events with stage context, not a continuous video-player scrubber, and reserves the only dark emphasis panel on the route for delay impact analysis.
+- The handover route keeps GIS-led asset overview and in-place panorama detail on the same route instead of reverting to a generic placeholder module page.
+- The handover detail view preserves the prototype's AI snag detection, reality-vs-model verification, and digital asset manual surfaces while keeping the Eagle Eye evidence view inside the same route.
 - Reduced-motion settings disable non-essential ambient motion and replace large travel with lighter or instant transitions.
 
 ## 6. Technical Acceptance
@@ -61,6 +63,8 @@
 - Requirements page-specific data lives in `lib/mock-data/requirements.ts`, and the detail view contract includes governance, automation, and validation structures rather than inline JSX-only content.
 - Procurement page-specific data lives in `lib/mock-data/procurement.ts` and the route file remains a thin composition layer.
 - Progress page-specific data lives in `lib/mock-data/progress.ts`, including timestamp, GPS, weather, and stage context for capture events, and the route composes dedicated progress components rather than inline generic-module placeholder content.
+- Handover page-specific data lives in `lib/mock-data/handover.ts`, and the route composes dedicated handover components rather than inline generic-module placeholder content.
+- The handover GIS overview uses the approved Mapbox GIS stack with a safe fallback preview when `NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN` is missing, and the detail view uses the approved Eagle Eye panorama asset.
 - Module docs record their matching split PRD source files when those working copies exist in the active input set.
 - The architecture, data contract, API seam, acceptance criteria, and test strategy docs stay mutually consistent.
 

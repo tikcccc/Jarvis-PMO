@@ -65,6 +65,9 @@ The highest-risk failures are visual consistency failures, not data logic bugs. 
 - On `/progress`, verify the GIS overview renders real map tiles or the configured fallback preview and that hovering/selecting zones keeps the selected-zone context synchronized.
 - On `/progress`, verify clicking a zone marker or monitored-zone row opens the matching in-place detail view, the back action returns to the overview, and the timestamped snapshot timeline does not behave like a continuous scrubber.
 - On `/progress`, verify `Delay Impact Analysis` is the only dark emphasis panel on the route and that its content updates coherently for stable versus lagging zones.
+- On `/handover`, verify the GIS overview renders real map tiles or the configured fallback preview and that hovering/selecting assets keeps the asset-verification list synchronized.
+- On `/handover`, verify clicking a GIS marker or asset row opens the matching in-place panorama detail and that the back action returns to the overview without route navigation.
+- On `/handover`, verify the detail view uses the approved Eagle Eye panorama asset and that `AI Snag Detection`, `Reality-vs-Model Verification`, and `Digital Asset Manual` update for the selected asset.
 - Test responsive layouts at common widths:
   - 1440px
   - 1280px
@@ -84,6 +87,7 @@ If Playwright is added, capture screenshot checks for:
 - `/finance`
 - `/payment`
 - `/progress`
+- `/handover`
 
 These routes cover the majority of shared layout and component patterns.
 

@@ -420,6 +420,83 @@ export interface ProgressZone {
   impactAnalysis: ProgressImpactAnalysis;
 }
 
+export interface HandoverCommandSummary {
+  portfolioStatusPercent: number;
+  verifiedAssetsLabel: string;
+  verifiedAssetsDetail: string;
+  waveLabel: string;
+}
+
+export interface HandoverZoneKpi {
+  id: string;
+  label: string;
+  valueLabel: string;
+  tone: Tone;
+  icon: IconName;
+}
+
+export interface HandoverDefectRecord {
+  id: string;
+  typeLabel: string;
+  locationLabel: string;
+  statusLabel: string;
+  statusTone: Tone;
+  severityLabel: string;
+  severityTone: Tone;
+  detectedDateLabel: string;
+  noteLabel: string;
+}
+
+export interface HandoverVerificationCheck {
+  id: string;
+  label: string;
+  valueLabel: string;
+  tone: Tone;
+}
+
+export interface HandoverVerificationSummary {
+  statusLabel: string;
+  statusTone: Tone;
+  consistencyLabel: string;
+  varianceLabel: string;
+  certificateLabel: string;
+  noteLabel: string;
+  checks: HandoverVerificationCheck[];
+}
+
+export interface HandoverManualAsset {
+  id: string;
+  assetLabel: string;
+  assetTypeLabel: string;
+  locationLabel: string;
+  statusLabel: string;
+  statusTone: Tone;
+}
+
+export interface HandoverAuditFeedItem {
+  id: string;
+  message: string;
+  tone: Tone;
+}
+
+export interface HandoverZone {
+  id: string;
+  mapLabel: string;
+  name: string;
+  label: string;
+  areaLabel: string;
+  statusLabel: string;
+  tone: Tone;
+  progressPercent: number;
+  lastScanLabel: string;
+  latitude: number;
+  longitude: number;
+  kpis: HandoverZoneKpi[];
+  defects: HandoverDefectRecord[];
+  verification: HandoverVerificationSummary;
+  manualAssets: HandoverManualAsset[];
+}
+
 export interface PaymentTask {
   id: string;
   typeLabel: string;
@@ -569,6 +646,10 @@ Suggested file mapping:
 - `lib/mock-data/progress.ts`
   - `ProgressSummaryMetric[]`
   - `ProgressZone[]`
+- `lib/mock-data/handover.ts`
+  - `HandoverCommandSummary`
+  - `HandoverAuditFeedItem[]`
+  - `HandoverZone[]`
 - `lib/mock-data/payment.ts`
   - `PaymentTask[]`
   - `PaymentOverviewMetric[]`
