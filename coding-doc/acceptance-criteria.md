@@ -47,8 +47,8 @@
 - The payment route replaces the generic placeholder with a dedicated Jarvis PAY workbench, keeps queue, overview, ledger, valuation, and CE / VO views on the same route, and may render full-bleed inside the shared shell for embedded-system use.
 - The payment valuation view uses the approved Mapbox GIS stack with a safe fallback preview when `NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN` is missing.
 - The payment valuation view supports in-place zone inspection and back navigation to the overview without leaving `/payment`, and the inspection detail uses the approved Eagle Eye panorama asset.
-- The progress route keeps GIS-led zone overview and in-place zone drill-down on the same route instead of reverting to a generic placeholder module page.
-- The progress detail view uses timestamped discrete Eagle Eye capture events with stage context, not a continuous video-player scrubber, and reserves the only dark emphasis panel on the route for delay impact analysis.
+- The progress route keeps GIS-led zone overview and in-place zone drill-down on the same route instead of reverting to a generic placeholder module page, and the GIS legend / markers distinguish normal, watch, and critical delay states.
+- The progress detail view uses timestamped discrete Eagle Eye capture events with stage context, not a continuous video-player scrubber, surfaces timestamp / GPS / weather metadata for the selected snapshot, and reserves the only dark emphasis panel on the route for delay impact analysis.
 - The handover route keeps GIS-led asset overview and in-place panorama detail on the same route instead of reverting to a generic placeholder module page.
 - The handover detail view preserves the prototype's AI snag detection, reality-vs-model verification, and digital asset manual surfaces while keeping the Eagle Eye evidence view inside the same route.
 - Reduced-motion settings disable non-essential ambient motion and replace large travel with lighter or instant transitions.

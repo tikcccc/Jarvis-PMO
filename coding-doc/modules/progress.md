@@ -23,7 +23,7 @@
 
 ## 4. Current State and Gap
 
-- Current state: the route now replaces the generic placeholder with a dedicated overview-to-detail workflow, including a Mapbox-backed GIS site map with safe fallback, monitored-zone drill-down, timestamped Eagle Eye snapshot timeline, Eagle Eye evidence image, AI trade progress bars, and a dark analytical delay-impact panel.
+- Current state: the route now replaces the generic placeholder with a dedicated overview-to-detail workflow, including a Mapbox-backed GIS site map with safe fallback, monitored-zone drill-down, three-stage GIS status grading (normal / watch / critical), timestamped Eagle Eye snapshot timeline, capture metadata that surfaces timestamp, GPS, and weather, Eagle Eye evidence image, AI trade progress bars, and a dark analytical delay-impact panel.
 - Gap to target: the page still uses typed mock data and a single shared Eagle Eye evidence image rather than live site imagery, BIM overlays, and schedule APIs.
 
 ## 5. Required UI Composition
@@ -55,7 +55,7 @@
 
 ## 8. Do Not Drift
 
-- Preserve: route name, `Progress (Eagle Eye)` terminology, white command-center shell, GIS-first overview, discrete timestamped snapshot logic, and the single dark emphasis panel reserved for delay impact analysis.
+- Preserve: route name, `Progress (Eagle Eye)` terminology, white command-center shell, GIS-first overview, green / amber / rose GIS status grading, discrete timestamped snapshot logic, snapshot timestamp / GPS / weather metadata, and the single dark emphasis panel reserved for delay impact analysis.
 - Avoid: turning the route into a generic KPI dashboard, replacing the GIS surface with a placeholder card, using a continuous video-player timeline, or dropping timestamp / GPS / weather capture metadata from the selected snapshot story.
 
 ## 9. Implementation Tasks
@@ -67,7 +67,8 @@
 ## 10. Acceptance Checks
 
 - [x] `/progress` renders a GIS-led overview and an in-place zone detail view without shell drift.
-- [x] The detail view uses discrete timestamped capture events with stage context rather than a continuous media scrubber.
+- [x] The overview differentiates normal, watch, and critical zones on the GIS legend and markers without diluting the map-first reading path.
+- [x] The detail view uses discrete timestamped capture events with stage context rather than a continuous media scrubber, and the selected snapshot story surfaces timestamp, GPS, and weather metadata.
 - [x] Delay impact analysis is the only dark emphasis panel on the route, while the remaining surfaces keep the shared white Jarvis card language.
 
 ## 11. Documentation Sync

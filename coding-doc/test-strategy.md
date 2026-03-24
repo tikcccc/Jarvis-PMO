@@ -62,8 +62,8 @@ The highest-risk failures are visual consistency failures, not data logic bugs. 
 - On `/payment`, verify the valuation overview renders real map tiles or the configured fallback preview and that marker focus stays synchronized with the monitored-zones list.
 - On `/payment`, verify clicking a valuation zone marker or monitored-zone row opens the matching inspection detail and that the back action returns to the overview in place.
 - On `/payment`, verify the inspection detail uses the approved Eagle Eye panorama asset instead of a remote placeholder image.
-- On `/progress`, verify the GIS overview renders real map tiles or the configured fallback preview and that hovering/selecting zones keeps the selected-zone context synchronized.
-- On `/progress`, verify clicking a zone marker or monitored-zone row opens the matching in-place detail view, the back action returns to the overview, and the timestamped snapshot timeline does not behave like a continuous scrubber.
+- On `/progress`, verify the GIS overview renders real map tiles or the configured fallback preview, that hovering/selecting zones keeps the selected-zone context synchronized, and that the legend / markers distinguish normal, watch, and critical delay states.
+- On `/progress`, verify clicking a zone marker or monitored-zone row opens the matching in-place detail view, the back action returns to the overview, the timestamped snapshot timeline does not behave like a continuous scrubber, and the selected snapshot story shows timestamp, GPS, and weather metadata.
 - On `/progress`, verify `Delay Impact Analysis` is the only dark emphasis panel on the route and that its content updates coherently for stable versus lagging zones.
 - On `/handover`, verify the GIS overview renders real map tiles or the configured fallback preview and that hovering/selecting assets keeps the asset-verification list synchronized.
 - On `/handover`, verify clicking a GIS marker or asset row opens the matching in-place panorama detail and that the back action returns to the overview without route navigation.

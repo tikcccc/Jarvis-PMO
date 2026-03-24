@@ -67,6 +67,38 @@ const toneMarkerClassMap: Record<Tone, string> = {
   danger: "bg-rose-500"
 };
 
+const toneMarkerRingClassMap: Record<Tone, string> = {
+  default: "ring-gray-200/80",
+  info: "ring-blue-200/80",
+  success: "ring-emerald-200/80",
+  warning: "ring-amber-200/80",
+  danger: "ring-rose-200/80"
+};
+
+const toneMarkerLabelClassMap: Record<Tone, string> = {
+  default: "ring-gray-300 text-gray-700",
+  info: "ring-blue-500 text-blue-600",
+  success: "ring-emerald-500 text-emerald-700",
+  warning: "ring-amber-500 text-amber-700",
+  danger: "ring-rose-500 text-rose-700"
+};
+
+const toneSelectedSurfaceClassMap: Record<Tone, string> = {
+  default: "bg-gray-50 text-gray-600",
+  info: "bg-blue-50 text-blue-600",
+  success: "bg-emerald-50 text-emerald-600",
+  warning: "bg-amber-50 text-amber-600",
+  danger: "bg-rose-50 text-rose-600"
+};
+
+const toneSelectedBlockClassMap: Record<Tone, string> = {
+  default: "border-gray-300/70 bg-gray-100/35",
+  info: "border-blue-300/70 bg-blue-100/30",
+  success: "border-emerald-300/70 bg-emerald-100/30",
+  warning: "border-amber-300/70 bg-amber-100/30",
+  danger: "border-rose-300/70 bg-rose-100/35"
+};
+
 const siteBlockStyleMap: Record<string, string> = {
   "zone-a": "left-[12%] top-[18%] h-[26%] w-[24%] -rotate-6",
   "zone-b": "right-[14%] top-[16%] h-[28%] w-[24%] rotate-3",
@@ -246,7 +278,7 @@ export function ProgressSiteMap({ zones, activeZone, siteViewport, onFocusZone, 
             <p className="mt-2 text-sm font-bold text-gray-900">{activeZone.name}</p>
             <p className="jarvis-copy-xs mt-1 text-gray-500">{activeZone.area}</p>
           </div>
-          <div className={cn("rounded-lg p-2", activeZone.tone === "danger" ? "bg-rose-50 text-rose-600" : "bg-blue-50 text-blue-600")}>
+          <div className={cn("rounded-lg p-2", toneSelectedSurfaceClassMap[activeZone.tone])}>
             <MapPin className="h-4 w-4" />
           </div>
         </div>
@@ -343,11 +375,7 @@ function ProgressSiteMapFallback({
           className={cn(
             "pointer-events-none absolute rounded-[30px] border shadow-[inset_0_1px_0_rgba(255,255,255,0.6)]",
             siteBlockStyleMap[zone.id] ?? "left-[30%] top-[30%] h-[20%] w-[20%]",
-            zone.id === activeZone.id
-              ? zone.tone === "danger"
-                ? "border-rose-300/70 bg-rose-100/35"
-                : "border-blue-300/70 bg-blue-100/30"
-              : "border-white/55 bg-white/18",
+            zone.id === activeZone.id ? toneSelectedBlockClassMap[zone.tone] : "border-white/55 bg-white/18",
             isSatellite ? "opacity-80" : "opacity-100"
           )}
         >
@@ -399,15 +427,20 @@ function ZoneMarkerButton({
     >
       <div
         className={cn(
-          "jarvis-text-10 mb-1 rounded bg-white px-2 py-1 font-bold text-gray-700 shadow-xl border border-gray-100 transition-opacity",
-          selected ? "opacity-100 ring-2 ring-blue-500 text-blue-600" : "opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100"
+          "mb-1 rounded border border-gray-100 bg-white px-2 py-1 shadow-xl transition-opacity",
+          toneMarkerLabelClassMap[zone.tone],
+          selected ? "opacity-100 ring-2" : "opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100"
         )}
       >
-        {zone.mapLabel} ({zone.progressPercent}%)
+        <p className="jarvis-text-10 font-bold uppercase tracking-widest text-gray-700">{zone.mapLabel}</p>
+        <p className="jarvis-text-10 mt-0.5 font-bold uppercase tracking-wide">
+          {zone.statusLabel} | {zone.progressPercent}%
+        </p>
       </div>
       <div
         className={cn(
-          "flex h-7 w-7 items-center justify-center rounded-full border-4 border-white shadow-lg",
+          "flex h-7 w-7 items-center justify-center rounded-full border-4 border-white shadow-lg transition-shadow duration-200",
+          selected ? cn("ring-4", toneMarkerRingClassMap[zone.tone]) : "group-hover:ring-4 group-hover:ring-gray-200/70",
           toneMarkerClassMap[zone.tone]
         )}
       >

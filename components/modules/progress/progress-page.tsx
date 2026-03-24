@@ -12,6 +12,7 @@ import {
   Download,
   FileCheck,
   Map,
+  MapPin,
   Maximize2,
   Scan
 } from "lucide-react";
@@ -68,6 +69,14 @@ const emphasisPillClassMap: Record<Tone, string> = {
   success: "border-emerald-400/25 bg-emerald-500/12 text-emerald-100",
   warning: "border-amber-300/25 bg-amber-500/12 text-amber-100",
   danger: "border-rose-400/30 bg-rose-500/15 text-rose-100"
+};
+
+const impactToneLabelMap: Record<Tone, string> = {
+  default: "Protected",
+  info: "Protected",
+  success: "Protected",
+  warning: "Recovery Watch",
+  danger: "Critical Path"
 };
 
 export function ProgressPage() {
@@ -176,14 +185,16 @@ function ProgressOverviewView({
               </div>
             </div>
             <div className="flex items-center space-x-4">
-              <span className="jarvis-text-10 flex items-center font-bold text-gray-500">
-                <span className="mr-1.5 h-2 w-2 rounded-full bg-emerald-500" />
-                Normal
-              </span>
-              <span className="jarvis-text-10 flex items-center font-bold text-gray-500">
-                <span className="mr-1.5 h-2 w-2 rounded-full bg-rose-500" />
-                Lagging
-              </span>
+              {[
+                { label: "Normal", tone: "success" as const },
+                { label: "Lagging", tone: "warning" as const },
+                { label: "Severe Lag", tone: "danger" as const }
+              ].map((item) => (
+                <span key={item.label} className="jarvis-text-10 flex items-center font-bold text-gray-500">
+                  <span className={cn("mr-1.5 h-2 w-2 rounded-full", toneBarClassMap[item.tone])} />
+                  {item.label}
+                </span>
+              ))}
             </div>
           </div>
           <div className="relative flex-1">
@@ -382,6 +393,10 @@ function ProgressDetailView({ zone, onBack }: { zone: ProgressZone; onBack: () =
                 <div className="rounded-xl border border-gray-100 bg-gray-50/70 px-4 py-3">
                   <div className="flex flex-wrap items-center gap-2">
                     <span className="jarvis-text-10 font-bold uppercase tracking-widest text-gray-400">{selectedSnapshot.weatherLabel}</span>
+                    <span className="jarvis-text-10 inline-flex items-center gap-1 rounded-full border border-gray-200 bg-white px-2 py-1 font-bold tracking-wide text-gray-500 shadow-sm">
+                      <MapPin className="h-3 w-3 text-blue-500" />
+                      GPS {selectedSnapshot.gpsLabel}
+                    </span>
                   </div>
                   <p className="jarvis-copy-xs mt-2 text-gray-500">{selectedSnapshot.noteLabel}</p>
                 </div>
@@ -438,7 +453,7 @@ function ProgressDetailView({ zone, onBack }: { zone: ProgressZone; onBack: () =
                 Delay Impact Analysis
               </h3>
               <span className={cn("jarvis-text-10 rounded-full border px-2 py-1 font-bold uppercase tracking-wider", emphasisPillClassMap[zone.tone])}>
-                {zone.tone === "danger" ? "Critical Path" : "Protected"}
+                {impactToneLabelMap[zone.tone]}
               </span>
             </div>
 
