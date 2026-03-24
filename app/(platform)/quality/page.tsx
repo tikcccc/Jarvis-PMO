@@ -1,5 +1,5 @@
-import { GenericModulePage } from "@/components/modules/generic/generic-module-page";
+import { QualityPage } from "@/components/modules/quality/quality-page";
 
 export default function QualityRoute() {
-  return <GenericModulePage moduleId="quality" />;
+  return <QualityPage />;
 }

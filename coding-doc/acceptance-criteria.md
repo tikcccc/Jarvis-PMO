@@ -47,6 +47,8 @@
 - The payment route replaces the generic placeholder with a dedicated Jarvis PAY workbench, keeps queue, overview, ledger, valuation, and CE / VO views on the same route, and may render full-bleed inside the shared shell for embedded-system use.
 - The payment valuation view uses the approved Mapbox GIS stack with a safe fallback preview when `NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN` is missing.
 - The payment valuation view supports in-place zone inspection and back navigation to the overview without leaving `/payment`, and the inspection detail uses the approved Eagle Eye panorama asset.
+- The quality route replaces the generic placeholder with a dedicated Jarvis DWSS workbench, keeps pending tasks, overview, work supervision, biometric control, RFI tracking, inspection forms, and site-daily archive views on the same route, and may render full-bleed inside the shared shell for embedded DWSS operations.
+- The quality route preserves the DWSS prototype's same-route process queue plus deep-work surfaces, including the first-time-pass chart, work-supervision double-lock flow, competency roster, RFI registry, inspection-form registry, and site-daily archive/detail views.
 - The progress route keeps GIS-led zone overview and in-place zone drill-down on the same route instead of reverting to a generic placeholder module page, and the GIS legend / markers distinguish normal, watch, and critical delay states.
 - The progress detail view uses timestamped discrete Eagle Eye capture events with stage context, not a continuous video-player scrubber, surfaces timestamp / GPS / weather metadata for the selected snapshot, and reserves the only dark emphasis panel on the route for delay impact analysis.
 - The handover route keeps GIS-led asset overview and in-place panorama detail on the same route instead of reverting to a generic placeholder module page.
@@ -62,6 +64,7 @@
 - Mock data is typed and stored outside page components.
 - Requirements page-specific data lives in `lib/mock-data/requirements.ts`, and the detail view contract includes governance, automation, and validation structures rather than inline JSX-only content.
 - Procurement page-specific data lives in `lib/mock-data/procurement.ts` and the route file remains a thin composition layer.
+- Quality page-specific data lives in `lib/mock-data/quality.ts`, including queue tasks, overview metrics, work-supervision cases, competency roster items, RFI records, inspection forms, and site-daily archive/detail records, and the route composes dedicated quality components rather than the generic placeholder page.
 - Progress page-specific data lives in `lib/mock-data/progress.ts`, including timestamp, GPS, weather, and stage context for capture events, and the route composes dedicated progress components rather than inline generic-module placeholder content.
 - Handover page-specific data lives in `lib/mock-data/handover.ts`, and the route composes dedicated handover components rather than inline generic-module placeholder content.
 - The handover GIS overview uses the approved Mapbox GIS stack with a safe fallback preview when `NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN` is missing, and the detail view uses the approved Eagle Eye panorama asset.

@@ -596,3 +596,148 @@ export interface PaymentVariationRecord {
   statusLabel: string;
   daysLeftLabel?: string;
 }
+
+export interface QualityTask {
+  id: string;
+  typeLabel: string;
+  title: string;
+  context: string;
+  contractor: string;
+  receivedLabel: string;
+  deadlineLabel: string;
+  priorityLabel: "High" | "Medium";
+  priorityTone: Tone;
+}
+
+export interface QualityOverviewMetric {
+  id: string;
+  label: string;
+  valueLabel: string;
+  detailLabel?: string;
+  changeLabel?: string;
+  tone: Tone;
+  icon?: IconName;
+}
+
+export interface QualityPassRateTrend {
+  labels: string[];
+  firstPassRate: number[];
+  defectRectificationRate: number[];
+}
+
+export interface QualityLiveFeedItem {
+  id: string;
+  typeLabel: string;
+  message: string;
+  timeLabel: string;
+  tone: Tone;
+  icon: "checkCircle2" | "shieldAlert" | "messageSquare" | "camera";
+}
+
+export interface QualityStepCheck {
+  id: string;
+  label: string;
+  passed: boolean;
+}
+
+export interface QualityAiCheck {
+  id: string;
+  label: string;
+  resultLabel: string;
+  tone: Tone;
+}
+
+export interface QualitySupervisionCase {
+  id: string;
+  title: string;
+  zoneLabel: string;
+  contractor: string;
+  disciplineLabel: string;
+  statusLabel: string;
+  statusTone: Tone;
+  timeLabel: string;
+  commenceChecks: QualityStepCheck[];
+  commenceNote: string;
+  executionSummary: string;
+  executionTone: Tone;
+  submissionNote: string;
+  submissionAttachmentLabel: string;
+  aiChecks: QualityAiCheck[];
+  completionNote: string;
+}
+
+export interface QualityPersonnelRecord {
+  id: string;
+  name: string;
+  roleLabel: string;
+  company: string;
+  zoneLabel: string;
+  timeInLabel: string;
+  statusLabel: string;
+  tone: Tone;
+  reasonLabel?: string;
+}
+
+export interface QualityRfiStatusSummary {
+  id: string;
+  label: string;
+  count: number;
+  tone: Tone;
+}
+
+export interface QualityDistributionItem {
+  id: string;
+  label: string;
+  percent: number;
+  accentHex: string;
+}
+
+export interface QualityRfiRecord {
+  id: string;
+  statusLabel: string;
+  statusTone: Tone;
+  typeLabel: string;
+  locationLabel: string;
+  description: string;
+  contractor: string;
+  submittedLabel: string;
+  slaLabel: string;
+  slaTone: Tone;
+}
+
+export interface QualityInspectionFormRecord {
+  formId: string;
+  statusLabel: string;
+  statusTone: Tone;
+  taskTitle: string;
+  typeLabel: string;
+  typeTone: Tone;
+  contractor: string;
+  locationLabel: string;
+  aiVerificationLabel: string;
+  aiVerificationTone: Tone;
+  submittedLabel: string;
+  auditState: "secured" | "pending";
+}
+
+export interface QualityDailyProcessEntry {
+  id: string;
+  label: string;
+  tone: Tone;
+}
+
+export interface QualityDailyLogRecord {
+  dateLabel: string;
+  weatherLabel: string;
+  temperatureLabel: string;
+  workersCount: number;
+  managementCount: number;
+  mainConCount: number;
+  specialistCount: number;
+  anomaliesCount: number;
+  statusLabel: string;
+  tone: Tone;
+  hashLabel: string;
+  processEntries: QualityDailyProcessEntry[];
+  anomalyNote?: string;
+}

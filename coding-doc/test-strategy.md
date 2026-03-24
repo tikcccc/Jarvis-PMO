@@ -62,6 +62,9 @@ The highest-risk failures are visual consistency failures, not data logic bugs. 
 - On `/payment`, verify the valuation overview renders real map tiles or the configured fallback preview and that marker focus stays synchronized with the monitored-zones list.
 - On `/payment`, verify clicking a valuation zone marker or monitored-zone row opens the matching inspection detail and that the back action returns to the overview in place.
 - On `/payment`, verify the inspection detail uses the approved Eagle Eye panorama asset instead of a remote placeholder image.
+- On `/quality`, verify the route renders full-bleed inside the shared shell, keeps the DWSS sub-navigation stable, and preserves the payment-style workbench proportions without shell drift.
+- On `/quality`, verify the overview shows the pass-rate chart and live quality feed, the work-supervision queue updates the selected detail canvas in place, and the biometric / RFI / inspection-form / site-daily views all stay on the same route.
+- On `/quality`, verify the site-daily archive opens the selected daily report in place and that the back action returns to the registry without route navigation.
 - On `/progress`, verify the GIS overview renders real map tiles or the configured fallback preview, that hovering/selecting zones keeps the selected-zone context synchronized, and that the legend / markers distinguish normal, watch, and critical delay states.
 - On `/progress`, verify clicking a zone marker or monitored-zone row opens the matching in-place detail view, the back action returns to the overview, the timestamped snapshot timeline does not behave like a continuous scrubber, and the selected snapshot story shows timestamp, GPS, and weather metadata.
 - On `/progress`, verify `Delay Impact Analysis` is the only dark emphasis panel on the route and that its content updates coherently for stable versus lagging zones.
@@ -86,6 +89,7 @@ If Playwright is added, capture screenshot checks for:
 - `/procurement`
 - `/finance`
 - `/payment`
+- `/quality`
 - `/progress`
 - `/handover`
 

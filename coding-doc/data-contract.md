@@ -604,6 +604,22 @@ export interface PaymentVariationRecord {
 }
 ```
 
+### 3.1 DWSS Additions
+
+The quality route now depends on dedicated DWSS-specific contracts in `lib/types.ts` rather than the generic placeholder shape. The required typed records are:
+
+- `QualityTask[]`
+- `QualityOverviewMetric[]`
+- `QualityPassRateTrend`
+- `QualityLiveFeedItem[]`
+- `QualitySupervisionCase[]`
+- `QualityPersonnelRecord[]`
+- `QualityRfiStatusSummary[]`
+- `QualityDistributionItem[]`
+- `QualityRfiRecord[]`
+- `QualityInspectionFormRecord[]`
+- `QualityDailyLogRecord[]`
+
 ## 4. Data File Ownership
 
 Suggested file mapping:
@@ -660,6 +676,18 @@ Suggested file mapping:
   - `PaymentCertificateRecord[]`
   - `PaymentValuationRecord[]`
   - `PaymentVariationRecord[]`
+- `lib/mock-data/quality.ts`
+  - `QualityTask[]`
+  - `QualityOverviewMetric[]`
+  - `QualityPassRateTrend`
+  - `QualityLiveFeedItem[]`
+  - `QualitySupervisionCase[]`
+  - `QualityPersonnelRecord[]`
+  - `QualityRfiStatusSummary[]`
+  - `QualityDistributionItem[]`
+  - `QualityRfiRecord[]`
+  - `QualityInspectionFormRecord[]`
+  - `QualityDailyLogRecord[]`
 
 ## 5. Contract Rules
 

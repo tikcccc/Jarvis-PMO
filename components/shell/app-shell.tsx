@@ -13,7 +13,7 @@ export function AppShell({ children }: Readonly<{ children: React.ReactNode }>) 
   const pathname = usePathname();
   const [isSidebarOpen, setSidebarOpen] = useState(true);
   const activeItem = getNavItemByPath(pathname);
-  const isFullBleedRoute = pathname === "/payment";
+  const isFullBleedRoute = pathname === "/payment" || pathname === "/quality";
 
   return (
     <div className="jarvis-shell min-h-screen bg-[#FDFDFE] flex font-sans text-gray-900 antialiased overflow-hidden">
