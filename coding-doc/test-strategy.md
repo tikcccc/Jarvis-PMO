@@ -65,6 +65,10 @@ The highest-risk failures are visual consistency failures, not data logic bugs. 
 - On `/quality`, verify the route renders full-bleed inside the shared shell, keeps the DWSS sub-navigation stable, and preserves the payment-style workbench proportions without shell drift.
 - On `/quality`, verify the overview shows the pass-rate chart and live quality feed, the work-supervision queue updates the selected detail canvas in place, and the biometric / RFI / inspection-form / site-daily views all stay on the same route.
 - On `/quality`, verify the site-daily archive opens the selected daily report in place and that the back action returns to the registry without route navigation.
+- On `/safety`, verify the route renders full-bleed inside the shared shell, keeps the payment-style internal sidebar stable, and preserves the Smart Site workbench proportions without shell drift.
+- On `/safety`, verify the internal safety menu lists the CMP plus all nine designated modules without numeric prefixes and that switching the menu updates same-route content without route navigation.
+- On `/safety`, verify CMP, personnel, excavation, gas, and structural GIS views render live tiles or the configured fallback preview and that marker focus stays synchronized with the selected safety node.
+- On `/safety`, verify the smart video, crane, hoist, environmental, excavation, gas, structural, and drone views each preserve their prototype-aligned dominant surface rather than collapsing into a generic KPI grid.
 - On `/progress`, verify the GIS overview renders real map tiles or the configured fallback preview, that hovering/selecting zones keeps the selected-zone context synchronized, and that the legend / markers distinguish normal, watch, and critical delay states.
 - On `/progress`, verify clicking a zone marker or monitored-zone row opens the matching in-place detail view, the back action returns to the overview, the timestamped snapshot timeline does not behave like a continuous scrubber, and the selected snapshot story shows timestamp, GPS, and weather metadata.
 - On `/progress`, verify `Delay Impact Analysis` is the only dark emphasis panel on the route and that its content updates coherently for stable versus lagging zones.
@@ -90,6 +94,7 @@ If Playwright is added, capture screenshot checks for:
 - `/finance`
 - `/payment`
 - `/quality`
+- `/safety`
 - `/progress`
 - `/handover`
 

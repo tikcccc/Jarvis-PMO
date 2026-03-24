@@ -620,6 +620,20 @@ The quality route now depends on dedicated DWSS-specific contracts in `lib/types
 - `QualityInspectionFormRecord[]`
 - `QualityDailyLogRecord[]`
 
+### 3.2 Safety Additions
+
+The safety route now depends on dedicated Smart Site contracts in `lib/types.ts` rather than the generic placeholder shape. The required typed records are:
+
+- `SafetyMetricCard[]`
+- `SafetyDeviceStatus[]`
+- `SafetyWeatherSummary`
+- `SafetyDistributionItem[]`
+- `SafetyTrendChart`
+- `SafetyMapPoint[]`
+- `SafetyCameraFeed[]`
+- `SafetyWorkerRecord[]`
+- `SafetyDroneFinding[]`
+
 ## 4. Data File Ownership
 
 Suggested file mapping:
@@ -688,6 +702,16 @@ Suggested file mapping:
   - `QualityRfiRecord[]`
   - `QualityInspectionFormRecord[]`
   - `QualityDailyLogRecord[]`
+- `lib/mock-data/safety.ts`
+  - `SafetyMetricCard[]`
+  - `SafetyDeviceStatus[]`
+  - `SafetyWeatherSummary`
+  - `SafetyDistributionItem[]`
+  - `SafetyTrendChart`
+  - `SafetyMapPoint[]`
+  - `SafetyCameraFeed[]`
+  - `SafetyWorkerRecord[]`
+  - `SafetyDroneFinding[]`
 
 ## 5. Contract Rules
 

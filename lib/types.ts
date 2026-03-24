@@ -741,3 +741,106 @@ export interface QualityDailyLogRecord {
   processEntries: QualityDailyProcessEntry[];
   anomalyNote?: string;
 }
+
+export type SafetyStatusIconKey =
+  | "camera"
+  | "shield"
+  | "vehicle"
+  | "wind"
+  | "alert"
+  | "user"
+  | "activity"
+  | "globe"
+  | "mapPin";
+
+export interface SafetyMetricCard {
+  id: string;
+  label: string;
+  valueLabel: string;
+  detailLabel?: string;
+  tone: Tone;
+  icon: SafetyStatusIconKey;
+}
+
+export interface SafetyDeviceStatus {
+  id: string;
+  label: string;
+  statusLabel: string;
+  tone: Tone;
+  detailLabel?: string;
+}
+
+export interface SafetyWeatherSummary {
+  updatedLabel: string;
+  summary: string;
+  conditionLabel: string;
+  temperatureLabel: string;
+  humidityLabel: string;
+}
+
+export interface SafetyDistributionItem {
+  id: string;
+  label: string;
+  value: number;
+  accentHex: string;
+}
+
+export interface SafetyTrendSeries {
+  id: string;
+  label: string;
+  values: number[];
+  accentHex: string;
+  tone: Tone;
+  type: "line" | "bar";
+  area?: boolean;
+  smooth?: boolean;
+  thresholdValue?: number;
+}
+
+export interface SafetyTrendChart {
+  labels: string[];
+  unitLabel?: string;
+  minValue?: number;
+  maxValue?: number;
+  series: SafetyTrendSeries[];
+}
+
+export interface SafetyMapPoint {
+  id: string;
+  label: string;
+  detailLabel: string;
+  tone: Tone;
+  icon: SafetyStatusIconKey;
+  latitude: number;
+  longitude: number;
+  mapLeftPercent: string;
+  mapTopPercent: string;
+}
+
+export interface SafetyCameraFeed {
+  id: string;
+  title: string;
+  timeLabel: string;
+  statusLabel: string;
+  tone: Tone;
+  imageUrl?: string;
+  noteLabel?: string;
+}
+
+export interface SafetyWorkerRecord {
+  id: string;
+  name: string;
+  tradeLabel: string;
+  zoneLabel: string;
+  statusLabel: string;
+  tone: Tone;
+}
+
+export interface SafetyDroneFinding {
+  id: string;
+  title: string;
+  zoneLabel: string;
+  severityLabel: string;
+  severityTone: Tone;
+  timeLabel: string;
+}

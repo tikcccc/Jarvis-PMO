@@ -1,5 +1,5 @@
-import { GenericModulePage } from "@/components/modules/generic/generic-module-page";
+import { SafetyPage } from "@/components/modules/safety/safety-page";
 
 export default function SafetyRoute() {
-  return <GenericModulePage moduleId="safety" />;
+  return <SafetyPage />;
 }

@@ -73,7 +73,7 @@ The shell should keep these proportions and behaviors:
   - scrollable
   - generous page padding for standard routes
   - centered max-width container for standard routes
-  - approved embedded-workbench routes such as `/payment` may render full-bleed inside the shared shell when the module needs to host an external system surface
+  - approved embedded-workbench routes such as `/payment`, `/quality`, and `/safety` may render full-bleed inside the shared shell when the module needs to host an internal workbench or external system surface
 
 ### 4.2 Token Direction
 
