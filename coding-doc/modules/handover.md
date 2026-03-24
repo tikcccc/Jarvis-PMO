@@ -30,7 +30,7 @@
 ## 5. Required UI Composition
 
 - Page archetype and why it fits: map/context plus certification drill-down, because operators need a macro GIS closeout scan first and a detailed digital-twin verification workspace second.
-- Header or summary row: one dominant command card carries the portfolio closeout signal and is followed by a compact four-card summary KPI strip for rectification rate, LOD consistency, active snags, and forecasted handover timing.
+- Header or summary row: on the overview only, one dominant command card carries the portfolio closeout signal and is followed by a compact four-card summary KPI strip for rectification rate, LOD consistency, active snags, and forecasted handover timing.
 - KPI or overview strategy: the summary KPI strip is allowed on this route because the refreshed prototype uses it as a compact executive summary ahead of the GIS work surface; keep the GIS surface visually dominant and the right rail secondary.
 - Primary focal zone: GIS macro view with Mapbox-backed asset markers and direct drill-down into the selected asset.
 - Secondary support zone: audit log plus digital-twin asset list in overview, then AI snag auto-closure and digital asset manual in detail mode.
@@ -49,7 +49,7 @@
 ## 7. Interaction Notes
 
 - Primary user actions: scan asset status on the GIS overview, hover/select an asset, open the in-place detail view, switch between `Reality 360` and `BIM Heatmap`, inspect AI evidence cards, and release or export closeout evidence packages.
-- Selection or drill-down behavior: hovering or focusing an asset updates the GIS/list context; clicking a GIS marker or asset row opens the in-place detail view; the back action returns to the macro GIS overview without leaving `/handover`; selecting a snag record expands its evidence comparison card in place.
+- Selection or drill-down behavior: hovering or focusing an asset updates the GIS/list context; clicking a GIS marker or asset row opens the in-place detail view; the detail workspace omits the overview command/KPI strip and returns directly to the macro GIS overview via the back action; selecting a snag record expands its evidence comparison card in place.
 - Chart drill-down, legend, or filter behavior: not applicable for the current implementation.
 - Empty or fallback behavior: if `NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN` is missing, the GIS surface falls back to a styled preview state instead of failing route render; the detail view still renders with the approved Eagle Eye panorama asset.
 - Responsive notes: desktop-first delivery; the route preserves the wide GIS and panorama surfaces expected by the prototype and stacks secondary panels without changing shell behavior.

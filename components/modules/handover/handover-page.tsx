@@ -95,9 +95,6 @@ export function HandoverPage() {
 
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
-      <HandoverCommandCard />
-      <HandoverOverviewMetricRow />
-
       {detailZone ? (
         <HandoverDetailView
           zone={detailZone}
@@ -112,7 +109,11 @@ export function HandoverPage() {
           onVisualModeChange={setVisualMode}
         />
       ) : (
-        <HandoverOverviewView activeZone={activeZone} onFocusZone={handleFocusZone} onOpenZone={handleOpenZone} />
+        <>
+          <HandoverCommandCard />
+          <HandoverOverviewMetricRow />
+          <HandoverOverviewView activeZone={activeZone} onFocusZone={handleFocusZone} onOpenZone={handleOpenZone} />
+        </>
       )}
     </div>
   );
@@ -179,44 +180,31 @@ function HandoverOverviewMetricRow() {
 }
 
 function OverviewMetricCard({ metric }: { metric: HandoverOverviewMetric }) {
-  const isEmphasis = metric.emphasis === "emphasis";
-
   return (
     <Card
-      variant={isEmphasis ? "emphasis" : "surface"}
-      className={cn(
-        "p-5",
-        isEmphasis ? "border-0" : cn("border-l-4", toneBorderClassMap[metric.tone], "shadow-sm")
-      )}
+      variant="surface"
+      className={cn("border-l-4 p-5 shadow-sm", toneBorderClassMap[metric.tone])}
     >
       <div className="flex items-start justify-between gap-4">
         <div>
-          <p className={cn("text-[10px] font-black uppercase tracking-widest", isEmphasis ? "text-gray-500" : "text-gray-400")}>
-            {metric.label}
-          </p>
+          <p className="text-[10px] font-black uppercase tracking-widest text-gray-400">{metric.label}</p>
           <div className="mt-3 flex items-center gap-2">
-            <p className={cn("text-2xl font-black", isEmphasis ? "text-blue-400" : "text-gray-900")}>{metric.valueLabel}</p>
+            <p className="text-2xl font-black text-gray-900">{metric.valueLabel}</p>
             {metric.badgeLabel ? <Badge tone={metric.tone}>{metric.badgeLabel}</Badge> : null}
           </div>
           {metric.detailLabel ? (
-            <p className={cn("mt-2 text-[10px] font-bold uppercase tracking-wide", isEmphasis ? "text-gray-500" : toneTextClassMap[metric.tone])}>
-              {metric.detailLabel}
-            </p>
+            <p className={cn("mt-2 text-[10px] font-bold uppercase tracking-wide", toneTextClassMap[metric.tone])}>{metric.detailLabel}</p>
           ) : null}
         </div>
 
-        <div className={cn("rounded-xl p-2.5", isEmphasis ? "bg-white/10 text-gray-300" : toneSurfaceClassMap[metric.tone])}>
+        <div className={cn("rounded-xl p-2.5", toneSurfaceClassMap[metric.tone])}>
           {createElement(appIcons[metric.icon], { className: "h-4 w-4" })}
         </div>
       </div>
 
       {metric.progressPercent !== undefined ? (
         <div className="mt-4">
-          <ProgressBar
-            value={metric.progressPercent}
-            className={cn("h-1.5", isEmphasis ? "bg-white/10" : "bg-gray-100")}
-            barClassName={isEmphasis ? "bg-blue-400" : toneBarClassMap[metric.tone]}
-          />
+          <ProgressBar value={metric.progressPercent} className="h-1.5 bg-gray-100" barClassName={toneBarClassMap[metric.tone]} />
         </div>
       ) : null}
     </Card>
@@ -256,26 +244,6 @@ function HandoverOverviewView({
       </Card>
 
       <div className="space-y-6">
-        <Card className="border-l-4 border-l-blue-600 bg-blue-50/20 p-5 shadow-lg">
-          <div className="mb-4 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="rounded-lg bg-blue-600 p-2 text-white shadow-lg shadow-blue-200">
-                <Cpu className="h-4 w-4" />
-              </div>
-              <span className="text-xs font-black uppercase tracking-widest text-blue-900">Audit Agent Log</span>
-            </div>
-            <Badge tone="info" className="animate-pulse">
-              Live
-            </Badge>
-          </div>
-
-          <div className="space-y-4">
-            {handoverAuditFeed.map((item) => (
-              <AuditFeedRow key={item.id} tone={item.tone} message={item.message} />
-            ))}
-          </div>
-        </Card>
-
         <Card className="min-h-[420px] overflow-hidden border-0 shadow-xl">
           <div className="flex items-center justify-between border-b border-gray-50 bg-gray-50/50 px-6 py-5">
             <h3 className="text-xs font-black uppercase tracking-[0.1em] text-gray-900">Digital Twin Assets</h3>
@@ -310,6 +278,26 @@ function HandoverOverviewView({
                   <span className="jarvis-text-10 font-bold uppercase text-gray-500">{zone.areaLabel}</span>
                 </div>
               </button>
+            ))}
+          </div>
+        </Card>
+
+        <Card className="border-l-4 border-l-blue-600 bg-blue-50/20 p-5 shadow-lg">
+          <div className="mb-4 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="rounded-lg bg-blue-600 p-2 text-white shadow-lg shadow-blue-200">
+                <Cpu className="h-4 w-4" />
+              </div>
+              <span className="text-xs font-black uppercase tracking-widest text-blue-900">Audit Agent Log</span>
+            </div>
+            <Badge tone="info" className="animate-pulse">
+              Live
+            </Badge>
+          </div>
+
+          <div className="space-y-4">
+            {handoverAuditFeed.map((item) => (
+              <AuditFeedRow key={item.id} tone={item.tone} message={item.message} />
             ))}
           </div>
         </Card>
@@ -377,7 +365,7 @@ function HandoverDetailView({
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1.9fr)_minmax(320px,0.95fr)]">
         <div className="space-y-6">
           <Card className="relative h-[520px] overflow-hidden border-0 shadow-2xl">
-            <div className="absolute left-6 top-6 z-20 flex flex-wrap gap-2 rounded-xl border border-gray-100 bg-white/92 p-1 shadow-sm backdrop-blur-md">
+            <div className="absolute left-5 top-5 z-20 flex flex-wrap gap-1.5 rounded-xl border border-gray-100 bg-white/92 p-1 shadow-sm backdrop-blur-md">
               <VisualModeButton
                 label="Reality 360"
                 active={visualMode === "reality"}
@@ -396,19 +384,30 @@ function HandoverDetailView({
               {visualMode === "reality" ? "Reality 360 Live" : "BIM Heatmap Compare"}
             </div>
 
-            <div className="absolute inset-0">
+            <div className="absolute inset-0 bg-slate-100">
               <Image
                 src={EAGLE_EYE_IMAGE}
                 alt="Handover Eagle Eye split-view evidence"
                 fill
                 priority
                 sizes="(min-width: 1024px) 70vw, 100vw"
-                className="object-cover transition-[transform,object-position] duration-[1800ms] ease-out"
-                style={{ objectPosition: visualMode === "reality" ? "18% center" : "82% center" }}
+                className="object-contain object-center"
               />
             </div>
 
-            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/65 via-black/10 to-transparent" />
+            <div
+              className={cn(
+                "pointer-events-none absolute inset-y-0 right-0 w-1/2 bg-slate-950/16 transition-opacity duration-300",
+                visualMode === "reality" ? "opacity-100" : "opacity-0"
+              )}
+            />
+            <div
+              className={cn(
+                "pointer-events-none absolute inset-y-0 left-0 w-1/2 bg-slate-950/16 transition-opacity duration-300",
+                visualMode === "bim" ? "opacity-100" : "opacity-0"
+              )}
+            />
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/55 via-black/10 to-transparent" />
 
             <div className="absolute bottom-8 left-1/2 z-20 flex -translate-x-1/2 items-center gap-4 rounded-2xl border border-white/25 bg-white/12 px-6 py-3 text-white shadow-xl backdrop-blur-md">
               <ArrowRightLeft className="h-4 w-4" />
@@ -605,7 +604,7 @@ function VisualModeButton({
       type="button"
       onClick={onClick}
       className={cn(
-        "inline-flex items-center gap-2 rounded-lg px-4 py-2 text-[10px] font-black uppercase tracking-widest transition-all",
+        "inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[9px] font-black uppercase tracking-[0.16em] transition-all",
         active ? "bg-blue-600 text-white shadow-md" : "text-gray-500 hover:bg-gray-100"
       )}
     >

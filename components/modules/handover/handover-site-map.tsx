@@ -37,7 +37,7 @@ const MAP_STYLE_CONFIGS = {
   }
 } as const;
 
-const FALLBACK_PADDING = 18;
+const FALLBACK_PADDING = 10;
 
 type MapMode = keyof typeof MAP_STYLES;
 
@@ -125,7 +125,7 @@ export function HandoverSiteMap({ zones, activeZone, siteViewport, onFocusZone, 
         [Math.max(...longitudes), Math.max(...latitudes)]
       ],
       {
-        padding: { top: 104, right: 84, bottom: 84, left: 84 },
+        padding: { top: 72, right: 56, bottom: 56, left: 56 },
         duration: 0,
         essential: true,
         maxZoom: Math.min(siteViewport.zoom, 17.1)

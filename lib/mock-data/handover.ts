@@ -38,8 +38,7 @@ export const handoverCommandSummary: HandoverCommandSummary = {
       valueLabel: "May 15, 2026",
       tone: "info",
       icon: "clock",
-      detailLabel: "52 days remaining",
-      emphasis: "emphasis"
+      detailLabel: "52 days remaining"
     }
   ]
 };
@@ -74,13 +73,13 @@ export const handoverZones: HandoverZone[] = [
     mapLabel: "Tower A",
     name: "Tower A",
     label: "Tower A - L42 Unit 05",
-    areaLabel: "Residential tower closeout and sample-unit certification",
+    areaLabel: "Residential closeout",
     statusLabel: "Rectifying",
     tone: "info",
     progressPercent: 92,
     lastScanLabel: "2026-03-23 09:40 HKT",
-    latitude: 22.30373,
-    longitude: 114.18128,
+    latitude: 22.30418,
+    longitude: 114.18084,
     kpis: [
       {
         id: "tower-a-consistency",
@@ -205,13 +204,13 @@ export const handoverZones: HandoverZone[] = [
     mapLabel: "Podium",
     name: "Podium",
     label: "Podium - Main Atrium",
-    areaLabel: "Retail podium and arrival hall rectification loop",
+    areaLabel: "Retail atrium loop",
     statusLabel: "Snagging",
     tone: "warning",
     progressPercent: 78,
     lastScanLabel: "2026-03-22 16:15 HKT",
-    latitude: 22.3034,
-    longitude: 114.18223,
+    latitude: 22.30321,
+    longitude: 114.18284,
     kpis: [
       {
         id: "podium-consistency",
@@ -336,13 +335,13 @@ export const handoverZones: HandoverZone[] = [
     mapLabel: "Car Park",
     name: "Car Park",
     label: "B1 Basement Parking",
-    areaLabel: "Back-of-house and basement digital twin release",
+    areaLabel: "Basement release",
     statusLabel: "Verified",
     tone: "success",
     progressPercent: 100,
     lastScanLabel: "2026-03-21 11:00 HKT",
-    latitude: 22.30321,
-    longitude: 114.18171,
+    latitude: 22.30258,
+    longitude: 114.18118,
     kpis: [
       {
         id: "car-park-consistency",
